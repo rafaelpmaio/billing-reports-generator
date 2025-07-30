@@ -3,6 +3,29 @@
 > _Desktop App that automates the generation of monthly PDF reports based on the energy consumption of solar farm customers._
 <br>
 
+<table border="0" cellpadding="0" cellspacing="0" style="border-collapse: collapse; text-align: center;">
+  <tr>
+    <td style="border: none; padding: 5px;">
+      <strong>PDF ORIGINAL | ORIGINAL PDF</strong>
+    </td>
+    <td style="border: none; padding: 5px;"></td>
+    <td style="border: none; padding: 5px;">
+      <strong>PDF GERADO | GENERATED PDF</strong>
+    </td>
+  </tr>
+  <tr>
+    <td style="border: none;">
+      <img src="GeradorRelatoriosSolarwelleEnergia/Images/pdforiginal.png" alt="PDF Original" width="400" />
+    </td>
+    <td style="font-size: 48px; padding: 0 20px; vertical-align: middle; border: none;">
+      ➡️
+    </td>
+    <td style="border: none;">
+      <img src="GeradorRelatoriosSolarwelleEnergia/Images/pdfcliente.png" alt="PDF Preenchido" width="400" />
+    </td>
+  </tr>
+</table>
+
 ### 👇🏾Idioma / Language 
 <details>
 <summary> pt-BR </summary>
