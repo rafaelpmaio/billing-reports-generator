@@ -1,10 +1,12 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.ComponentModel;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using System.Xml.Linq;
 using OfficeOpenXml;
+using ClosedXML.Excel;
 
 namespace GeradorRelatoriosSolarwelleEnergia.Dominio.DTO
 {
@@ -30,30 +32,32 @@ namespace GeradorRelatoriosSolarwelleEnergia.Dominio.DTO
         public static List<TabelaCemig> LerTabelaExcel(string filePath)
         {
             var tabela = new List<TabelaCemig>();
-            using (var package = new ExcelPackage(new FileInfo(filePath)))
+
+            using (var workbook = new XLWorkbook(filePath))
             {
-                var worksheet = package.Workbook.Worksheets[0];
-                int rowCount = worksheet.Dimension.Rows;
+
+                var worksheet = workbook.Worksheets.Worksheet(1);
+                int rowCount = worksheet.LastRowUsed().RowNumber();
 
                 for (int row = 2; row <= rowCount; row++)
                 {
                     var item = new TabelaCemig
                     {
-                        Modalidade = worksheet.Cells[row, 1].Text,
-                        NumeroInstalacao = worksheet.Cells[row, 2].Text,
-                        Periodo = worksheet.Cells[row, 3].Text,
-                        Quota = worksheet.Cells[row, 4].Text,
-                        PostoHorario = worksheet.Cells[row, 5].Text,
-                        SaldoAnterior = worksheet.Cells[row, 6].Text,
-                        SaldoExpirado = worksheet.Cells[row, 7].Text,
-                        QtdConsumo = worksheet.Cells[row, 8].Text,
-                        QtdGeracao = worksheet.Cells[row, 9].Text,
-                        QtdCompensacao = worksheet.Cells[row, 10].Text,
-                        QtdTransfencia = worksheet.Cells[row, 11].Text,
-                        QtdRecebimento = worksheet.Cells[row, 12].Text,
-                        SaldoAtual = worksheet.Cells[row, 13].Text,
-                        QtdSaldoExpirar = worksheet.Cells[row, 14].Text,
-                        PeriodoSaldoExpirar = worksheet.Cells[row, 15].Text,
+                        Modalidade = worksheet.Cell(row, 1).GetString(),
+                        NumeroInstalacao = worksheet.Cell(row, 2).GetString(),
+                        Periodo = ParsePeriodo(worksheet.Cell(row, 3).GetString()),
+                        Quota = worksheet.Cell(row, 4).GetString(),
+                        PostoHorario = worksheet.Cell(row, 5).GetString(),
+                        SaldoAnterior = worksheet.Cell(row, 6).GetString(),
+                        SaldoExpirado = worksheet.Cell(row, 7).GetString(),
+                        QtdConsumo = worksheet.Cell(row, 8).GetString(),
+                        QtdGeracao = worksheet.Cell(row, 9).GetString(),
+                        QtdCompensacao = worksheet.Cell(row, 10).GetString(),
+                        QtdTransfencia = worksheet.Cell(row, 11).GetString(),
+                        QtdRecebimento = worksheet.Cell(row, 12).GetString(),
+                        SaldoAtual = worksheet.Cell(row, 13).GetString(),
+                        QtdSaldoExpirar = worksheet.Cell(row, 14).GetString(),
+                        PeriodoSaldoExpirar = worksheet.Cell(row, 15).GetString(),
                     };
                     tabela.Add(item);
                 }
@@ -68,7 +72,7 @@ namespace GeradorRelatoriosSolarwelleEnergia.Dominio.DTO
             List<TabelaCemig> tabela = doc.Descendants("Linha")
                 .Select(campo => new TabelaCemig
                 {
-                    Periodo = (string)campo.Element("Periodo"),
+                    Periodo = ParsePeriodo((string)campo.Element("Periodo")),
                     Modalidade = (string)campo.Element("Modalidade"),
                     NumeroInstalacao = (string)campo.Element("Instalacao"),
                     Quota = (string)campo.Element("Quota"),
@@ -86,6 +90,16 @@ namespace GeradorRelatoriosSolarwelleEnergia.Dominio.DTO
                 }).ToList();
             
             return tabela;
+        }
+
+        private static string ParsePeriodo(string periodo)
+        {
+            // Se estiver no formato MM/yyyy, converte para yyyy/MM para ficar padrão
+            if (DateTime.TryParseExact(periodo, "MM/yyyy", null, System.Globalization.DateTimeStyles.None, out DateTime dt))
+            {
+                return dt.ToString("yyyy/MM");
+            }
+            return periodo; // se já estiver no formato esperado, retorna como está
         }
 
         public override string ToString()

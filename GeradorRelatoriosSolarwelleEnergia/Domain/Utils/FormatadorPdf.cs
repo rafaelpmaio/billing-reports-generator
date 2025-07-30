@@ -27,12 +27,15 @@ namespace GeradorRelatoriosSolarwelleEnergia.Dominio.Utils
         public void gerarRelatorio(RelatorioCliente relatorioCliente)
         {
             byte[] imagemGraficoAnual = GraficoEconomiaAnual.GerarGraficoColunas(relatorioCliente);
+            //Quebra endereço em 2 linhas
+            var linhasEndereco = QuebrarTextoEmLinhas(relatorioCliente.Endereco, 60);
+            var enderecoLinha1 = linhasEndereco.ElementAtOrDefault(0);
+            var enderecoLinha2 = linhasEndereco.ElementAtOrDefault(1);
             //Cria a lista com os campos que serão inseridos no pdf
             var listaCamposPdf = new List<(string valor, float[] coordenadas, bool negritoEBranco, int tamanhoFonte)>
         {            
             //Dados referentes ao mês
             (relatorioCliente.MesReferenciaBoleto, new float[] {155,455}, false, 14),
-            //DateTime.Now.AddMonths(-1).ToString("MMMM/yyyy").ToUpper()
             (relatorioCliente.NumeroInstalacao,new float[] { 50, 385 }, false, 16),
             (relatorioCliente.Vencimento ,new float[] { 50, 290 }, false, 16),
             ($"R$ {relatorioCliente.TotalAPagar.ToString("F2")}", new float[] { 50, 190 }, false, 16),
@@ -42,15 +45,16 @@ namespace GeradorRelatoriosSolarwelleEnergia.Dominio.Utils
             ($"R$ {relatorioCliente.HistoricoEconomia.Sum(kvp => kvp.Value).ToString("F2")}",new float[] { 280, 190 }, true, 16),
 
             //Dados do cliente
-            ($"CNPJ/CPF: {relatorioCliente.CnpjOuCpf}", new float[] {480, 550}, true, 8),
-            ($"RAZÃO SOCIAL/NOME: {relatorioCliente.RazaoSocialOuNome}", new float[] {480, 535}, true, 8),
-            ($"ENDEREÇO: {relatorioCliente.Endereco}", new float[] {480, 520}, true, 8),
-            ($"EMAIL: {relatorioCliente.Email}", new float[] {480, 505}, true, 8),    
+            ($"CNPJ/CPF: {relatorioCliente.CnpjOuCpf}", new float[] {480, 555}, true, 8),
+            ($"RAZÃO SOCIAL/NOME: {relatorioCliente.RazaoSocialOuNome}", new float[] {480, 540}, true, 8),
+            ($"EMAIL: {relatorioCliente.Email}", new float[] {480, 525}, true, 8),    
+            ($"ENDEREÇO: {enderecoLinha1}", new float[] {480, 510}, true, 8),
+            (enderecoLinha2, new float[] {480, 500}, true, 8),
             
             //Área do Gráfico
             ($"Economia Anual (valores em R$):", new float[] {500, 415}, false, 14),
             ($"R$ {relatorioCliente.QtdCompensacao.ToString("F2")}", new float[] {670, 478}, false, 14),
-            ($"R$ {relatorioCliente.QtdConsumo.ToString("F2")}", new float[] {670, 457}, false, 14),
+            ($"R$ {relatorioCliente.QtdCompensacao.ToString("F2")}", new float[] {670, 457}, false, 14),
         };
 
             PdfReader reader = new PdfReader(this.CaminhoPdfModelo);
@@ -109,5 +113,42 @@ namespace GeradorRelatoriosSolarwelleEnergia.Dominio.Utils
                 }
             }
         }
+        private List<string> QuebrarTextoEmLinhas(string texto, int maxCaracteresPorLinha, int maxLinhas = 2)
+        {
+            var linhas = new List<string>();
+            var palavras = texto.Split(' ');
+
+            string linhaAtual = "";
+
+            foreach (var palavra in palavras)
+            {
+                if ((linhaAtual + " " + palavra).Trim().Length <= maxCaracteresPorLinha)
+                {
+                    linhaAtual = (linhaAtual + " " + palavra).Trim();
+                }
+                else
+                {
+                    linhas.Add(linhaAtual);
+                    linhaAtual = palavra;
+
+                    if (linhas.Count == maxLinhas - 1)
+                        break;
+                }
+            }
+            // Se ainda sobrou algo no buffer, adiciona como última linha (mesmo que ultrapasse o limite de caracteres)
+            var restante = string.Join(" ", palavras.Skip(linhas.SelectMany(l => l.Split(' ')).Count()));
+            if (!string.IsNullOrWhiteSpace(restante))
+            {
+                linhas.Add(restante.Trim());
+            }
+            else if (!string.IsNullOrWhiteSpace(linhaAtual) && linhas.Count < maxLinhas)
+            {
+                linhas.Add(linhaAtual.Trim());
+            }
+
+            return linhas;
+
+        }
+
     }
 }

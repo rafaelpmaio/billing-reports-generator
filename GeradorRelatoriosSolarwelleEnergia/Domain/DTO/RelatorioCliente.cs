@@ -7,6 +7,7 @@ using System.Text;
 using System.Threading.Tasks;
 using GeradorRelatoriosSolarwelleEnergia.Dominio.Entidades;
 using Newtonsoft.Json;
+using System.Globalization;
 
 namespace GeradorRelatoriosSolarwelleEnergia.Dominio.DTO
 {
@@ -30,10 +31,10 @@ namespace GeradorRelatoriosSolarwelleEnergia.Dominio.DTO
         {
             this.NumeroInstalacao = tabelaCemig.NumeroInstalacao;
             DateTime data =  DateTime.ParseExact(tabelaCemig.Periodo, "yyyy/MM", null);
-            this.Vencimento = new DateTime(data.Year, data.AddMonths(1).Month,3).ToString("dd/MM/yyyy", new CultureInfo("pt-BR")).ToUpper();
+            this.Vencimento = new DateTime(data.Year, data.AddMonths(2).Month,3).ToString("dd/MM/yyyy", new CultureInfo("pt-BR")).ToUpper();
             this.MesReferenciaBoleto = new DateTime(data.Year, data.Month, 1).ToString("MMMM/yyyy", new CultureInfo("pt-BR")).ToUpper();
-            this.QtdConsumo = float.Parse(tabelaCemig.QtdConsumo) /10 ;
-            this.QtdCompensacao = float.Parse(tabelaCemig.QtdCompensacao) /10;
+            this.QtdConsumo = float.Parse(tabelaCemig.QtdConsumo, CultureInfo.InvariantCulture)  ;
+            this.QtdCompensacao = float.Parse(tabelaCemig.QtdCompensacao, CultureInfo.InvariantCulture);
             this.Endereco = cliente.Endereco;
             this.Email = cliente.Email;
             this.ValorKwhHora = kwhHora;

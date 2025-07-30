@@ -64,7 +64,7 @@
             txtBox_CaminhoXmlCemig.ReadOnly = true;
             txtBox_CaminhoXmlCemig.Size = new Size(269, 23);
             txtBox_CaminhoXmlCemig.TabIndex = 2;
-            txtBox_CaminhoXmlCemig.Click += txtBox_CaminhoXml_Click;
+            txtBox_CaminhoXmlCemig.Click += txtBox_CaminhoTabelaCemig_Click;
             // 
             // lbl_ValorKwH
             // 

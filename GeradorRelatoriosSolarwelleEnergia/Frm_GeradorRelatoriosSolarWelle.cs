@@ -11,11 +11,11 @@ namespace GeradorRelatoriosSolarwelleEnergia
             InitializeComponent();
         }
 
-        private void txtBox_CaminhoXml_Click(object sender, EventArgs e)
+        private void txtBox_CaminhoTabelaCemig_Click(object sender, EventArgs e)
         {
             OpenFileDialog openFileDialog = new OpenFileDialog();
-            openFileDialog.Title = "Selecione um arquivo XML";
-            openFileDialog.Filter = "Arquivos XML (*.xml)|*.xml";
+            openFileDialog.Title = "Selecione um arquivo XML ou XLSX";
+            openFileDialog.Filter = "Arquivos XML ou Excel (*.xml;*.xlsx)|*.xml;*.xlsx|Todos os arquivos (*.*)|*.*";
             openFileDialog.InitialDirectory = Environment.GetFolderPath(Environment.SpecialFolder.MyDocuments);
 
             if (openFileDialog.ShowDialog() == DialogResult.OK)
@@ -81,9 +81,25 @@ namespace GeradorRelatoriosSolarwelleEnergia
             string filePathTabelaClientes = txtBox_CaminhoTabelaClientes.Text;
             float valorKwhH = float.Parse(txtBox_ValorKwH.Text);
 
-            List<TabelaCemig> listaTabelaCemig = TabelaCemig.LerTabelaXML(filePathTabelaCemig);
+            List<TabelaCemig> listaTabelaCemig;
+            // Detecta a extensão da Tabel CEMIG e chama o método correspondente
+            string extensao = Path.GetExtension(filePathTabelaCemig).ToLower();
+            if (extensao == ".xml")
+            {
+                listaTabelaCemig = TabelaCemig.LerTabelaXML(filePathTabelaCemig);
+            }
+            else if (extensao == ".xlsx")
+            {
+                listaTabelaCemig = TabelaCemig.LerTabelaExcel(filePathTabelaCemig);
+            }
+            else
+            {
+                MessageBox.Show("Formato de arquivo da Tabela CEMIG não suportado. Use XML ou XLSX.", "Erro", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                return;
+            }
+
             List<Cliente> listaClientes = Cliente.LerTabelaExcel(filePathTabelaClientes);
-                    
+
             string caminhoPdfModelo = Path.Combine(AppContext.BaseDirectory, "Assets", "modeloapresentacao.pdf");
 
             var listaRelatorios = RelatorioCliente.montarTabelaDeRelatorios(listaTabelaCemig, listaClientes, valorKwhH);
@@ -118,5 +134,6 @@ namespace GeradorRelatoriosSolarwelleEnergia
                 !string.IsNullOrWhiteSpace(txtBox_CaminhoTabelaClientes.Text) &&
                 !string.IsNullOrWhiteSpace(txtBox_ValorKwH.Text);
         }
+
     }
 }
