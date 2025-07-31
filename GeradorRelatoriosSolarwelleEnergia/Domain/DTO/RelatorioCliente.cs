@@ -25,6 +25,7 @@ namespace GeradorRelatoriosSolarwelleEnergia.Dominio.DTO
         public float ValorKwhHora { get; set; }
         public double TotalSemDesconto { get; set; }
         public double TotalAPagar { get; set; }
+        public double ValorEconomizadoNoMes => TotalSemDesconto - TotalAPagar;
         public Dictionary<string, float> HistoricoEconomia { get; set; } = new Dictionary<string, float>();
 
         public RelatorioCliente(Cliente cliente, TabelaCemig tabelaCemig, float kwhHora)
@@ -38,7 +39,7 @@ namespace GeradorRelatoriosSolarwelleEnergia.Dominio.DTO
             this.Endereco = cliente.Endereco;
             this.Email = cliente.Email;
             this.ValorKwhHora = kwhHora;
-            this.TotalSemDesconto = this.QtdConsumo * this.ValorKwhHora;
+            this.TotalSemDesconto = this.QtdCompensacao * this.ValorKwhHora;
             this.TotalAPagar = this.TotalSemDesconto * 0.8;
 
             this.CarregarHistoricoEconomiaAnual();

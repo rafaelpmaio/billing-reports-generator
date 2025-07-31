@@ -27,6 +27,7 @@ namespace GeradorRelatoriosSolarwelleEnergia.Dominio.Utils
         public void gerarRelatorio(RelatorioCliente relatorioCliente)
         {
             byte[] imagemGraficoAnual = GraficoEconomiaAnual.GerarGraficoColunas(relatorioCliente);
+            var economiaTotal = (relatorioCliente.HistoricoEconomia.Sum(kvp => kvp.Value) + relatorioCliente.ValorEconomizadoNoMes).ToString("F2");
             //Quebra endereço em 2 linhas
             var linhasEndereco = QuebrarTextoEmLinhas(relatorioCliente.Endereco, 60);
             var enderecoLinha1 = linhasEndereco.ElementAtOrDefault(0);
@@ -41,8 +42,8 @@ namespace GeradorRelatoriosSolarwelleEnergia.Dominio.Utils
             ($"R$ {relatorioCliente.TotalAPagar.ToString("F2")}", new float[] { 50, 190 }, false, 16),
 
             ($"R$ {relatorioCliente.TotalSemDesconto.ToString("F2")}", new float[] { 280, 385 }, true, 16),
-            ($"R$ {(relatorioCliente.TotalSemDesconto - relatorioCliente.TotalAPagar).ToString("F2")}",new float[] { 280, 290 }, true, 16),
-            ($"R$ {relatorioCliente.HistoricoEconomia.Sum(kvp => kvp.Value).ToString("F2")}",new float[] { 280, 190 }, true, 16),
+            ($"R$ {(relatorioCliente.ValorEconomizadoNoMes).ToString("F2")}",new float[] { 280, 290 }, true, 16),
+            ($"R$ {economiaTotal}",new float[] { 280, 190 }, true, 16),
 
             //Dados do cliente
             ($"CNPJ/CPF: {relatorioCliente.CnpjOuCpf}", new float[] {480, 555}, true, 8),
@@ -52,7 +53,7 @@ namespace GeradorRelatoriosSolarwelleEnergia.Dominio.Utils
             (enderecoLinha2, new float[] {480, 500}, true, 8),
             
             //Área do Gráfico
-            ($"Economia Anual (valores em R$):", new float[] {500, 415}, false, 14),
+            ($"Economia Anual (valores em R$): R${economiaTotal}", new float[] {500, 415}, false, 14),
             ($"R$ {relatorioCliente.QtdCompensacao.ToString("F2")}", new float[] {670, 478}, false, 14),
             ($"R$ {relatorioCliente.QtdCompensacao.ToString("F2")}", new float[] {670, 457}, false, 14),
         };

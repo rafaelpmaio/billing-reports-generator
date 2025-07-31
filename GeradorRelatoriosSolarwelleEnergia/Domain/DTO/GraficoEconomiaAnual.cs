@@ -10,6 +10,34 @@ namespace GeradorRelatoriosSolarwelleEnergia.Dominio.DTO
 {
     internal class GraficoEconomiaAnual
     {
+
+        private static DateTime ParseMesAno(string chave)
+        {
+            var meses = new Dictionary<string, int>
+    {
+        { "jan", 1 }, { "fev", 2 }, { "mar", 3 }, { "abr", 4 },
+        { "mai", 5 }, { "jun", 6 }, { "jul", 7 }, { "ago", 8 },
+        { "set", 9 }, { "out", 10 }, { "nov", 11 }, { "dez", 12 }
+    };
+
+            string[] partes = chave.Split('-');
+            if (partes.Length != 2)
+                throw new FormatException($"Formato inválido: {chave}");
+
+            string mesAbrev = partes[0].ToLower().Trim().TrimEnd('.');
+            int ano = 2000 + int.Parse(partes[1]);
+
+            if (!meses.TryGetValue(mesAbrev, out int mes))
+                throw new FormatException($"Mês inválido: {mesAbrev}");
+
+            return new DateTime(ano, mes, 1);
+        }
+
+        private static string NormalizeMesAno(string chave)
+        {
+            return chave?.Trim().ToLower().TrimEnd('.');
+        }
+
         public static byte[] GerarGraficoColunas(RelatorioCliente relatorio)
         {
             int largura = 900;
@@ -28,7 +56,32 @@ namespace GeradorRelatoriosSolarwelleEnergia.Dominio.DTO
             float profundidade3D = 10;
             float alturaUtil = altura - 2 * margem;
 
-            var listaHistoricoEconomia = relatorio.HistoricoEconomia.ToList();
+            var listaHistoricoEconomia = new List<KeyValuePair<string, float>>();
+
+            //Adiciona valor economizado no mês atual à tabela
+            DateTime mesRef;
+            if (DateTime.TryParseExact(relatorio.MesReferenciaBoleto, "MMMM/yyyy", new CultureInfo("pt-BR"), DateTimeStyles.None, out mesRef))
+            {
+                // Gera chave no formato "set-25"
+                string chaveMes = mesRef.ToString("MMM-yy", new CultureInfo("pt-BR")).ToLower().Replace(".", "");
+
+                // Cria dicionário para evitar duplicatas
+                var dictHistorico = relatorio.HistoricoEconomia
+       .ToDictionary(kvp => NormalizeMesAno(kvp.Key), kvp => kvp.Value);
+
+                // Adiciona o mês atualizado
+                dictHistorico[chaveMes] = (float)relatorio.ValorEconomizadoNoMes;
+
+                listaHistoricoEconomia = dictHistorico
+        .OrderBy(kvp => ParseMesAno(kvp.Key))
+        .ToList();
+            }
+            else
+            {
+                // Caso não consiga parse, apenas copia a lista original
+                listaHistoricoEconomia = relatorio.HistoricoEconomia.ToList();
+            }
+
             float maxValorReal = listaHistoricoEconomia.Max(kvp => kvp.Value);
             float maxValor = (float)(Math.Ceiling(maxValorReal / 100) * 100);
 
@@ -38,8 +91,12 @@ namespace GeradorRelatoriosSolarwelleEnergia.Dominio.DTO
             // Estilos
             Pen eixoPen = new Pen(Color.Black, 2);
             Pen gradePen = new Pen(Color.LightGray, 1);
-            Brush barraFrontal = new SolidBrush(Color.DodgerBlue);
-            Brush barraLateral = new SolidBrush(Color.MidnightBlue);
+
+            Color azulPetroleo = Color.FromArgb(0, 153, 153);
+            Color azulPetroleoEscuro = Color.FromArgb(0, 102, 102);
+
+            Brush barraFrontal = new SolidBrush(azulPetroleo);
+            Brush barraLateral = new SolidBrush(azulPetroleoEscuro);
             Font fonte = new Font("Arial", 12, FontStyle.Bold);
 
             //Brush barraBrush = new SolidBrush(Color.DodgerBlue);
@@ -112,3 +169,4 @@ namespace GeradorRelatoriosSolarwelleEnergia.Dominio.DTO
         }
     }
 }
+
