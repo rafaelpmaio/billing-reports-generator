@@ -4,12 +4,13 @@ using System.Linq;
 using System.Reflection.PortableExecutable;
 using System.Text;
 using System.Threading.Tasks;
-using GeradorRelatoriosSolarwelleEnergia.Dominio.DTO;
 using iText.Kernel.Pdf.Canvas.Parser.Listener;
 using iText.Kernel.Pdf.Canvas.Parser;
 using iText.Kernel.Pdf;
 using iText.Kernel.Pdf.Canvas;
 using iText.IO.Image;
+using GeradorRelatoriosSolarwelleEnergia.Domain.Utils;
+using GeradorRelatoriosSolarwelleEnergia.Domain.Entities;
 
 namespace GeradorRelatoriosSolarwelleEnergia.Dominio.Utils
 {

@@ -1,6 +1,9 @@
-using GeradorRelatoriosSolarwelleEnergia.Dominio.DTO;
+using GeradorRelatoriosSolarwelleEnergia.Domain.Entities;
+using GeradorRelatoriosSolarwelleEnergia.Domain.Utils;
 using GeradorRelatoriosSolarwelleEnergia.Dominio.Entidades;
 using GeradorRelatoriosSolarwelleEnergia.Dominio.Utils;
+using GeradorRelatoriosSolarwelleEnergia.Infrastructure;
+using GeradorRelatoriosSolarwelleEnergia.Services;
 
 namespace GeradorRelatoriosSolarwelleEnergia
 {
@@ -97,12 +100,13 @@ namespace GeradorRelatoriosSolarwelleEnergia
                 MessageBox.Show("Formato de arquivo da Tabela CEMIG não suportado. Use XML ou XLSX.", "Erro", MessageBoxButtons.OK, MessageBoxIcon.Error);
                 return;
             }
-
-            List<Cliente> listaClientes = Cliente.LerTabelaExcel(filePathTabelaClientes);
+            
+            List<Cliente> listaClientes = ClienteReader.LerTabelaExcel(filePathTabelaClientes);
 
             string caminhoPdfModelo = Path.Combine(AppContext.BaseDirectory, "Assets", "modeloapresentacao.pdf");
 
-            var listaRelatorios = RelatorioCliente.montarTabelaDeRelatorios(listaTabelaCemig, listaClientes, valorKwhH);
+            var historicoEconomia = HistoricoEconomiaLoader.Carregar();
+            var listaRelatorios = RelatorioClienteService.MontarTabelaDeRelatorios(listaTabelaCemig, listaClientes, valorKwhH, historicoEconomia);
 
             //TRECHO ENGESSADO, AJUSTAR
             string pastaDestino = @"C:\Users\Usuário\Desktop\softwaregordao\relatorios\";
@@ -134,6 +138,5 @@ namespace GeradorRelatoriosSolarwelleEnergia
                 !string.IsNullOrWhiteSpace(txtBox_CaminhoTabelaClientes.Text) &&
                 !string.IsNullOrWhiteSpace(txtBox_ValorKwH.Text);
         }
-
     }
 }

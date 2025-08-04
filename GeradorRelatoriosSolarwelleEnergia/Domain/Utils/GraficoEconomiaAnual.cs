@@ -5,8 +5,9 @@ using System.Globalization;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using GeradorRelatoriosSolarwelleEnergia.Domain.Entities;
 
-namespace GeradorRelatoriosSolarwelleEnergia.Dominio.DTO
+namespace GeradorRelatoriosSolarwelleEnergia.Domain.Utils
 {
     internal class GraficoEconomiaAnual
     {
@@ -109,10 +110,10 @@ namespace GeradorRelatoriosSolarwelleEnergia.Dominio.DTO
             int numLinhasGrade = 5;
             for (int i = 1; i <= numLinhasGrade; i++)
             {
-                float yGrade = yBase - (alturaUtil / numLinhasGrade) * i;
+                float yGrade = yBase - alturaUtil / numLinhasGrade * i;
                 g.DrawLine(gradePen, margem, yGrade, largura - margem, yGrade);
 
-                float valorGrade = (maxValor / numLinhasGrade) * i;
+                float valorGrade = maxValor / numLinhasGrade * i;
                 string label = valorGrade.ToString("0.##");
                 SizeF tamanho = g.MeasureString(label, fonte);
                 g.DrawString(label, fonte, Brushes.Gray, margem - tamanho.Width - 5, yGrade - tamanho.Height / 2);
@@ -124,7 +125,7 @@ namespace GeradorRelatoriosSolarwelleEnergia.Dominio.DTO
                 string mes = item.Key;
                 float valor = item.Value;
 
-                float alturaBarra = (valor / maxValor) * alturaUtil;
+                float alturaBarra = valor / maxValor * alturaUtil;
                 float y = yBase - alturaBarra;
 
                 // Frente da barra

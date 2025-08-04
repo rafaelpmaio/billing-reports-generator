@@ -31,9 +31,13 @@
   </ItemGroup>
 
 	<ItemGroup>
-		<Content Include="assets\**\*.*">
+		<Content Include="Assets\**\*.*">
 			<CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
 		</Content>
+	</ItemGroup>
+
+	<ItemGroup>
+	  <Folder Include="Domain\DTO\" />
 	</ItemGroup>
 
 </Project>

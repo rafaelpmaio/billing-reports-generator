@@ -8,7 +8,7 @@ using System.Xml.Linq;
 using OfficeOpenXml;
 using ClosedXML.Excel;
 
-namespace GeradorRelatoriosSolarwelleEnergia.Dominio.DTO
+namespace GeradorRelatoriosSolarwelleEnergia.Domain.Entities
 {
     internal class TabelaCemig
     {
@@ -88,7 +88,7 @@ namespace GeradorRelatoriosSolarwelleEnergia.Dominio.DTO
                     QtdSaldoExpirar = (string)campo.Element("Qtd_saldo_exp"),
                     PeriodoSaldoExpirar = (string)campo.Element("Per_prox_saldo_exp"),
                 }).ToList();
-            
+
             return tabela;
         }
 
@@ -99,7 +99,7 @@ namespace GeradorRelatoriosSolarwelleEnergia.Dominio.DTO
             {
                 return dt.ToString("yyyy/MM");
             }
-            return periodo; // se já estiver no formato esperado, retorna como está
+            return periodo;
         }
 
         public override string ToString()
