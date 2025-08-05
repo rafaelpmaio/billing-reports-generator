@@ -9,7 +9,7 @@ using GeradorRelatoriosSolarwelleEnergia.Domain.Entities;
 
 namespace GeradorRelatoriosSolarwelleEnergia.Domain.Utils
 {
-    internal class GraficoEconomiaAnual
+    internal class GraficoEconomiaAnualGenerator
     {
 
         private static DateTime ParseMesAno(string chave)

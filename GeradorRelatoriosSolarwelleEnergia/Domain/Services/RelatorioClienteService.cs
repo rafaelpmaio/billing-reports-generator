@@ -3,15 +3,15 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using GeradorRelatoriosSolarwelleEnergia.Domain.Builders;
 using GeradorRelatoriosSolarwelleEnergia.Domain.Entities;
-using GeradorRelatoriosSolarwelleEnergia.Domain.Utils;
 using GeradorRelatoriosSolarwelleEnergia.Dominio.Entidades;
 
-namespace GeradorRelatoriosSolarwelleEnergia.Services
+namespace GeradorRelatoriosSolarwelleEnergia.Domain.Services
 {
     internal class RelatorioClienteService
     {
-        public static List<RelatorioCliente> MontarTabelaDeRelatorios(List<TabelaCemig> listaTabelaCemig, List<Cliente> listaClientes, float valorKwhH, Dictionary<string, Dictionary<string,float>> historicoEconomia)
+        public static List<RelatorioCliente> MontarTabelaDeRelatorios(List<TabelaCemig> listaTabelaCemig, List<Cliente> listaClientes, float valorKwhH, Dictionary<string, Dictionary<string, float>> historicoEconomia)
         {
             var listaRelatorios = new List<RelatorioCliente>();
 

@@ -1,9 +1,9 @@
 using GeradorRelatoriosSolarwelleEnergia.Domain.Entities;
-using GeradorRelatoriosSolarwelleEnergia.Domain.Utils;
+using GeradorRelatoriosSolarwelleEnergia.Domain.Services;
 using GeradorRelatoriosSolarwelleEnergia.Dominio.Entidades;
 using GeradorRelatoriosSolarwelleEnergia.Dominio.Utils;
 using GeradorRelatoriosSolarwelleEnergia.Infrastructure;
-using GeradorRelatoriosSolarwelleEnergia.Services;
+using GeradorRelatoriosSolarwelleEnergia.Infrastructure.Readers;
 
 namespace GeradorRelatoriosSolarwelleEnergia
 {

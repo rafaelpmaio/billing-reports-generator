@@ -7,7 +7,7 @@ using ClosedXML.Excel;
 using GeradorRelatoriosSolarwelleEnergia.Domain.Entities;
 using System.Xml.Linq;
 
-namespace GeradorRelatoriosSolarwelleEnergia.Domain.Utils
+namespace GeradorRelatoriosSolarwelleEnergia.Domain.Builders
 {
     internal class TabelaCemigBuilder
     {

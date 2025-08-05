@@ -27,7 +27,7 @@ namespace GeradorRelatoriosSolarwelleEnergia.Dominio.Utils
 
         public void gerarRelatorio(RelatorioCliente relatorioCliente)
         {
-            byte[] imagemGraficoAnual = GraficoEconomiaAnual.GerarGraficoColunas(relatorioCliente);
+            byte[] imagemGraficoAnual = GraficoEconomiaAnualGenerator.GerarGraficoColunas(relatorioCliente);
             var economiaTotal = (relatorioCliente.HistoricoEconomia.Sum(kvp => kvp.Value) + relatorioCliente.ValorEconomizadoNoMes).ToString("F2");
             //Quebra endereço em 2 linhas
             var linhasEndereco = QuebrarTextoEmLinhas(relatorioCliente.Endereco, 60);

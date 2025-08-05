@@ -7,8 +7,9 @@ using ClosedXML.Excel;
 using GeradorRelatoriosSolarwelleEnergia.Domain.Entities;
 using GeradorRelatoriosSolarwelleEnergia.Domain.Utils;
 using System.Xml.Linq;
+using GeradorRelatoriosSolarwelleEnergia.Domain.Builders;
 
-namespace GeradorRelatoriosSolarwelleEnergia.Services
+namespace GeradorRelatoriosSolarwelleEnergia.Domain.Services
 {
     internal class TabelaCemigService
     {
@@ -19,7 +20,7 @@ namespace GeradorRelatoriosSolarwelleEnergia.Services
             using var workbook = new XLWorkbook(filePath);
             var worksheet = workbook.Worksheets.Worksheet(1);
             int rowCount = worksheet.LastRowUsed().RowNumber();
-
+            
             var builder = new TabelaCemigBuilder();
 
             for (int row = 2; row <= rowCount; row++)
@@ -29,7 +30,7 @@ namespace GeradorRelatoriosSolarwelleEnergia.Services
                     .Build();
 
                 tabela.Add(item);
-                builder = new TabelaCemigBuilder(); 
+                builder = new TabelaCemigBuilder();
             }
 
             return tabela;

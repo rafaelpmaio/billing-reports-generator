@@ -7,7 +7,7 @@ using System.Threading.Tasks;
 using GeradorRelatoriosSolarwelleEnergia.Domain.Entities;
 using GeradorRelatoriosSolarwelleEnergia.Dominio.Entidades;
 
-namespace GeradorRelatoriosSolarwelleEnergia.Domain.Utils
+namespace GeradorRelatoriosSolarwelleEnergia.Domain.Builders
 {
     internal class RelatorioClienteBuilder
     {
