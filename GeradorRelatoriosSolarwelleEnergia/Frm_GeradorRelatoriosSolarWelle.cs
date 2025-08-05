@@ -85,15 +85,18 @@ namespace GeradorRelatoriosSolarwelleEnergia
             float valorKwhH = float.Parse(txtBox_ValorKwH.Text);
 
             List<TabelaCemig> listaTabelaCemig;
+            var service = new TabelaCemigService();
+
             // Detecta a extensão da Tabel CEMIG e chama o método correspondente
             string extensao = Path.GetExtension(filePathTabelaCemig).ToLower();
+
             if (extensao == ".xml")
             {
-                listaTabelaCemig = TabelaCemig.LerTabelaXML(filePathTabelaCemig);
+                listaTabelaCemig = service.LerTabelaXml(filePathTabelaCemig);
             }
             else if (extensao == ".xlsx")
             {
-                listaTabelaCemig = TabelaCemig.LerTabelaExcel(filePathTabelaCemig);
+                listaTabelaCemig = service.LerTabelaExcel(filePathTabelaCemig);
             }
             else
             {

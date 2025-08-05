@@ -10,7 +10,6 @@ namespace GeradorRelatoriosSolarwelleEnergia.Domain.Utils
 {
     internal class ClienteReader
     {
-
         public static List<Cliente> LerTabelaExcel(string filePath)
         {
             var tabela = new List<Cliente>();
