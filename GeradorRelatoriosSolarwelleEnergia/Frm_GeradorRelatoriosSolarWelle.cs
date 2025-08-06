@@ -2,7 +2,6 @@ using GeradorRelatoriosSolarwelleEnergia.Application.Services;
 using GeradorRelatoriosSolarwelleEnergia.Domain.Entities;
 using GeradorRelatoriosSolarwelleEnergia.Domain.Services;
 using GeradorRelatoriosSolarwelleEnergia.Dominio.Entidades;
-using GeradorRelatoriosSolarwelleEnergia.Infrastructure;
 using GeradorRelatoriosSolarwelleEnergia.Infrastructure.Readers;
 
 namespace GeradorRelatoriosSolarwelleEnergia
@@ -108,7 +107,7 @@ namespace GeradorRelatoriosSolarwelleEnergia
 
             string caminhoPdfModelo = Path.Combine(AppContext.BaseDirectory, "Assets", "modeloapresentacao.pdf");
 
-            var historicoEconomia = HistoricoEconomiaLoader.Carregar();
+            var historicoEconomia = ClientEconomyHistoryReader.Carregar();
             var listaRelatorios = RelatorioClienteService.MontarTabelaDeRelatorios(listaTabelaCemig, listaClientes, valorKwhH, historicoEconomia);
 
             //TRECHO ENGESSADO, AJUSTAR

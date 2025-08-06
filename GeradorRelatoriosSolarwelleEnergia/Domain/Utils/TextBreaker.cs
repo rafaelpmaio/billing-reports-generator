@@ -39,7 +39,6 @@ namespace GeradorRelatoriosSolarwelleEnergia.Domain.Utils
             {
                 lines.Add(currentLine.Trim());
             }
-
             return lines;
 
         }

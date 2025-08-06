@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using GeradorRelatoriosSolarwelleEnergia.ApplicationLayer.Services;
 using GeradorRelatoriosSolarwelleEnergia.Domain.Entities;
 using GeradorRelatoriosSolarwelleEnergia.Domain.Utils;
 using GeradorRelatoriosSolarwelleEnergia.Infrastructure.Pdf;
@@ -23,7 +24,7 @@ namespace GeradorRelatoriosSolarwelleEnergia.Application.Services
 
         public void Gerar (RelatorioCliente relatorio)
         {
-            var imagemGrafico = GraficoEconomiaAnualGenerator.GerarGraficoColunas(relatorio);
+            var imagemGrafico = AnnualEconomyGraphicGenerator.Generate(relatorio);
             var campos = PdfMapperReport.Map(relatorio);
 
             using var reader = new PdfReader(_caminhoModelo);
