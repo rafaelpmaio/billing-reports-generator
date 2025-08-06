@@ -1,7 +1,7 @@
+using GeradorRelatoriosSolarwelleEnergia.Application.Services;
 using GeradorRelatoriosSolarwelleEnergia.Domain.Entities;
 using GeradorRelatoriosSolarwelleEnergia.Domain.Services;
 using GeradorRelatoriosSolarwelleEnergia.Dominio.Entidades;
-using GeradorRelatoriosSolarwelleEnergia.Dominio.Utils;
 using GeradorRelatoriosSolarwelleEnergia.Infrastructure;
 using GeradorRelatoriosSolarwelleEnergia.Infrastructure.Readers;
 
@@ -103,7 +103,7 @@ namespace GeradorRelatoriosSolarwelleEnergia
                 MessageBox.Show("Formato de arquivo da Tabela CEMIG não suportado. Use XML ou XLSX.", "Erro", MessageBoxButtons.OK, MessageBoxIcon.Error);
                 return;
             }
-            
+
             List<Cliente> listaClientes = ClienteReader.LerTabelaExcel(filePathTabelaClientes);
 
             string caminhoPdfModelo = Path.Combine(AppContext.BaseDirectory, "Assets", "modeloapresentacao.pdf");
@@ -129,8 +129,8 @@ namespace GeradorRelatoriosSolarwelleEnergia
                     contador++;
                 }
 
-                FormatadorPdf formatadorPdf = new FormatadorPdf(caminhoPdfModelo, caminhoPdfFormatado);
-                formatadorPdf.gerarRelatorio(relatorio);
+                var formatadorPdf = new GeradorRelatorioPdf(caminhoPdfModelo, caminhoPdfFormatado);
+                formatadorPdf.Gerar(relatorio);
             }
         }
 
