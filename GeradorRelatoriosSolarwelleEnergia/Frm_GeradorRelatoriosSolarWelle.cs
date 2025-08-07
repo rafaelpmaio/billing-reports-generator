@@ -1,16 +1,27 @@
 using GeradorRelatoriosSolarwelleEnergia.Application.Services;
+using GeradorRelatoriosSolarwelleEnergia.ApplicationLayer.Services;
 using GeradorRelatoriosSolarwelleEnergia.Domain.Entities;
 using GeradorRelatoriosSolarwelleEnergia.Domain.Services;
 using GeradorRelatoriosSolarwelleEnergia.Dominio.Entidades;
+using GeradorRelatoriosSolarwelleEnergia.Infrastructure.Pdf;
 using GeradorRelatoriosSolarwelleEnergia.Infrastructure.Readers;
 
 namespace GeradorRelatoriosSolarwelleEnergia
 {
     public partial class Frm_GeradorRelatoriosSolarWelle : Form
     {
+        private readonly ReportGeneratorHandler _handler;
         public Frm_GeradorRelatoriosSolarWelle()
         {
             InitializeComponent();
+
+            _handler = new ReportGeneratorHandler(
+                new TabelaCemigService(),
+                new ClienteReader(),
+                new ClientEconomyHistoryReader(),
+                new ClientReportService(),
+                new PdfReportSaver()
+                );
         }
 
         private void txtBox_CaminhoTabelaCemig_Click(object sender, EventArgs e)
@@ -79,58 +90,22 @@ namespace GeradorRelatoriosSolarwelleEnergia
 
         private void btn_GerarRelatorios_Click(object sender, EventArgs e)
         {
-            string filePathTabelaCemig = txtBox_CaminhoXmlCemig.Text;
-            string filePathTabelaClientes = txtBox_CaminhoTabelaClientes.Text;
-            float valorKwhH = float.Parse(txtBox_ValorKwH.Text);
-
-            List<TabelaCemig> listaTabelaCemig;
-            var service = new TabelaCemigService();
-
-            // Detecta a extensão da Tabel CEMIG e chama o método correspondente
-            string extensao = Path.GetExtension(filePathTabelaCemig).ToLower();
-
-            if (extensao == ".xml")
+            try
             {
-                listaTabelaCemig = service.LerTabelaXml(filePathTabelaCemig);
+                string cemigTablePath = txtBox_CaminhoXmlCemig.Text;
+                string clientsTablePath = txtBox_CaminhoTabelaClientes.Text;
+                float kwhValue = float.Parse(txtBox_ValorKwH.Text);
+                string destinyFolder = @"C:\Users\Usuário\Desktop\softwaregordao\relatorios\";
+                string pdfModel = Path.Combine(AppContext.BaseDirectory, "Assets", "modeloapresentacao.pdf");
+
+                _handler.Generate(cemigTablePath, clientsTablePath, kwhValue, destinyFolder, pdfModel);
+                MessageBox.Show("Relatórios gerados com sucesso!", "Sucesso", MessageBoxButtons.OK, MessageBoxIcon.Information);
             }
-            else if (extensao == ".xlsx")
+            catch (Exception ex)
             {
-                listaTabelaCemig = service.LerTabelaExcel(filePathTabelaCemig);
-            }
-            else
-            {
-                MessageBox.Show("Formato de arquivo da Tabela CEMIG não suportado. Use XML ou XLSX.", "Erro", MessageBoxButtons.OK, MessageBoxIcon.Error);
-                return;
+                MessageBox.Show($"Erro ao gerar relatórios: {ex.Message}", "Erro", MessageBoxButtons.OK, MessageBoxIcon.Error);
             }
 
-            List<Cliente> listaClientes = ClienteReader.LerTabelaExcel(filePathTabelaClientes);
-
-            string caminhoPdfModelo = Path.Combine(AppContext.BaseDirectory, "Assets", "modeloapresentacao.pdf");
-
-            var historicoEconomia = ClientEconomyHistoryReader.Carregar();
-            var listaRelatorios = RelatorioClienteService.MontarTabelaDeRelatorios(listaTabelaCemig, listaClientes, valorKwhH, historicoEconomia);
-
-            //TRECHO ENGESSADO, AJUSTAR
-            string pastaDestino = @"C:\Users\Usuário\Desktop\softwaregordao\relatorios\";
-
-            foreach (var relatorio in listaRelatorios)
-            {
-                string nomeBase = relatorio.RazaoSocialOuNome.Trim();
-                string nomeArquivo = nomeBase + ".pdf";
-                string caminhoPdfFormatado = Path.Combine(pastaDestino, nomeArquivo);
-
-                //Contador adc ao nome do arquivo em caso de haver mais de um relatório por cliente
-                int contador = 2;
-                while (File.Exists(caminhoPdfFormatado))
-                {
-                    nomeArquivo = $"{nomeBase}({contador}).pdf";
-                    caminhoPdfFormatado = Path.Combine(pastaDestino, nomeArquivo);
-                    contador++;
-                }
-
-                var formatadorPdf = new GeradorRelatorioPdf(caminhoPdfModelo, caminhoPdfFormatado);
-                formatadorPdf.Gerar(relatorio);
-            }
         }
 
         private void habilitarBotao()

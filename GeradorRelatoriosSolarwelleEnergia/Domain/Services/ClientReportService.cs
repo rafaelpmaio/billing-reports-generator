@@ -9,9 +9,9 @@ using GeradorRelatoriosSolarwelleEnergia.Dominio.Entidades;
 
 namespace GeradorRelatoriosSolarwelleEnergia.Domain.Services
 {
-    internal class RelatorioClienteService
+    internal class ClientReportService : IClientReportService
     {
-        public static List<RelatorioCliente> MontarTabelaDeRelatorios(List<TabelaCemig> listaTabelaCemig, List<Cliente> listaClientes, float valorKwhH, Dictionary<string, Dictionary<string, float>> historicoEconomia)
+        public List<RelatorioCliente> MontarTabelaDeRelatorios(List<TabelaCemig> listaTabelaCemig, List<Cliente> listaClientes, float valorKwhH, Dictionary<string, Dictionary<string, float>> historicoEconomia)
         {
             var listaRelatorios = new List<RelatorioCliente>();
 

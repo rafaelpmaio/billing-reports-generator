@@ -11,12 +11,12 @@ using iText.Kernel.Pdf;
 
 namespace GeradorRelatoriosSolarwelleEnergia.Application.Services
 {
-    internal class GeradorRelatorioPdf
+    internal class PdfReportBuilder
     {
         private readonly string _caminhoModelo;
         private readonly string _caminhoDestino;
 
-        public GeradorRelatorioPdf(string caminhoModelo, string caminhoDestino)
+        public PdfReportBuilder(string caminhoModelo, string caminhoDestino)
         {
             _caminhoModelo = caminhoModelo;
             _caminhoDestino = caminhoDestino;

@@ -31,7 +31,7 @@ namespace GeradorRelatoriosSolarwelleEnergia.Domain.Builders
                 RazaoSocialOuNome = cliente is ClientePessoaFisica pf2 ? pf2.Nome : ((ClientePessoaJuridica)cliente).RazaoSocial,
 
             };
-            if (historicoEconomia.TryGetValue(relatorio.NumeroInstalacao, out var hist))
+            if (historicoEconomia.TryGetValue(relatorio.NumeroInstalacao, out var hist)) { }
                 relatorio.HistoricoEconomia = hist;
 
             return relatorio;

@@ -9,9 +9,9 @@ using OfficeOpenXml;
 
 namespace GeradorRelatoriosSolarwelleEnergia.Infrastructure.Readers
 {
-    internal class ClienteReader
+    internal class ClienteReader : IClientReader
     {
-        public static List<Cliente> LerTabelaExcel(string filePath)
+        public List<Cliente> LerTabelaExcel(string filePath)
         {
             var tabela = new List<Cliente>();
             using (var package = new ExcelPackage(new FileInfo(filePath)))
