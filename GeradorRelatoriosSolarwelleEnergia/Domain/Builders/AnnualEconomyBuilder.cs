@@ -25,8 +25,8 @@ namespace GeradorRelatoriosSolarwelleEnergia.Domain.Builders
 
                 // Cria dicionário para evitar duplicatas
                 var dictHistorico = relatorio.HistoricoEconomia
-                    .ToDictionary(kvp => MonthYearParser.Normalize(kvp.Key), kvp => kvp.Value);
-
+                    .ToDictionary(kvp => MonthYearParser.Normalize(kvp.Key), kvp => kvp.Value);                              
+                                
                 // Adiciona o mês atualizado
                 dictHistorico[keyMonth] = (float)relatorio.ValorEconomizadoNoMes;
 

@@ -60,52 +60,53 @@ namespace GeradorRelatoriosSolarwelleEnergia.Infrastructure.Pdf
                 string label = valorGrade.ToString("0.##");
                 SizeF tamanho = graphic.MeasureString(label, font);
                 graphic.DrawString(label, font, Brushes.Gray, margin - tamanho.Width - 5, yGrade - tamanho.Height / 2);
+            }
 
-                // Desenhar barras 3D
-                foreach (var item in data)
+            // Desenhar barras 3D
+            foreach (var item in data)
+            {
+                string mes = item.Key;
+                float valor = item.Value;
+
+                float alturaBarra = valor / roundedMaxValue * utilHeigh;
+                float y = yBase - alturaBarra;
+
+                // Frente da barra
+                graphic.FillRectangle(barraFrontal, x, y, barWidth, alturaBarra);
+
+                // Lateral direita (simula 3D)
+                Point[] lateralDireita =
                 {
-                    string mes = item.Key;
-                    float valor = item.Value;
-
-                    float alturaBarra = valor / roundedMaxValue * utilHeigh;
-                    float y = yBase - alturaBarra;
-
-                    // Frente da barra
-                    graphic.FillRectangle(barraFrontal, x, y, barWidth, alturaBarra);
-
-                    // Lateral direita (simula 3D)
-                    Point[] lateralDireita =
-                    {
                     new Point((int)(x + barWidth), (int)y),
                     new Point((int)(x + barWidth + depth3D), (int)(y - depth3D)),
                     new Point((int)(x + barWidth + depth3D), (int)(y + alturaBarra - depth3D)),
                     new Point((int)(x + barWidth), (int)(y + alturaBarra))
                 };
-                    graphic.FillPolygon(barraLateral, lateralDireita);
+                graphic.FillPolygon(barraLateral, lateralDireita);
 
-                    // Topo da barra (simula profundidade no topo)
-                    Point[] topo =
-                    {
+                // Topo da barra (simula profundidade no topo)
+                Point[] topo =
+                {
                     new Point((int)x, (int)y),
                     new Point((int)(x + depth3D), (int)(y - depth3D)),
                     new Point((int)(x + barWidth + depth3D), (int)(y - depth3D)),
                     new Point((int)(x + barWidth), (int)y)
                 };
-                    graphic.FillPolygon(Brushes.LightBlue, topo);
+                graphic.FillPolygon(Brushes.LightBlue, topo);
 
-                    // Nome do mês
-                    graphic.DrawString(mes, font, Brushes.Black, x, yBase + 5);
+                // Nome do mês
+                graphic.DrawString(mes, font, Brushes.Black, x, yBase + 5);
 
-                    // Valor acima da barra
-                    string valorTexto = valor.ToString("0.##");
-                    SizeF tamanhoTexto = graphic.MeasureString(valorTexto, font);
-                    float posXValor = x + (barWidth - tamanhoTexto.Width) / 2;
-                    float posYValor = y - tamanhoTexto.Height - 2;
-                    graphic.DrawString(valorTexto, font, Brushes.Black, posXValor, posYValor);
+                // Valor acima da barra
+                string valorTexto = valor.ToString("0.##");
+                SizeF tamanhoTexto = graphic.MeasureString(valorTexto, font);
+                float posXValor = x + (barWidth - tamanhoTexto.Width) / 2;
+                float posYValor = y - tamanhoTexto.Height - 2;
+                graphic.DrawString(valorTexto, font, Brushes.Black, posXValor, posYValor);
 
-                    x += barWidth + spaceBtw;
-                }
+                x += barWidth + spaceBtw;
             }
+
             using var ms = new MemoryStream();
             bmp.Save(ms, ImageFormat.Png);
             return ms.ToArray();
