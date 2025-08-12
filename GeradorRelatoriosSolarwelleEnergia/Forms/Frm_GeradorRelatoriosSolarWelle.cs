@@ -1,7 +1,9 @@
 using GeradorRelatoriosSolarwelleEnergia.Application.Services;
 using GeradorRelatoriosSolarwelleEnergia.ApplicationLayer.Services;
+using GeradorRelatoriosSolarwelleEnergia.Domain.DTO;
 using GeradorRelatoriosSolarwelleEnergia.Domain.Entities;
 using GeradorRelatoriosSolarwelleEnergia.Domain.Services;
+using GeradorRelatoriosSolarwelleEnergia.Domain.Utils;
 using GeradorRelatoriosSolarwelleEnergia.Dominio.Entidades;
 using GeradorRelatoriosSolarwelleEnergia.Infrastructure.Pdf;
 using GeradorRelatoriosSolarwelleEnergia.Infrastructure.Readers;
@@ -10,12 +12,12 @@ namespace GeradorRelatoriosSolarwelleEnergia
 {
     public partial class Frm_GeradorRelatoriosSolarWelle : Form
     {
-        private readonly ReportGeneratorHandler _handler;
+        private readonly ReportGeneratorAppService _handler;
         public Frm_GeradorRelatoriosSolarWelle()
         {
             InitializeComponent();
 
-            _handler = new ReportGeneratorHandler(
+            _handler = new ReportGeneratorAppService(
                 new TabelaCemigService(),
                 new ClienteReader(),
                 new ClientEconomyHistoryReader(),
@@ -92,13 +94,32 @@ namespace GeradorRelatoriosSolarwelleEnergia
         {
             try
             {
-                string cemigTablePath = txtBox_CaminhoXmlCemig.Text;
-                string clientsTablePath = txtBox_CaminhoTabelaClientes.Text;
-                float kwhValue = float.Parse(txtBox_ValorKwH.Text);
-                string destinyFolder = @"C:\Users\Usuário\Desktop\softwaregordao\relatorios\";
-                string pdfModel = Path.Combine(AppContext.BaseDirectory, "Assets", "modeloapresentacao.pdf");
+                string desktopPath = Environment.GetFolderPath(Environment.SpecialFolder.Desktop);
+                string destinyReportsPath = Path.Combine(desktopPath, "relatorios");
 
-                _handler.Generate(cemigTablePath, clientsTablePath, kwhValue, destinyFolder, pdfModel);
+                if (!Directory.Exists(destinyReportsPath)) 
+                {
+                    Directory.CreateDirectory(destinyReportsPath);
+                }
+
+                var input = new ReportGenerationInputDto
+                {
+                    CemigTablePath = txtBox_CaminhoXmlCemig.Text,
+                    ClientsTablePath = txtBox_CaminhoTabelaClientes.Text,
+                    KwhValue = float.Parse(txtBox_ValorKwH.Text),
+                    DestinyFolder = destinyReportsPath,
+                    PdfModelPath = Path.Combine(AppContext.BaseDirectory, "Assets", "modeloapresentacao.pdf"),
+                };
+                //@"C:\Users\Usuário\Desktop\softwaregordao\relatorios\"
+
+                if (!InputValidator.Validate(input, out string error))
+                {
+                    MessageBox.Show(error, "Validação", MessageBoxButtons.OK, MessageBoxIcon.Warning);
+                    return;
+                }
+
+                _handler.Generate(input);
+
                 MessageBox.Show("Relatórios gerados com sucesso!", "Sucesso", MessageBoxButtons.OK, MessageBoxIcon.Information);
             }
             catch (Exception ex)

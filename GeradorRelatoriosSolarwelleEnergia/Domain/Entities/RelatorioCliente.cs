@@ -27,7 +27,7 @@ namespace GeradorRelatoriosSolarwelleEnergia.Domain.Entities
         public float PercentualDesconto { get; set; }
         public float FatorDeDesconto => 1 - (PercentualDesconto / 100);
         public double TotalSemDesconto => QtdCompensacao * ValorKwhHora;
-        public double TotalAPagar => TotalSemDesconto * FatorDeDesconto;
+        public double TotalAPagar => TotalSemDesconto * 0.8;
         public double ValorEconomizadoNoMes => TotalSemDesconto - TotalAPagar;
         public Dictionary<string, float> HistoricoEconomia { get; set; } = new();
 
