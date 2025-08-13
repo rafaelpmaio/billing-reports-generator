@@ -27,6 +27,7 @@ namespace GeradorRelatoriosSolarwelleEnergia.Domain.Builders
                 ValorKwhHora = kwhHora,
                 Vencimento = vencimento,
                 MesReferenciaBoleto = mesRef,
+                DescontoPercentual = float.Parse(cliente.DescontoPercentual),
                 CnpjOuCpf = cliente is ClientePessoaFisica pf ? pf.Cpf : ((ClientePessoaJuridica)cliente).Cnpj,
                 RazaoSocialOuNome = cliente is ClientePessoaFisica pf2 ? pf2.Nome : ((ClientePessoaJuridica)cliente).RazaoSocial,
 

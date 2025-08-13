@@ -16,6 +16,7 @@ namespace GeradorRelatoriosSolarwelleEnergia.Dominio.Entidades
         public string Endereco { get; set; }
         public string Email { get; set; }
         public string DistribuidoraLocal { get; set; } //pertinente?
+        public string DescontoPercentual { get; set; }
              
                 
         public override string ToString()

@@ -23,7 +23,8 @@ namespace GeradorRelatoriosSolarwelleEnergia.Infrastructure.Mappers
         private const int COL_ENDERECO = 10;
         private const int COL_EMAIL = 11;
         private const int COL_DISTRIBUIDORA = 12;
-        private const int COL_TIPO_CLIENTE = 13;
+        private const int COL_DESCONTO_PERCENTUAL = 13;
+        private const int COL_TIPO_CLIENTE = 14;
 
         public static Cliente Map(ExcelWorksheet ws, int row)
         {
@@ -39,6 +40,7 @@ namespace GeradorRelatoriosSolarwelleEnergia.Infrastructure.Mappers
             cliente.Endereco = ws.Cells[row, COL_ENDERECO].Text;
             cliente.Email = ws.Cells[row, COL_EMAIL].Text;
             cliente.DistribuidoraLocal = ws.Cells[row, COL_DISTRIBUIDORA].Text;
+            cliente.DescontoPercentual = ws.Cells[row, COL_DESCONTO_PERCENTUAL].Text;
 
             if (cliente is ClientePessoaJuridica pj)
             {
