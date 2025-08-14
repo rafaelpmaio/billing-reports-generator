@@ -9,6 +9,7 @@ namespace GeradorRelatoriosSolarwelleEnergia.Infrastructure.Readers
 {
     internal interface IClientReader
     {
-        List<Cliente> LerTabelaExcel(string filePath);
+        List<Cliente> ReadClients(string? filePath = null);
+        //filePath é necessário apenas para o caso de arquivos externos (excel, json etc)
     }
 }

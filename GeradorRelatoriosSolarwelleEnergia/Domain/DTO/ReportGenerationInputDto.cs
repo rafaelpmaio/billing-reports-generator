@@ -14,5 +14,7 @@ namespace GeradorRelatoriosSolarwelleEnergia.Domain.DTO
         public string DestinyFolder {  get; set; }
         public string PdfModelPath { get; set; }
 
+        public bool UseDatabase { get; set; }
+
     }
 }

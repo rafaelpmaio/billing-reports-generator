@@ -34,9 +34,11 @@ namespace GeradorRelatoriosSolarwelleEnergia.Infrastructure.Database
                                     NumeroInstalacao TEXT,
                                     RazaoSocialOuNome TEXT,
                                     CnpjOuCpf TEXT,
-                                    Telefone TEXT,
-                                    Endereco TEXT,
-                                    Email TEXT,
+                                    RepresentanteLegal TEXT NULL,   
+                                    RG TEXT NULL,
+                                    Telefone TEXT NULL,
+                                    Endereco TEXT NULL,
+                                    Email TEXT NULL,
                                     DistribuidoraLocal TEXT,
                                     DescontoPercentual TEXT,
                                     TipoCliente INTEGER
@@ -74,31 +76,61 @@ namespace GeradorRelatoriosSolarwelleEnergia.Infrastructure.Database
             return list;
         }
 
-        public void Insert(Cliente cliente, RelatorioCliente clientReport)
+        public void Insert(Cliente cliente)
         {
             using (var conn = new SQLiteConnection(_connString))
             {
                 conn.Open();
                 string sql = @"INSERT INTO Clientes (
-                                NumeroCliente, NumeroInstalacao, Telefone, Endereco, Email,
-                                DistribuidoraLocal, DescontoPercentual, RazaoSocialOuNome,
-                                CnpjOuCpf, NumeroRG, TipoCliente)
-                                VALUES (
-                                @NumeroCliente, @NumeroInstalacao, @Telefone, @Endereco, @Email,
-                                @DistribuidoraLocal, @DescontoPercentual, @RazaoSocialOuNome,
-                                @CnpjOuCpf, @NumeroRG, @TipoCliente);";
-                var cmd = new SQLiteCommand(sql,conn);
+                            NumeroCliente,
+                            NumeroInstalacao,
+                            Telefone,
+                            Endereco,
+                            Email,
+                            DistribuidoraLocal,
+                            DescontoPercentual,
+                            RazaoSocialOuNome,
+                            CnpjOuCpf,
+                            RepresentanteLegal,
+                            TipoCliente
+                        ) VALUES (
+                            @NumeroCliente,
+                            @NumeroInstalacao,
+                            @Telefone,
+                            @Endereco,
+                            @Email,
+                            @DistribuidoraLocal,
+                            @DescontoPercentual,
+                            @RazaoSocialOuNome,
+                            @CnpjOuCpf,
+                            @RepresentanteLegal,
+                            @TipoCliente
+                        );";
+
+                var cmd = new SQLiteCommand(sql, conn);
+
                 cmd.Parameters.AddWithValue("@NumeroCliente", cliente.NumeroCliente);
                 cmd.Parameters.AddWithValue("@NumeroInstalacao", cliente.NumeroInstalacoes);
-                cmd.Parameters.AddWithValue("@Telefone", cliente.Telefone);
-                cmd.Parameters.AddWithValue("@Endereco", cliente.Endereco);
-                cmd.Parameters.AddWithValue("@Email", cliente.Email);
-                cmd.Parameters.AddWithValue("@DistribuidoraLocal", cliente.DistribuidoraLocal);
-                cmd.Parameters.AddWithValue("@DescontoPercentual", cliente.DescontoPercentual);
-                cmd.Parameters.AddWithValue("@RazaoSocialOuNome", clientReport.RazaoSocialOuNome);
-                cmd.Parameters.AddWithValue("@CnpjOuCpf", clientReport.CnpjOuCpf);
-                //cmd.Parameters.AddWithValue("@NumeroRG", clientReport.rg);
-                cmd.Parameters.AddWithValue("@TipoCliente", clientReport.TipoCliente);
+                cmd.Parameters.AddWithValue("@Telefone", cliente.Telefone ?? "");
+                cmd.Parameters.AddWithValue("@Endereco", cliente.Endereco ?? "");
+                cmd.Parameters.AddWithValue("@Email", cliente.Email ?? "");
+                cmd.Parameters.AddWithValue("@DistribuidoraLocal", cliente.DistribuidoraLocal ?? "");
+                cmd.Parameters.AddWithValue("@DescontoPercentual", cliente.DescontoPercentual ?? "");
+
+                if (cliente is ClientePessoaJuridica pj)
+                {
+                    cmd.Parameters.AddWithValue("@RazaoSocialOuNome", pj.RazaoSocial ?? "");
+                    cmd.Parameters.AddWithValue("@CnpjOuCpf", pj.Cnpj ?? "");
+                    cmd.Parameters.AddWithValue("@RepresentanteLegal", pj.RepresentanteLegal ?? "");
+                    cmd.Parameters.AddWithValue("@TipoCliente", 1);
+
+                }
+                else if (cliente is ClientePessoaFisica pf)
+                {
+                    cmd.Parameters.AddWithValue("@RazaoSocialOuNome", pf.Nome ?? "");
+                    cmd.Parameters.AddWithValue("@CnpjOuCpf", pf.Cpf ?? "");
+                    cmd.Parameters.AddWithValue("@TipoCliente", 0);
+                }
 
                 cmd.ExecuteNonQuery();
             }
@@ -110,7 +142,7 @@ namespace GeradorRelatoriosSolarwelleEnergia.Infrastructure.Database
             {
                 conn.Open();
                 string sql = "DELETE FROM Clientes WHERE Id = @id";
-                var cmd = new SQLiteCommand(sql,conn);
+                var cmd = new SQLiteCommand(sql, conn);
                 cmd.Parameters.AddWithValue("@id", id);
                 cmd.ExecuteNonQuery();
             }

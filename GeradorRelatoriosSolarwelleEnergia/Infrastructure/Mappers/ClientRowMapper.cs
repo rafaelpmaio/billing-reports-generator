@@ -12,7 +12,7 @@ namespace GeradorRelatoriosSolarwelleEnergia.Infrastructure.Mappers
     internal class ClientRowMapper
     {
         private const int COL_NUMERO_CLIENTE = 1;
-        private const int COL_NUMERO_INSTALACOES = 2;
+        private const int COL_NUMERO_INSTALACAO = 2;
         private const int COL_RAZAO_SOCIAL = 3;
         private const int COL_CNPJ = 4;
         private const int COL_REPRESENTANTE = 5;
@@ -35,7 +35,7 @@ namespace GeradorRelatoriosSolarwelleEnergia.Infrastructure.Mappers
                 : new ClientePessoaFisica();
 
             cliente.NumeroCliente = ws.Cells[row, COL_NUMERO_CLIENTE].Text;
-            cliente.NumeroInstalacoes = ws.Cells[row, COL_NUMERO_INSTALACOES].Text.Split(',').Select(n => n.Trim()).ToArray();
+            cliente.NumeroInstalacoes = ws.Cells[row, COL_NUMERO_INSTALACAO].Text.Split(',').Select(n => n.Trim()).ToArray();
             cliente.Telefone = ws.Cells[row, COL_TELEFONE].Text;
             cliente.Endereco = ws.Cells[row, COL_ENDERECO].Text;
             cliente.Email = ws.Cells[row, COL_EMAIL].Text;

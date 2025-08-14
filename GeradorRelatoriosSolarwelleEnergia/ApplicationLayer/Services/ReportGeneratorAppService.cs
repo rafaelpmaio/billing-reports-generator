@@ -44,7 +44,8 @@ namespace GeradorRelatoriosSolarwelleEnergia.ApplicationLayer.Services
                 _ => throw new NotSupportedException("Formato de arquivo da Tabela CEMIG não suportado.")
             };
 
-            var clientsList = _clientReader.LerTabelaExcel(input.ClientsTablePath);
+            input.UseDatabase = string.IsNullOrWhiteSpace(input.ClientsTablePath);
+            var clientsList = input.UseDatabase ? _clientReader.ReadClients() : _clientReader.ReadClients(input.ClientsTablePath);
             var economyHistory = _historyReader.Load();
             var relatorios = _reportService.MontarTabelaDeRelatorios(
                 cemigTableList,
