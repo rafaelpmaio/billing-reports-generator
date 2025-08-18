@@ -15,13 +15,13 @@
   </tr>
   <tr>
     <td style="border: none;">
-      <img src="GeradorRelatoriosSolarwelleEnergia/Images/pdforiginal.png" alt="PDF Original" width="400" />
+      <img src="GeradorRelatoriosSolarwelleEnergia/AssetsReadme/Images/pdforiginal.png" alt="PDF Original" width="400" />
     </td>
     <td style="font-size: 48px; padding: 0 20px; vertical-align: middle; border: none;">
       ➡️
     </td>
     <td style="border: none;">
-      <img src="GeradorRelatoriosSolarwelleEnergia/Images/pdfcliente.png" alt="PDF Preenchido" width="400" />
+      <img src="GeradorRelatoriosSolarwelleEnergia/AssetsReadme/Images/pdfcliente.png" alt="PDF Preenchido" width="400" />
     </td>
   </tr>
 </table>
@@ -69,3 +69,4 @@ C# | .NET | EPPlus | iText7 | iText7.BouncyCastleAdapter
 ![LinkedIn](https://img.shields.io/badge/linkedin-%230077B5.svg?style=for-the-badge&logo=linkedin&logoColor=white)
 
 </a>
+
