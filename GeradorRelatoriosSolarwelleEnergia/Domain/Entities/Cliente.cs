@@ -11,7 +11,7 @@ namespace GeradorRelatoriosSolarwelleEnergia.Dominio.Entidades
     internal class Cliente
     {
         public string NumeroCliente { get; set; }
-        public string[] NumeroInstalacoes { get; set; }
+        public string NumeroInstalacao { get; set; }
         public string Telefone { get; set; }
         public string Endereco { get; set; }
         public string Email { get; set; }
@@ -22,7 +22,7 @@ namespace GeradorRelatoriosSolarwelleEnergia.Dominio.Entidades
         public override string ToString()
         {
             return $"Número Cliente: {NumeroCliente}, " +
-                   $"Número de Instalação: {NumeroInstalacoes}, " +
+                   $"Número de Instalação: {NumeroInstalacao}, " +
                    $"Telefone: {Telefone}, " +
                    $"Endereco: {Endereco}, " +
                    $"Email: {Email}, " +

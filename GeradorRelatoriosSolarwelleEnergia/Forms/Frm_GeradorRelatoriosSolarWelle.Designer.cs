@@ -35,6 +35,7 @@
             txtBox_ValorKwH = new TextBox();
             txtBox_CaminhoTabelaClientes = new TextBox();
             lbl_TabelaClientes = new Label();
+            clientes = new Button();
             SuspendLayout();
             // 
             // lbl_RelatorioCemig
@@ -101,11 +102,22 @@
             lbl_TabelaClientes.TabIndex = 5;
             lbl_TabelaClientes.Text = "Selecione a tabela de CLIENTES";
             // 
+            // clientes
+            // 
+            clientes.Location = new Point(162, 175);
+            clientes.Name = "clientes";
+            clientes.Size = new Size(75, 23);
+            clientes.TabIndex = 7;
+            clientes.Text = "clientes";
+            clientes.UseVisualStyleBackColor = true;
+            clientes.Click += btn_Clientes_Click;
+            // 
             // Frm_GeradorRelatoriosSolarWelle
             // 
             AutoScaleDimensions = new SizeF(7F, 15F);
             AutoScaleMode = AutoScaleMode.Font;
             ClientSize = new Size(374, 210);
+            Controls.Add(clientes);
             Controls.Add(txtBox_CaminhoTabelaClientes);
             Controls.Add(lbl_TabelaClientes);
             Controls.Add(txtBox_ValorKwH);
@@ -128,5 +140,6 @@
         private TextBox txtBox_ValorKwH;
         private TextBox txtBox_CaminhoTabelaClientes;
         private Label lbl_TabelaClientes;
+        private Button clientes;
     }
 }

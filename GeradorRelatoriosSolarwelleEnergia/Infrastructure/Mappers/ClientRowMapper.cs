@@ -35,7 +35,7 @@ namespace GeradorRelatoriosSolarwelleEnergia.Infrastructure.Mappers
                 : new ClientePessoaFisica();
 
             cliente.NumeroCliente = ws.Cells[row, COL_NUMERO_CLIENTE].Text;
-            cliente.NumeroInstalacoes = ws.Cells[row, COL_NUMERO_INSTALACAO].Text.Split(',').Select(n => n.Trim()).ToArray();
+            cliente.NumeroInstalacao = ws.Cells[row, COL_NUMERO_INSTALACAO].Text;
             cliente.Telefone = ws.Cells[row, COL_TELEFONE].Text;
             cliente.Endereco = ws.Cells[row, COL_ENDERECO].Text;
             cliente.Email = ws.Cells[row, COL_EMAIL].Text;

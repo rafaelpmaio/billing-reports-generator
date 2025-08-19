@@ -19,7 +19,7 @@ namespace GeradorRelatoriosSolarwelleEnergia.Domain.Services
             {
                 foreach (var cliente in listaClientes)
                 {
-                    if (cliente.NumeroInstalacoes.Contains(tabelaCemig.NumeroInstalacao))
+                    if (cliente.NumeroInstalacao.Contains(tabelaCemig.NumeroInstalacao))
                     {
                         var relatorio = RelatorioClienteBuilder.Criar(cliente, tabelaCemig, valorKwhH, historicoEconomia);
                         listaRelatorios.Add(relatorio);

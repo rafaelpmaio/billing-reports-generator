@@ -28,14 +28,13 @@ namespace GeradorRelatoriosSolarwelleEnergia.Infrastructure.Database
                 using (var conn = new SQLiteConnection(_connString))
                 {
                     conn.Open();
-                    string sql = @"CREATE TABLE Clientes (
-                                    Id INTEGER PRIMARY KEY AUTOINCREMENT,
+                    string sql = @"CREATE TABLE Clientes (                                    
+                                    NumeroInstalacao TEXT PRIMARY KEY,
                                     NumeroCliente TEXT,
-                                    NumeroInstalacao TEXT,
                                     RazaoSocialOuNome TEXT,
                                     CnpjOuCpf TEXT,
                                     RepresentanteLegal TEXT NULL,   
-                                    RG TEXT NULL,
+                                    Rg TEXT NULL,
                                     Telefone TEXT NULL,
                                     Endereco TEXT NULL,
                                     Email TEXT NULL,
@@ -64,13 +63,39 @@ namespace GeradorRelatoriosSolarwelleEnergia.Infrastructure.Database
                 {
                     while (reader.Read())
                     {
-                        //IMPLEMENTAR CLIENT ROW MAPPER ADAPTADO
-                        list.Add(new Cliente
+                        int tipoCliente = reader.GetInt32(reader.GetOrdinal("TipoCliente"));
+
+                        Cliente cliente = tipoCliente == 1
+                            ? new ClientePessoaJuridica()
+                            : new ClientePessoaFisica();
+
+                        cliente.NumeroCliente = reader["NumeroCliente"]?.ToString();
+                        cliente.NumeroInstalacao = reader["NumeroInstalacao"]?.ToString();
+                        cliente.Telefone = reader["Telefone"]?.ToString();
+                        cliente.Endereco = reader["Endereco"]?.ToString();
+                        cliente.Email = reader["Email"]?.ToString();
+                        cliente.DistribuidoraLocal = reader["DistribuidoraLocal"]?.ToString();
+                        cliente.DescontoPercentual = reader["DescontoPercentual"]?.ToString();                         
+
+                        if (cliente is ClientePessoaJuridica pj)
                         {
-                            NumeroCliente = "1",
-                            DescontoPercentual = "1",
-                        });
+                            pj.RazaoSocial = reader["RazaoSocialOuNome"]?.ToString();
+                            pj.Cnpj = reader["CnpjOuCpf"]?.ToString();
+                            pj.RepresentanteLegal = reader["RepresentanteLegal"]?.ToString();
+                        }
+                        else if (cliente is ClientePessoaFisica pf)
+                        {
+                            pf.Nome = reader["RazaoSocialOuNome"]?.ToString();
+                            pf.Cpf = reader["CnpjOuCpf"]?.ToString();
+                            pf.Rg = reader["RG"]?.ToString();
+                        }
+
+                        list.Add(cliente);
+
                     }
+                    
+
+
                 }
             }
             return list;
@@ -91,6 +116,7 @@ namespace GeradorRelatoriosSolarwelleEnergia.Infrastructure.Database
                             DescontoPercentual,
                             RazaoSocialOuNome,
                             CnpjOuCpf,
+                            Rg,
                             RepresentanteLegal,
                             TipoCliente
                         ) VALUES (
@@ -103,14 +129,21 @@ namespace GeradorRelatoriosSolarwelleEnergia.Infrastructure.Database
                             @DescontoPercentual,
                             @RazaoSocialOuNome,
                             @CnpjOuCpf,
+                            @Rg,
                             @RepresentanteLegal,
                             @TipoCliente
                         );";
 
                 var cmd = new SQLiteCommand(sql, conn);
 
+                string razaoSocialOuNome = "";
+                string cnpjOuCpf = "";
+                string representanteLegal = "";
+                string Rg = "";
+                int tipoCliente = 0;
+
                 cmd.Parameters.AddWithValue("@NumeroCliente", cliente.NumeroCliente);
-                cmd.Parameters.AddWithValue("@NumeroInstalacao", cliente.NumeroInstalacoes);
+                cmd.Parameters.AddWithValue("@NumeroInstalacao", cliente.NumeroInstalacao);
                 cmd.Parameters.AddWithValue("@Telefone", cliente.Telefone ?? "");
                 cmd.Parameters.AddWithValue("@Endereco", cliente.Endereco ?? "");
                 cmd.Parameters.AddWithValue("@Email", cliente.Email ?? "");
@@ -119,18 +152,25 @@ namespace GeradorRelatoriosSolarwelleEnergia.Infrastructure.Database
 
                 if (cliente is ClientePessoaJuridica pj)
                 {
-                    cmd.Parameters.AddWithValue("@RazaoSocialOuNome", pj.RazaoSocial ?? "");
-                    cmd.Parameters.AddWithValue("@CnpjOuCpf", pj.Cnpj ?? "");
-                    cmd.Parameters.AddWithValue("@RepresentanteLegal", pj.RepresentanteLegal ?? "");
-                    cmd.Parameters.AddWithValue("@TipoCliente", 1);
+                    razaoSocialOuNome = pj.RazaoSocial ?? "";
+                    cnpjOuCpf = pj.Cnpj ?? "";
+                    representanteLegal = pj.RepresentanteLegal ?? "";
+                    tipoCliente = 1;
 
                 }
                 else if (cliente is ClientePessoaFisica pf)
                 {
-                    cmd.Parameters.AddWithValue("@RazaoSocialOuNome", pf.Nome ?? "");
-                    cmd.Parameters.AddWithValue("@CnpjOuCpf", pf.Cpf ?? "");
-                    cmd.Parameters.AddWithValue("@TipoCliente", 0);
+                    razaoSocialOuNome = pf.Nome ?? "";
+                    cnpjOuCpf = pf.Cpf ?? "";
+                    Rg = pf.Rg;
+                    tipoCliente = 0;
                 }
+
+                cmd.Parameters.AddWithValue("@RazaoSocialOuNome", razaoSocialOuNome);
+                cmd.Parameters.AddWithValue("@CnpjOuCpf", cnpjOuCpf);
+                cmd.Parameters.AddWithValue("@RepresentanteLegal", representanteLegal);
+                cmd.Parameters.AddWithValue("@Rg", Rg);
+                cmd.Parameters.AddWithValue("@TipoCliente", tipoCliente);
 
                 cmd.ExecuteNonQuery();
             }
@@ -141,9 +181,9 @@ namespace GeradorRelatoriosSolarwelleEnergia.Infrastructure.Database
             using (var conn = new SQLiteConnection(_connString))
             {
                 conn.Open();
-                string sql = "DELETE FROM Clientes WHERE Id = @id";
+                string sql = "DELETE FROM Clientes WHERE NumeroCliente = @numeroCliente";
                 var cmd = new SQLiteCommand(sql, conn);
-                cmd.Parameters.AddWithValue("@id", id);
+                cmd.Parameters.AddWithValue("@numeroCliente", id);
                 cmd.ExecuteNonQuery();
             }
         }

@@ -1,3 +1,5 @@
+using System.Data;
+using System.Windows.Forms;
 using GeradorRelatoriosSolarwelleEnergia.Application.Services;
 using GeradorRelatoriosSolarwelleEnergia.ApplicationLayer.Services;
 using GeradorRelatoriosSolarwelleEnergia.Domain.DTO;
@@ -5,6 +7,8 @@ using GeradorRelatoriosSolarwelleEnergia.Domain.Entities;
 using GeradorRelatoriosSolarwelleEnergia.Domain.Services;
 using GeradorRelatoriosSolarwelleEnergia.Domain.Utils;
 using GeradorRelatoriosSolarwelleEnergia.Dominio.Entidades;
+using GeradorRelatoriosSolarwelleEnergia.Forms;
+using GeradorRelatoriosSolarwelleEnergia.Infrastructure.Database;
 using GeradorRelatoriosSolarwelleEnergia.Infrastructure.Pdf;
 using GeradorRelatoriosSolarwelleEnergia.Infrastructure.Readers;
 
@@ -97,7 +101,7 @@ namespace GeradorRelatoriosSolarwelleEnergia
                 string desktopPath = Environment.GetFolderPath(Environment.SpecialFolder.Desktop);
                 string destinyReportsPath = Path.Combine(desktopPath, "relatorios");
 
-                if (!Directory.Exists(destinyReportsPath)) 
+                if (!Directory.Exists(destinyReportsPath))
                 {
                     Directory.CreateDirectory(destinyReportsPath);
                 }
@@ -110,7 +114,6 @@ namespace GeradorRelatoriosSolarwelleEnergia
                     DestinyFolder = destinyReportsPath,
                     PdfModelPath = Path.Combine(AppContext.BaseDirectory, "Assets", "modeloapresentacao.pdf"),
                 };
-                //@"C:\Users\Usuário\Desktop\softwaregordao\relatorios\"
 
                 if (!InputValidator.Validate(input, out string error))
                 {
@@ -135,6 +138,12 @@ namespace GeradorRelatoriosSolarwelleEnergia
                 !string.IsNullOrWhiteSpace(txtBox_CaminhoXmlCemig.Text) &&
                 !string.IsNullOrWhiteSpace(txtBox_CaminhoTabelaClientes.Text) &&
                 !string.IsNullOrWhiteSpace(txtBox_ValorKwH.Text);
+        }
+
+        private void btn_Clientes_Click(object sender, EventArgs e)
+        {        
+            var clientsForm = new Frm_Clients();
+            clientsForm.ShowDialog();
         }
     }
 }
