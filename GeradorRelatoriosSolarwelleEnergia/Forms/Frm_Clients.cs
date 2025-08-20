@@ -98,7 +98,7 @@ namespace GeradorRelatoriosSolarwelleEnergia.Forms
             openFileDialog.Filter = "Arquivos Excel (*.xlsx)|*.xlsx|Todos os arquivos (*.*)|*.*";
             openFileDialog.Title = "Selecione a planilha de clientes";
 
-            if(openFileDialog.ShowDialog() == DialogResult.OK)
+            if (openFileDialog.ShowDialog() == DialogResult.OK)
             {
                 string filePath = openFileDialog.FileName;
 
@@ -107,6 +107,11 @@ namespace GeradorRelatoriosSolarwelleEnergia.Forms
 
                 MessageBox.Show("Clientes importados com sucesso!", "Importação", MessageBoxButtons.OK, MessageBoxIcon.Information);
             }
+        }
+
+        private void btn_EditClient_Click(object sender, EventArgs e)
+        {
+
         }
     }
 }

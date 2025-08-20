@@ -75,7 +75,7 @@ namespace GeradorRelatoriosSolarwelleEnergia.Infrastructure.Database
                         cliente.Endereco = reader["Endereco"]?.ToString();
                         cliente.Email = reader["Email"]?.ToString();
                         cliente.DistribuidoraLocal = reader["DistribuidoraLocal"]?.ToString();
-                        cliente.DescontoPercentual = reader["DescontoPercentual"]?.ToString();                         
+                        cliente.DescontoPercentual = reader["DescontoPercentual"]?.ToString();
 
                         if (cliente is ClientePessoaJuridica pj)
                         {
@@ -89,13 +89,8 @@ namespace GeradorRelatoriosSolarwelleEnergia.Infrastructure.Database
                             pf.Cpf = reader["CnpjOuCpf"]?.ToString();
                             pf.Rg = reader["RG"]?.ToString();
                         }
-
                         list.Add(cliente);
-
                     }
-                    
-
-
                 }
             }
             return list;
@@ -107,8 +102,8 @@ namespace GeradorRelatoriosSolarwelleEnergia.Infrastructure.Database
             {
                 conn.Open();
                 string sql = @"INSERT INTO Clientes (
-                            NumeroCliente,
                             NumeroInstalacao,
+                            NumeroCliente,
                             Telefone,
                             Endereco,
                             Email,
@@ -120,8 +115,8 @@ namespace GeradorRelatoriosSolarwelleEnergia.Infrastructure.Database
                             RepresentanteLegal,
                             TipoCliente
                         ) VALUES (
-                            @NumeroCliente,
                             @NumeroInstalacao,
+                            @NumeroCliente,
                             @Telefone,
                             @Endereco,
                             @Email,
@@ -135,57 +130,86 @@ namespace GeradorRelatoriosSolarwelleEnergia.Infrastructure.Database
                         );";
 
                 var cmd = new SQLiteCommand(sql, conn);
+                AddClientParameters(cmd, cliente);
+                cmd.ExecuteNonQuery();
+            }
+        }
+        public void Update(Cliente cliente)
+        {
+            using (var conn = new SQLiteConnection(_connString))
+            {
+                conn.Open();
+                string sql = @"UPDATE Clientes SET
+                        NumeroCliente = @NumeroCliente,
+                        Telefone = @Telefone,
+                        Endereco = @Endereco,
+                        Email = @Email,
+                        DistribuidoraLocal = @DistribuidoraLocal,
+                        DescontoPercentual = @DescontoPercentual,
+                        RazaoSocialOuNome = @RazaoSocialOuNome,
+                        CnpjOuCpf = @CnpjOuCpf,
+                        Rg = @Rg,
+                        RepresentanteLegal = @RepresentanteLegal,
+                        TipoCliente = @TipoCliente
+                    WHERE NumeroInstalacao = @NumeroInstalacao";
 
-                string razaoSocialOuNome = "";
-                string cnpjOuCpf = "";
-                string representanteLegal = "";
-                string Rg = "";
-                int tipoCliente = 0;
-
-                cmd.Parameters.AddWithValue("@NumeroCliente", cliente.NumeroCliente);
-                cmd.Parameters.AddWithValue("@NumeroInstalacao", cliente.NumeroInstalacao);
-                cmd.Parameters.AddWithValue("@Telefone", cliente.Telefone ?? "");
-                cmd.Parameters.AddWithValue("@Endereco", cliente.Endereco ?? "");
-                cmd.Parameters.AddWithValue("@Email", cliente.Email ?? "");
-                cmd.Parameters.AddWithValue("@DistribuidoraLocal", cliente.DistribuidoraLocal ?? "");
-                cmd.Parameters.AddWithValue("@DescontoPercentual", cliente.DescontoPercentual ?? "");
-
-                if (cliente is ClientePessoaJuridica pj)
-                {
-                    razaoSocialOuNome = pj.RazaoSocial ?? "";
-                    cnpjOuCpf = pj.Cnpj ?? "";
-                    representanteLegal = pj.RepresentanteLegal ?? "";
-                    tipoCliente = 1;
-
-                }
-                else if (cliente is ClientePessoaFisica pf)
-                {
-                    razaoSocialOuNome = pf.Nome ?? "";
-                    cnpjOuCpf = pf.Cpf ?? "";
-                    Rg = pf.Rg;
-                    tipoCliente = 0;
-                }
-
-                cmd.Parameters.AddWithValue("@RazaoSocialOuNome", razaoSocialOuNome);
-                cmd.Parameters.AddWithValue("@CnpjOuCpf", cnpjOuCpf);
-                cmd.Parameters.AddWithValue("@RepresentanteLegal", representanteLegal);
-                cmd.Parameters.AddWithValue("@Rg", Rg);
-                cmd.Parameters.AddWithValue("@TipoCliente", tipoCliente);
-
+                var cmd = new SQLiteCommand(sql, conn);
+                AddClientParameters(cmd, cliente);             
                 cmd.ExecuteNonQuery();
             }
         }
 
-        public void Remove(int id)
+        public void Remove(string numeroInstalacao)
         {
             using (var conn = new SQLiteConnection(_connString))
             {
                 conn.Open();
                 string sql = "DELETE FROM Clientes WHERE NumeroCliente = @numeroCliente";
                 var cmd = new SQLiteCommand(sql, conn);
-                cmd.Parameters.AddWithValue("@numeroCliente", id);
+                cmd.Parameters.AddWithValue("@numeroInstalacao", numeroInstalacao);
                 cmd.ExecuteNonQuery();
             }
+        }
+
+        private void AddClientParameters(SQLiteCommand cmd, Cliente client, bool includeNumeroInstalacao = true)
+        {
+            string razaoSocialOuNome = "";
+            string cnpjOuCpf = "";
+            string representanteLegal = "";
+            string Rg = "";
+            int tipoCliente = 0;
+
+            if (client is ClientePessoaJuridica pj)
+            {
+                razaoSocialOuNome = pj.RazaoSocial ?? "";
+                cnpjOuCpf = pj.Cnpj ?? "";
+                representanteLegal = pj.RepresentanteLegal ?? "";
+                tipoCliente = 1;
+
+            }
+            else if (client is ClientePessoaFisica pf)
+            {
+                razaoSocialOuNome = pf.Nome ?? "";
+                cnpjOuCpf = pf.Cpf ?? "";
+                Rg = pf.Rg;
+                tipoCliente = 0;
+            }
+
+            if (includeNumeroInstalacao)
+                cmd.Parameters.AddWithValue("@NumeroInstalacao", client.NumeroInstalacao);
+
+            cmd.Parameters.AddWithValue("@NumeroCliente", client.NumeroCliente);
+            cmd.Parameters.AddWithValue("@Telefone", client.Telefone ?? "");
+            cmd.Parameters.AddWithValue("@Endereco", client.Endereco ?? "");
+            cmd.Parameters.AddWithValue("@Email", client.Email ?? "");
+            cmd.Parameters.AddWithValue("@DistribuidoraLocal", client.DistribuidoraLocal ?? "");
+            cmd.Parameters.AddWithValue("@DescontoPercentual", client.DescontoPercentual ?? "");
+            cmd.Parameters.AddWithValue("@RazaoSocialOuNome", razaoSocialOuNome);
+            cmd.Parameters.AddWithValue("@CnpjOuCpf", cnpjOuCpf);
+            cmd.Parameters.AddWithValue("@RepresentanteLegal", representanteLegal);
+            cmd.Parameters.AddWithValue("@Rg", Rg);
+            cmd.Parameters.AddWithValue("@TipoCliente", tipoCliente);
+
         }
     }
 }

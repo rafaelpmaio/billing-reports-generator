@@ -32,6 +32,7 @@
             btn_AddClient = new Button();
             btn_DeleteClient = new Button();
             btn_ImportClients = new Button();
+            btn_EditClient = new Button();
             ((System.ComponentModel.ISupportInitialize)dataGridView1).BeginInit();
             SuspendLayout();
             // 
@@ -46,7 +47,7 @@
             // 
             // btn_AddClient
             // 
-            btn_AddClient.Location = new Point(713, 415);
+            btn_AddClient.Location = new Point(551, 415);
             btn_AddClient.Name = "btn_AddClient";
             btn_AddClient.Size = new Size(75, 23);
             btn_AddClient.TabIndex = 1;
@@ -56,6 +57,7 @@
             // 
             // btn_DeleteClient
             // 
+            btn_DeleteClient.Enabled = false;
             btn_DeleteClient.Location = new Point(632, 415);
             btn_DeleteClient.Name = "btn_DeleteClient";
             btn_DeleteClient.Size = new Size(75, 23);
@@ -66,7 +68,7 @@
             // 
             // btn_ImportClients
             // 
-            btn_ImportClients.Location = new Point(551, 415);
+            btn_ImportClients.Location = new Point(12, 415);
             btn_ImportClients.Name = "btn_ImportClients";
             btn_ImportClients.Size = new Size(75, 23);
             btn_ImportClients.TabIndex = 3;
@@ -74,11 +76,22 @@
             btn_ImportClients.UseVisualStyleBackColor = true;
             btn_ImportClients.Click += btn_ImportClients_Click;
             // 
+            // btn_EditClient
+            // 
+            btn_EditClient.Location = new Point(713, 415);
+            btn_EditClient.Name = "btn_EditClient";
+            btn_EditClient.Size = new Size(75, 23);
+            btn_EditClient.TabIndex = 4;
+            btn_EditClient.Text = "Editar";
+            btn_EditClient.UseVisualStyleBackColor = true;
+            btn_EditClient.Click += btn_EditClient_Click;
+            // 
             // Frm_Clients
             // 
             AutoScaleDimensions = new SizeF(7F, 15F);
             AutoScaleMode = AutoScaleMode.Font;
             ClientSize = new Size(800, 450);
+            Controls.Add(btn_EditClient);
             Controls.Add(btn_ImportClients);
             Controls.Add(btn_DeleteClient);
             Controls.Add(btn_AddClient);
@@ -95,5 +108,6 @@
         private Button btn_AddClient;
         private Button btn_DeleteClient;
         private Button btn_ImportClients;
+        private Button btn_EditClient;
     }
 }
