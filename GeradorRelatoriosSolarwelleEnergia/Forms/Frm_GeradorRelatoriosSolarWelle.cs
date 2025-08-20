@@ -39,7 +39,7 @@ namespace GeradorRelatoriosSolarwelleEnergia
 
             if (openFileDialog.ShowDialog() == DialogResult.OK)
             {
-                txtBox_CaminhoXmlCemig.Text = openFileDialog.FileName;
+                txtBox_CaminhoTabelaCemig.Text = openFileDialog.FileName;
                 habilitarBotao();
             }
         }
@@ -108,7 +108,7 @@ namespace GeradorRelatoriosSolarwelleEnergia
 
                 var input = new ReportGenerationInputDto
                 {
-                    CemigTablePath = txtBox_CaminhoXmlCemig.Text,
+                    CemigTablePath = txtBox_CaminhoTabelaCemig.Text,
                     ClientsTablePath = txtBox_CaminhoTabelaClientes.Text,
                     KwhValue = float.Parse(txtBox_ValorKwH.Text),
                     DestinyFolder = destinyReportsPath,
@@ -135,7 +135,7 @@ namespace GeradorRelatoriosSolarwelleEnergia
         private void habilitarBotao()
         {
             btn_GerarRelatorios.Enabled =
-                !string.IsNullOrWhiteSpace(txtBox_CaminhoXmlCemig.Text) &&
+                !string.IsNullOrWhiteSpace(txtBox_CaminhoTabelaCemig.Text) &&
                 !string.IsNullOrWhiteSpace(txtBox_CaminhoTabelaClientes.Text) &&
                 !string.IsNullOrWhiteSpace(txtBox_ValorKwH.Text);
         }

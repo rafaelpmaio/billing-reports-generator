@@ -30,7 +30,7 @@
         {
             lbl_RelatorioCemig = new Label();
             btn_GerarRelatorios = new Button();
-            txtBox_CaminhoXmlCemig = new TextBox();
+            txtBox_CaminhoTabelaCemig = new TextBox();
             lbl_ValorKwH = new Label();
             txtBox_ValorKwH = new TextBox();
             txtBox_CaminhoTabelaClientes = new TextBox();
@@ -58,14 +58,14 @@
             btn_GerarRelatorios.UseVisualStyleBackColor = true;
             btn_GerarRelatorios.Click += btn_GerarRelatorios_Click;
             // 
-            // txtBox_CaminhoXmlCemig
+            // txtBox_CaminhoTabelaCemig
             // 
-            txtBox_CaminhoXmlCemig.Location = new Point(12, 39);
-            txtBox_CaminhoXmlCemig.Name = "txtBox_CaminhoXmlCemig";
-            txtBox_CaminhoXmlCemig.ReadOnly = true;
-            txtBox_CaminhoXmlCemig.Size = new Size(269, 23);
-            txtBox_CaminhoXmlCemig.TabIndex = 2;
-            txtBox_CaminhoXmlCemig.Click += txtBox_CaminhoTabelaCemig_Click;
+            txtBox_CaminhoTabelaCemig.Location = new Point(12, 39);
+            txtBox_CaminhoTabelaCemig.Name = "txtBox_CaminhoTabelaCemig";
+            txtBox_CaminhoTabelaCemig.ReadOnly = true;
+            txtBox_CaminhoTabelaCemig.Size = new Size(269, 23);
+            txtBox_CaminhoTabelaCemig.TabIndex = 2;
+            txtBox_CaminhoTabelaCemig.Click += txtBox_CaminhoTabelaCemig_Click;
             // 
             // lbl_ValorKwH
             // 
@@ -122,7 +122,7 @@
             Controls.Add(lbl_TabelaClientes);
             Controls.Add(txtBox_ValorKwH);
             Controls.Add(lbl_ValorKwH);
-            Controls.Add(txtBox_CaminhoXmlCemig);
+            Controls.Add(txtBox_CaminhoTabelaCemig);
             Controls.Add(btn_GerarRelatorios);
             Controls.Add(lbl_RelatorioCemig);
             Name = "Frm_GeradorRelatoriosSolarWelle";
@@ -135,7 +135,7 @@
 
         private Label lbl_RelatorioCemig;
         private Button btn_GerarRelatorios;
-        private TextBox txtBox_CaminhoXmlCemig;
+        private TextBox txtBox_CaminhoTabelaCemig;
         private Label lbl_ValorKwH;
         private TextBox txtBox_ValorKwH;
         private TextBox txtBox_CaminhoTabelaClientes;

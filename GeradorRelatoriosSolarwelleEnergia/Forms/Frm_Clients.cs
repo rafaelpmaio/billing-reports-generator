@@ -84,6 +84,14 @@ namespace GeradorRelatoriosSolarwelleEnergia.Forms
 
         private void btn_AddClient_Click(object sender, EventArgs e)
         {
+            using (var form = new Frm_AddOrUpdateClient())
+            {
+                var result = form.ShowDialog();
+                if (result == DialogResult.OK)
+                {
+                    LoadClients();
+                }
+            }
 
         }
 
