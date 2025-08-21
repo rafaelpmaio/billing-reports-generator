@@ -132,6 +132,7 @@ namespace GeradorRelatoriosSolarwelleEnergia.Infrastructure.Database
                 var cmd = new SQLiteCommand(sql, conn);
                 AddClientParameters(cmd, cliente);
                 cmd.ExecuteNonQuery();
+                MessageBox.Show("Cliente adicionado com sucesso!");
             }
         }
         public void Update(Cliente cliente)

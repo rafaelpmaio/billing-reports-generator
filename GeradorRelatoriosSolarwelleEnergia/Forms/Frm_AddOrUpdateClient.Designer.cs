@@ -63,6 +63,7 @@
             txtBox_Cep = new TextBox();
             lbl_Cep = new Label();
             grpBox_Endereco = new GroupBox();
+            btn_Adicionar = new Button();
             grpBox_Endereco.SuspendLayout();
             SuspendLayout();
             // 
@@ -367,11 +368,22 @@
             grpBox_Endereco.TabStop = false;
             grpBox_Endereco.Text = "Endereço";
             // 
+            // btn_Adicionar
+            // 
+            btn_Adicionar.Location = new Point(394, 443);
+            btn_Adicionar.Name = "btn_Adicionar";
+            btn_Adicionar.Size = new Size(75, 23);
+            btn_Adicionar.TabIndex = 35;
+            btn_Adicionar.Text = "Adicionar";
+            btn_Adicionar.UseVisualStyleBackColor = true;
+            btn_Adicionar.Click += btn_Adicionar_Click;
+            // 
             // Frm_AddOrUpdateClient
             // 
             AutoScaleDimensions = new SizeF(7F, 15F);
             AutoScaleMode = AutoScaleMode.Font;
-            ClientSize = new Size(486, 445);
+            ClientSize = new Size(486, 469);
+            Controls.Add(btn_Adicionar);
             Controls.Add(grpBox_Endereco);
             Controls.Add(rbtn_PessoaJuridica);
             Controls.Add(rbtn_PessoaFisica);
@@ -438,5 +450,6 @@
         private TextBox txtBox_Cep;
         private Label lbl_Cep;
         private GroupBox grpBox_Endereco;
+        private Button btn_Adicionar;
     }
 }
