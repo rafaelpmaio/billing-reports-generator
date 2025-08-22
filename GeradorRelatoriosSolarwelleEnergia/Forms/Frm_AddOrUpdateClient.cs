@@ -19,7 +19,49 @@ namespace GeradorRelatoriosSolarwelleEnergia.Forms
             InitializeComponent();
         }
 
-        private void btn_Adicionar_Click(object sender, EventArgs e)
+        private void btn_AddClient_Click(object sender, EventArgs e)
+        {
+            try
+            {
+                Cliente client = BuildClientFromForm();
+
+                var repo = new ClientRepository();
+                repo.Insert(client);
+                ClearFormFields();
+            }
+            catch (InvalidOperationException ex)
+            {
+                MessageBox.Show(ex.Message);
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show("Erro ao salvar cliente: " + ex.Message);
+            }
+        }    
+
+        private void btn_UpdateClient_Click(object sender, EventArgs e)
+        {
+            //try
+            //{
+               
+            //    Cliente updatedClient = BuildClientFromForm();                
+            //    updatedClient.NumeroInstalacao = clienteExistente.Id; // supondo que você tenha um cliente existente selecionado
+
+            //    var repo = new ClientRepository();
+            //    repo.Update(updatedClient);
+            //    ClearFormFields();
+            //}
+            //catch (InvalidOperationException ex)
+            //{
+            //    MessageBox.Show(ex.Message);
+            //}
+            //catch (Exception ex)
+            //{
+            //    MessageBox.Show("Erro ao editar cliente: " + ex.Message);
+            //}
+        }
+
+        private Cliente BuildClientFromForm()
         {
             string numeroInstalacao = txtBox_NumeroInstalacao.Text;
             string numeroCliente = txtBox_NumeroCliente.Text;
@@ -30,69 +72,79 @@ namespace GeradorRelatoriosSolarwelleEnergia.Forms
             string email = txtBox_Email.Text;
             string distribuidoraEnergia = txtBox_DistribuidoraEnergia.Text;
             string descontoCliente = txtBox_DescontoCliente.Text;
+
             string[] partesEndereco = new string[]
             {
-                txtBox_Logradouro.Text,
-                "Nº " + txtBox_NumeroEndereco.Text,
-                txtBox_ComplementoEndereco.Text,
-                txtBox_Bairro.Text,
-                txtBox_Cidade.Text,
-                txtBox_Estado.Text,
-                "CEP: " + txtBox_Cep.Text,
-            };            
+        txtBox_Logradouro.Text,
+        "Nº " + txtBox_NumeroEndereco.Text,
+        txtBox_ComplementoEndereco.Text,
+        txtBox_Bairro.Text,
+        txtBox_Cidade.Text,
+        txtBox_Estado.Text,
+        "CEP: " + txtBox_Cep.Text,
+            };
 
             string enderecoCompleto = string.Join(",", partesEndereco.Where(p => !string.IsNullOrWhiteSpace(p)));
 
-            try
+            Cliente cliente;
+
+            if (rbtn_PessoaFisica.Checked)
             {
-                Cliente cliente;
-
-                // Verifica o tipo de cliente
-                if (rbtn_PessoaFisica.Checked)
+                cliente = new ClientePessoaFisica
                 {
-                    cliente = new ClientePessoaFisica
-                    {
-                        Nome = nomeOuRazaoSocial,
-                        Cpf = cpfOuCnpj,
-                        Rg = rgOuRepresentanteLegal,
-                    };
-                }
-                else if (rbtn_PessoaJuridica.Checked)
-                {
-                    cliente = new ClientePessoaJuridica
-                    {
-                        RazaoSocial = nomeOuRazaoSocial,
-                        Cnpj = cpfOuCnpj,
-                        RepresentanteLegal = rgOuRepresentanteLegal
-                    };
-                }
-                else
-                {
-                    MessageBox.Show("Selecione o tipo de cliente (Pessoa Física ou Jurídica).");
-                    return;
-                }
-
-               //logica para tipoCliente ser 1 ou 0
-             
-
-                cliente.NumeroInstalacao = numeroInstalacao;
-                cliente.NumeroCliente = numeroCliente;
-                cliente.Telefone = telefone;
-                cliente.Endereco = enderecoCompleto;
-                cliente.Email = email;
-                cliente.DistribuidoraLocal = distribuidoraEnergia;
-                cliente.DescontoPercentual = descontoCliente;
-
-                var repo = new ClientRepository();
-                repo.Insert( cliente );
-
-                //lógica LimparCampos();
-
+                    Nome = nomeOuRazaoSocial,
+                    Cpf = cpfOuCnpj,
+                    Rg = rgOuRepresentanteLegal,
+                };
             }
-            catch (Exception ex)
+            else if (rbtn_PessoaJuridica.Checked)
             {
-                MessageBox.Show("Erro ao salvar cliente: " + ex.Message);
+                cliente = new ClientePessoaJuridica
+                {
+                    RazaoSocial = nomeOuRazaoSocial,
+                    Cnpj = cpfOuCnpj,
+                    RepresentanteLegal = rgOuRepresentanteLegal,
+                };
             }
+            else
+            {
+                throw new InvalidOperationException("Tipo de cliente não selecionado.");
+            }
+
+            cliente.NumeroInstalacao = numeroInstalacao;
+            cliente.NumeroCliente = numeroCliente;
+            cliente.Telefone = telefone;
+            cliente.Endereco = enderecoCompleto;
+            cliente.Email = email;
+            cliente.DistribuidoraLocal = distribuidoraEnergia;
+            cliente.DescontoPercentual = descontoCliente;
+
+            return cliente;
         }
+
+        private void ClearFormFields()
+        {
+            txtBox_NumeroInstalacao.Clear();
+            txtBox_NumeroCliente.Clear();
+            txtBox_NomeOuRazaoSocial.Clear();
+            txtBox_CpfOuCnpj.Clear();
+            txtBox_Telefone.Clear();
+            txtBox_RgOuRepresentanteLegal.Clear();
+            txtBox_Email.Clear();
+            txtBox_DistribuidoraEnergia.Clear();
+            txtBox_DescontoCliente.Clear();
+
+            txtBox_Logradouro.Clear();
+            txtBox_NumeroEndereco.Clear();
+            txtBox_ComplementoEndereco.Clear();
+            txtBox_Bairro.Clear();
+            txtBox_Cidade.Clear();
+            txtBox_Estado.Clear();
+            txtBox_Cep.Clear();
+
+            txtBox_NumeroInstalacao.Focus();
+        }
+
+        
     }
 }

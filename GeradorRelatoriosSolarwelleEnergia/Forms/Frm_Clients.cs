@@ -74,7 +74,7 @@ namespace GeradorRelatoriosSolarwelleEnergia.Forms
                 );
             }
 
-            dataGridView1.DataSource = table;
+            dataGridView.DataSource = table;
         }
 
         private void Frm_Clients_Load(object? sender, EventArgs e)
@@ -119,7 +119,7 @@ namespace GeradorRelatoriosSolarwelleEnergia.Forms
 
         private void btn_EditClient_Click(object sender, EventArgs e)
         {
-
+            dataGrid
         }
     }
 }

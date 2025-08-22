@@ -28,22 +28,22 @@
         /// </summary>
         private void InitializeComponent()
         {
-            dataGridView1 = new DataGridView();
+            dataGridView = new DataGridView();
             btn_AddClient = new Button();
             btn_DeleteClient = new Button();
             btn_ImportClients = new Button();
-            btn_EditClient = new Button();
-            ((System.ComponentModel.ISupportInitialize)dataGridView1).BeginInit();
+            btn_UpdateClient = new Button();
+            ((System.ComponentModel.ISupportInitialize)dataGridView).BeginInit();
             SuspendLayout();
             // 
             // dataGridView1
             // 
-            dataGridView1.ColumnHeadersHeightSizeMode = DataGridViewColumnHeadersHeightSizeMode.AutoSize;
-            dataGridView1.Dock = DockStyle.Top;
-            dataGridView1.Location = new Point(0, 0);
-            dataGridView1.Name = "dataGridView1";
-            dataGridView1.Size = new Size(800, 409);
-            dataGridView1.TabIndex = 0;
+            dataGridView.ColumnHeadersHeightSizeMode = DataGridViewColumnHeadersHeightSizeMode.AutoSize;
+            dataGridView.Dock = DockStyle.Top;
+            dataGridView.Location = new Point(0, 0);
+            dataGridView.Name = "dataGridView1";
+            dataGridView.Size = new Size(800, 409);
+            dataGridView.TabIndex = 0;
             // 
             // btn_AddClient
             // 
@@ -76,38 +76,38 @@
             btn_ImportClients.UseVisualStyleBackColor = true;
             btn_ImportClients.Click += btn_ImportClients_Click;
             // 
-            // btn_EditClient
+            // btn_UpdateClient
             // 
-            btn_EditClient.Location = new Point(713, 415);
-            btn_EditClient.Name = "btn_EditClient";
-            btn_EditClient.Size = new Size(75, 23);
-            btn_EditClient.TabIndex = 4;
-            btn_EditClient.Text = "Editar";
-            btn_EditClient.UseVisualStyleBackColor = true;
-            btn_EditClient.Click += btn_EditClient_Click;
+            btn_UpdateClient.Location = new Point(713, 415);
+            btn_UpdateClient.Name = "btn_UpdateClient";
+            btn_UpdateClient.Size = new Size(75, 23);
+            btn_UpdateClient.TabIndex = 4;
+            btn_UpdateClient.Text = "Editar";
+            btn_UpdateClient.UseVisualStyleBackColor = true;
+            btn_UpdateClient.Click += btn_EditClient_Click;
             // 
             // Frm_Clients
             // 
             AutoScaleDimensions = new SizeF(7F, 15F);
             AutoScaleMode = AutoScaleMode.Font;
             ClientSize = new Size(800, 450);
-            Controls.Add(btn_EditClient);
+            Controls.Add(btn_UpdateClient);
             Controls.Add(btn_ImportClients);
             Controls.Add(btn_DeleteClient);
             Controls.Add(btn_AddClient);
-            Controls.Add(dataGridView1);
+            Controls.Add(dataGridView);
             Name = "Frm_Clients";
             Text = "Frm_ClientsForm";
-            ((System.ComponentModel.ISupportInitialize)dataGridView1).EndInit();
+            ((System.ComponentModel.ISupportInitialize)dataGridView).EndInit();
             ResumeLayout(false);
         }
 
         #endregion
 
-        private DataGridView dataGridView1;
+        private DataGridView dataGridView;
         private Button btn_AddClient;
         private Button btn_DeleteClient;
         private Button btn_ImportClients;
-        private Button btn_EditClient;
+        private Button btn_UpdateClient;
     }
 }
