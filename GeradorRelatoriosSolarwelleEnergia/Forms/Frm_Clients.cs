@@ -119,7 +119,31 @@ namespace GeradorRelatoriosSolarwelleEnergia.Forms
 
         private void btn_EditClient_Click(object sender, EventArgs e)
         {
-            dataGrid
+            try
+            {
+                if (dataGridView.SelectedRows.Count == 0)
+                {
+                    MessageBox.Show("Selecione um cliente para editar.");
+                    return;
+                }
+                //criar lógica para botao não poder ser clicado caso não tenha linha selecionada
+                DataGridViewRow selectedRow = dataGridView.SelectedRows[0];
+                string numeroInstalacao = Convert.ToString(selectedRow.Cells["NumeroInstalacao"].Value);
+                using (var form = new Frm_AddOrUpdateClient())
+                {
+                    //fazer com que numero de instalação apareça no novo form caso selecionado, se não estiver sendo, será valor ""
+                    form.NumeroInstalacao = numeroInstalacao;
+                    var result = form.ShowDialog();
+                    if (result == DialogResult.OK)
+                    {
+                        LoadClients();
+                    }
+                }
+            }
+            catch (Exception ex) 
+            {
+                MessageBox.Show("Erro ao abrir formulário de edição: " + ex.Message);
+            }
         }
     }
 }

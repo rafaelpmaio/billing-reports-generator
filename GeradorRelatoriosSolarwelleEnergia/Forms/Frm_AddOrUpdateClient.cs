@@ -14,6 +14,7 @@ namespace GeradorRelatoriosSolarwelleEnergia.Forms
 {
     public partial class Frm_AddOrUpdateClient : Form
     {
+        public string NumeroInstalacao {  get; set; }
         public Frm_AddOrUpdateClient()
         {
             InitializeComponent();
