@@ -8,7 +8,7 @@ using OfficeOpenXml;
 
 namespace GeradorRelatoriosSolarwelleEnergia.Dominio.Entidades
 {
-    internal class Cliente
+    public class Cliente
     {
         public string NumeroCliente { get; set; }
         public string NumeroInstalacao { get; set; }

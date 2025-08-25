@@ -9,25 +9,53 @@ using System.Threading.Tasks;
 using System.Windows.Forms;
 using GeradorRelatoriosSolarwelleEnergia.Dominio.Entidades;
 using GeradorRelatoriosSolarwelleEnergia.Infrastructure.Database;
+using iText.StyledXmlParser.Jsoup.Nodes;
 
 namespace GeradorRelatoriosSolarwelleEnergia.Forms
 {
     public partial class Frm_AddOrUpdateClient : Form
     {
-        public string NumeroInstalacao {  get; set; }
-        public Frm_AddOrUpdateClient()
+        private Cliente? _client;
+        public string NumeroInstalacao { get; set; }
+        public Frm_AddOrUpdateClient(Cliente? client = null)
         {
             InitializeComponent();
+            _client = client;
+            if (_client != null)
+            {
+                this.Text = $"Editando cliente {(_client is ClientePessoaFisica pf? pf.Nome : (_client as ClientePessoaJuridica)?.RazaoSocial ?? "")}";
+                PopulateFields(_client);
+                txtBox_NumeroInstalacao.ReadOnly = true;
+                txtBox_NumeroInstalacao.BackColor = SystemColors.Control;
+                txtBox_NumeroInstalacao.TabStop = false;
+            }
+            else
+            {
+                this.Text = "Adicionando novo cliente";
+            }
         }
 
-        private void btn_AddClient_Click(object sender, EventArgs e)
+        private void btn_Enviar_Click(object sender, EventArgs e)
         {
             try
             {
                 Cliente client = BuildClientFromForm();
 
                 var repo = new ClientRepository();
-                repo.Insert(client);
+
+                if (_client == null)
+                {
+                    repo.Insert(client);
+                    MessageBox.Show("Cliente adicionado com sucesso!", "Sucesso", MessageBoxButtons.OK, MessageBoxIcon.Information);
+                }
+                else
+                {
+                    client.NumeroInstalacao = _client.NumeroInstalacao;
+                    repo.Update(client);
+                    MessageBox.Show("Cliente atualizado com sucesso!", "Sucesso", MessageBoxButtons.OK, MessageBoxIcon.Information);
+                }
+                DialogResult = DialogResult.OK;
+                Close();
                 ClearFormFields();
             }
             catch (InvalidOperationException ex)
@@ -38,30 +66,7 @@ namespace GeradorRelatoriosSolarwelleEnergia.Forms
             {
                 MessageBox.Show("Erro ao salvar cliente: " + ex.Message);
             }
-        }    
-
-        private void btn_UpdateClient_Click(object sender, EventArgs e)
-        {
-            //try
-            //{
-               
-            //    Cliente updatedClient = BuildClientFromForm();                
-            //    updatedClient.NumeroInstalacao = clienteExistente.Id; // supondo que você tenha um cliente existente selecionado
-
-            //    var repo = new ClientRepository();
-            //    repo.Update(updatedClient);
-            //    ClearFormFields();
-            //}
-            //catch (InvalidOperationException ex)
-            //{
-            //    MessageBox.Show(ex.Message);
-            //}
-            //catch (Exception ex)
-            //{
-            //    MessageBox.Show("Erro ao editar cliente: " + ex.Message);
-            //}
         }
-
         private Cliente BuildClientFromForm()
         {
             string numeroInstalacao = txtBox_NumeroInstalacao.Text;
@@ -122,7 +127,6 @@ namespace GeradorRelatoriosSolarwelleEnergia.Forms
 
             return cliente;
         }
-
         private void ClearFormFields()
         {
             txtBox_NumeroInstalacao.Clear();
@@ -145,7 +149,34 @@ namespace GeradorRelatoriosSolarwelleEnergia.Forms
 
             txtBox_NumeroInstalacao.Focus();
         }
+        private void PopulateFields(Cliente cliente)
 
-        
+        {
+
+            txtBox_NumeroInstalacao.Text = cliente.NumeroInstalacao;
+            txtBox_NumeroCliente.Text = cliente.NumeroCliente;
+            txtBox_Telefone.Text = cliente.Telefone;
+            //txtEndereco.Text = cliente.Endereco;
+            txtBox_Email.Text = cliente.Email;
+            txtBox_DistribuidoraEnergia.Text = cliente.DistribuidoraLocal;
+            txtBox_DescontoCliente.Text = cliente.DescontoPercentual;
+
+            if (cliente is ClientePessoaJuridica pj)
+            {
+                txtBox_NomeOuRazaoSocial.Text = pj.RazaoSocial;
+                txtBox_CpfOuCnpj.Text = pj.Cnpj;
+                txtBox_RgOuRepresentanteLegal.Text = pj.RepresentanteLegal;
+                rbtn_PessoaJuridica.Checked = true;
+
+            }
+            else if (cliente is ClientePessoaFisica pf)
+            {
+                txtBox_NomeOuRazaoSocial.Text = pf.Nome;
+                txtBox_CpfOuCnpj.Text = pf.Cpf;
+                txtBox_RgOuRepresentanteLegal.Text = pf.Rg;
+                rbtn_PessoaFisica.Checked = true;
+            }
+        }
+
     }
 }

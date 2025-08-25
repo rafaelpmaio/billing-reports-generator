@@ -50,7 +50,6 @@ namespace GeradorRelatoriosSolarwelleEnergia.Infrastructure.Database
                 }
             }
         }
-
         public List<Cliente> GetClients()
         {
             var list = new List<Cliente>();
@@ -95,7 +94,6 @@ namespace GeradorRelatoriosSolarwelleEnergia.Infrastructure.Database
             }
             return list;
         }
-
         public void Insert(Cliente cliente)
         {
             using (var conn = new SQLiteConnection(_connString))
@@ -159,19 +157,17 @@ namespace GeradorRelatoriosSolarwelleEnergia.Infrastructure.Database
                 cmd.ExecuteNonQuery();
             }
         }
-
         public void Remove(string numeroInstalacao)
         {
             using (var conn = new SQLiteConnection(_connString))
             {
                 conn.Open();
-                string sql = "DELETE FROM Clientes WHERE NumeroCliente = @numeroCliente";
+                string sql = "DELETE FROM Clientes WHERE NumeroInstalacao  = @numeroInstalacao";
                 var cmd = new SQLiteCommand(sql, conn);
                 cmd.Parameters.AddWithValue("@numeroInstalacao", numeroInstalacao);
                 cmd.ExecuteNonQuery();
             }
         }
-
         private void AddClientParameters(SQLiteCommand cmd, Cliente client, bool includeNumeroInstalacao = true)
         {
             string razaoSocialOuNome = "";

@@ -19,9 +19,94 @@ namespace GeradorRelatoriosSolarwelleEnergia.Forms
         {
             InitializeComponent();
             this.Load += Frm_Clients_Load;
+            dataGridView.SelectionChanged += DataGridView_SelectionChanged;
         }
 
         public void LoadClients()
+        {
+            dataGridView.DataSource = GetClientsAsDataTable();
+            dataGridView.ClearSelection();
+        }
+        private void Frm_Clients_Load(object? sender, EventArgs e)
+        {
+            LoadClients();
+        }
+        private void btn_AddClient_Click(object sender, EventArgs e)
+        {
+            using (var form = new Frm_AddOrUpdateClient())
+            {
+                var result = form.ShowDialog();
+                if (result == DialogResult.OK)
+                {
+                    LoadClients();
+                }
+            }
+
+        }
+        private void btn_DeleteClient_Click(object sender, EventArgs e)
+        {
+            var confirmResult = MessageBox.Show(
+                    "Tem certeza que deseja excluir o cliente selecionado?",
+                    "Confirmação",
+                    MessageBoxButtons.YesNo,
+                    MessageBoxIcon.Question);
+
+            if (confirmResult == DialogResult.No)
+                return;
+
+            try
+            {
+                DataGridViewRow selectedRow = dataGridView.SelectedRows[0];
+                string numeroInstalacao = Convert.ToString(selectedRow.Cells["NumeroInstalacao"].Value);
+
+                var repo = new ClientRepository();
+                repo.Remove(numeroInstalacao);
+
+                MessageBox.Show("Cliente removido com sucesso.", "Sucesso", MessageBoxButtons.OK, MessageBoxIcon.Information);
+
+                LoadClients(); // Recarrega a grid
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show("Erro ao excluir cliente: " + ex.Message, "Erro", MessageBoxButtons.OK, MessageBoxIcon.Error);
+            }
+        }
+        private void btn_UpdateClient_Click(object sender, EventArgs e)
+        {
+            var client = CreateClientFromSelectedRow();
+ 
+            using (var form = new Frm_AddOrUpdateClient(client))
+            {
+                var result = form.ShowDialog();
+                if(result == DialogResult.OK)
+                {
+                    LoadClients();
+                }
+            }
+        }
+        private void btn_ImportClients_Click(object sender, EventArgs e)
+        {
+            OpenFileDialog openFileDialog = new OpenFileDialog();
+            openFileDialog.Filter = "Arquivos Excel (*.xlsx)|*.xlsx|Todos os arquivos (*.*)|*.*";
+            openFileDialog.Title = "Selecione a planilha de clientes";
+
+            if (openFileDialog.ShowDialog() == DialogResult.OK)
+            {
+                string filePath = openFileDialog.FileName;
+
+                var importer = new ClientImporter();
+                importer.ImportFromExcelToDb(filePath);
+
+                MessageBox.Show("Clientes importados com sucesso!", "Importação", MessageBoxButtons.OK, MessageBoxIcon.Information);
+            }
+        }
+        private void DataGridView_SelectionChanged(object? sender, EventArgs e)
+        {
+            bool rowSelected = dataGridView.SelectedRows.Count > 0;
+            btn_DeleteClient.Enabled = rowSelected;
+            btn_UpdateClient.Enabled = rowSelected;
+        }
+        private DataTable GetClientsAsDataTable() 
         {
             var repo = new ClientRepository();
             var clients = repo.GetClients();
@@ -73,77 +158,56 @@ namespace GeradorRelatoriosSolarwelleEnergia.Forms
                     client is ClientePessoaJuridica ? 1 : 0
                 );
             }
-
-            dataGridView.DataSource = table;
+            return table;
         }
-
-        private void Frm_Clients_Load(object? sender, EventArgs e)
+        private Cliente CreateClientFromSelectedRow()
         {
-            LoadClients();
-        }
+            DataGridViewRow selectedRow = dataGridView.SelectedRows[0];
 
-        private void btn_AddClient_Click(object sender, EventArgs e)
-        {
-            using (var form = new Frm_AddOrUpdateClient())
+            string numeroInstalacao = selectedRow.Cells["NumeroInstalacao"].Value?.ToString();
+            string numeroCliente = selectedRow.Cells["NumeroCLiente"].Value?.ToString();
+            string nome = selectedRow.Cells["RazaoSocialOuNome"].Value?.ToString();
+            string doc = selectedRow.Cells["CnpjOuCpf"].Value?.ToString();
+            string representante = selectedRow.Cells["RepresentanteLegal"].Value?.ToString();
+            string rg = selectedRow.Cells["RG"].Value?.ToString();
+            string telefone = selectedRow.Cells["Telefone"].Value?.ToString();
+            string endereco = selectedRow.Cells["Endereco"].Value?.ToString();
+            string email = selectedRow.Cells["Email"].Value?.ToString();
+            string distribuidora = selectedRow.Cells["DistribuidoraLocal"].Value?.ToString();
+            string desconto = selectedRow.Cells["DescontoPercentual"].Value?.ToString();
+            int tipo = Convert.ToInt32(selectedRow.Cells["TipoCliente"].Value);
+
+            Cliente cliente;
+
+            if (tipo == 1)
             {
-                var result = form.ShowDialog();
-                if (result == DialogResult.OK)
+                cliente = new ClientePessoaJuridica
                 {
-                    LoadClients();
-                }
+                    RazaoSocial = nome,
+                    Cnpj = doc,
+                    RepresentanteLegal = representante
+                };
             }
-
-        }
-
-        private void btn_DeleteClient_Click(object sender, EventArgs e)
-        {
-
-        }
-
-        private void btn_ImportClients_Click(object sender, EventArgs e)
-        {
-            OpenFileDialog openFileDialog = new OpenFileDialog();
-            openFileDialog.Filter = "Arquivos Excel (*.xlsx)|*.xlsx|Todos os arquivos (*.*)|*.*";
-            openFileDialog.Title = "Selecione a planilha de clientes";
-
-            if (openFileDialog.ShowDialog() == DialogResult.OK)
+            else
             {
-                string filePath = openFileDialog.FileName;
-
-                var importer = new ClientImporter();
-                importer.ImportFromExcelToDb(filePath);
-
-                MessageBox.Show("Clientes importados com sucesso!", "Importação", MessageBoxButtons.OK, MessageBoxIcon.Information);
-            }
-        }
-
-        private void btn_EditClient_Click(object sender, EventArgs e)
-        {
-            try
-            {
-                if (dataGridView.SelectedRows.Count == 0)
+                cliente = new ClientePessoaFisica
                 {
-                    MessageBox.Show("Selecione um cliente para editar.");
-                    return;
-                }
-                //criar lógica para botao não poder ser clicado caso não tenha linha selecionada
-                DataGridViewRow selectedRow = dataGridView.SelectedRows[0];
-                string numeroInstalacao = Convert.ToString(selectedRow.Cells["NumeroInstalacao"].Value);
-                using (var form = new Frm_AddOrUpdateClient())
-                {
-                    //fazer com que numero de instalação apareça no novo form caso selecionado, se não estiver sendo, será valor ""
-                    form.NumeroInstalacao = numeroInstalacao;
-                    var result = form.ShowDialog();
-                    if (result == DialogResult.OK)
-                    {
-                        LoadClients();
-                    }
-                }
+                    Nome = nome,
+                    Cpf = doc,
+                    Rg = rg
+                };
             }
-            catch (Exception ex) 
-            {
-                MessageBox.Show("Erro ao abrir formulário de edição: " + ex.Message);
-            }
+
+            cliente.NumeroInstalacao = numeroInstalacao;
+            cliente.NumeroCliente = numeroCliente;
+            cliente.Telefone = telefone;
+            cliente.Endereco = endereco;
+            cliente.Email = email;
+            cliente.DistribuidoraLocal = distribuidora;
+            cliente.DescontoPercentual = desconto;
+            return cliente;
         }
+
+
     }
 }

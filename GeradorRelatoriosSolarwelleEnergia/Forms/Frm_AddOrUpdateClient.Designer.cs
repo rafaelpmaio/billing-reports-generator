@@ -63,8 +63,7 @@
             txtBox_Cep = new TextBox();
             lbl_Cep = new Label();
             grpBox_Endereco = new GroupBox();
-            btn_AddClient = new Button();
-            btn_UpdateClient = new Button();
+            btn_Enviar = new Button();
             grpBox_Endereco.SuspendLayout();
             SuspendLayout();
             // 
@@ -369,33 +368,22 @@
             grpBox_Endereco.TabStop = false;
             grpBox_Endereco.Text = "Endereço";
             // 
-            // btn_AddClient
+            // btn_Enviar
             // 
-            btn_AddClient.Location = new Point(315, 443);
-            btn_AddClient.Name = "btn_AddClient";
-            btn_AddClient.Size = new Size(75, 23);
-            btn_AddClient.TabIndex = 35;
-            btn_AddClient.Text = "Adicionar";
-            btn_AddClient.UseVisualStyleBackColor = true;
-            btn_AddClient.Click += btn_AddClient_Click;
-            // 
-            // btn_UpdateClient
-            // 
-            btn_UpdateClient.Location = new Point(394, 443);
-            btn_UpdateClient.Name = "btn_UpdateClient";
-            btn_UpdateClient.Size = new Size(75, 23);
-            btn_UpdateClient.TabIndex = 36;
-            btn_UpdateClient.Text = "Atualizar";
-            btn_UpdateClient.UseVisualStyleBackColor = true;
-            btn_UpdateClient.Click += btn_UpdateClient_Click;
+            btn_Enviar.Location = new Point(394, 443);
+            btn_Enviar.Name = "btn_Enviar";
+            btn_Enviar.Size = new Size(75, 23);
+            btn_Enviar.TabIndex = 35;
+            btn_Enviar.Text = "Enviar";
+            btn_Enviar.UseVisualStyleBackColor = true;
+            btn_Enviar.Click += btn_Enviar_Click;
             // 
             // Frm_AddOrUpdateClient
             // 
             AutoScaleDimensions = new SizeF(7F, 15F);
             AutoScaleMode = AutoScaleMode.Font;
             ClientSize = new Size(486, 469);
-            Controls.Add(btn_UpdateClient);
-            Controls.Add(btn_AddClient);
+            Controls.Add(btn_Enviar);
             Controls.Add(grpBox_Endereco);
             Controls.Add(rbtn_PessoaJuridica);
             Controls.Add(rbtn_PessoaFisica);
@@ -462,7 +450,6 @@
         private TextBox txtBox_Cep;
         private Label lbl_Cep;
         private GroupBox grpBox_Endereco;
-        private Button btn_AddClient;
-        private Button btn_UpdateClient;
+        private Button btn_Enviar;
     }
 }

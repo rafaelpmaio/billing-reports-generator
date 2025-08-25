@@ -36,12 +36,13 @@
             ((System.ComponentModel.ISupportInitialize)dataGridView).BeginInit();
             SuspendLayout();
             // 
-            // dataGridView1
+            // dataGridView
             // 
             dataGridView.ColumnHeadersHeightSizeMode = DataGridViewColumnHeadersHeightSizeMode.AutoSize;
             dataGridView.Dock = DockStyle.Top;
             dataGridView.Location = new Point(0, 0);
-            dataGridView.Name = "dataGridView1";
+            dataGridView.Name = "dataGridView";
+            dataGridView.SelectionMode = DataGridViewSelectionMode.FullRowSelect;
             dataGridView.Size = new Size(800, 409);
             dataGridView.TabIndex = 0;
             // 
@@ -78,13 +79,14 @@
             // 
             // btn_UpdateClient
             // 
+            btn_UpdateClient.Enabled = false;
             btn_UpdateClient.Location = new Point(713, 415);
             btn_UpdateClient.Name = "btn_UpdateClient";
             btn_UpdateClient.Size = new Size(75, 23);
             btn_UpdateClient.TabIndex = 4;
             btn_UpdateClient.Text = "Editar";
             btn_UpdateClient.UseVisualStyleBackColor = true;
-            btn_UpdateClient.Click += btn_EditClient_Click;
+            btn_UpdateClient.Click += btn_UpdateClient_Click;
             // 
             // Frm_Clients
             // 
