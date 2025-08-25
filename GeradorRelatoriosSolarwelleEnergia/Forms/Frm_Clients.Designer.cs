@@ -99,7 +99,7 @@
             Controls.Add(btn_AddClient);
             Controls.Add(dataGridView);
             Name = "Frm_Clients";
-            Text = "Frm_ClientsForm";
+            Text = "Clientes SollarWelle";
             ((System.ComponentModel.ISupportInitialize)dataGridView).EndInit();
             ResumeLayout(false);
         }

@@ -43,21 +43,6 @@ namespace GeradorRelatoriosSolarwelleEnergia
                 habilitarBotao();
             }
         }
-
-        private void txtBox_CaminhoTabelaClientes_Click(object sender, EventArgs e)
-        {
-            OpenFileDialog openFileDialog = new OpenFileDialog();
-            openFileDialog.Title = "Selecione um arquivo XLSX";
-            openFileDialog.Filter = "Arquivos XLSX (*.xlsx)|*.xlsx";
-            openFileDialog.InitialDirectory = Environment.GetFolderPath(Environment.SpecialFolder.MyDocuments);
-
-            if (openFileDialog.ShowDialog() == DialogResult.OK)
-            {
-                txtBox_CaminhoTabelaClientes.Text = openFileDialog.FileName;
-                habilitarBotao();
-            }
-        }
-
         private void txtBox_ValorKwH_KeyPress(object sender, KeyPressEventArgs e)
         {
             TextBox txt = sender as TextBox;
@@ -106,10 +91,13 @@ namespace GeradorRelatoriosSolarwelleEnergia
                     Directory.CreateDirectory(destinyReportsPath);
                 }
 
+                var repo = new ClientRepository();
+                var clients = repo.GetClients();
+
                 var input = new ReportGenerationInputDto
                 {
                     CemigTablePath = txtBox_CaminhoTabelaCemig.Text,
-                    ClientsTablePath = txtBox_CaminhoTabelaClientes.Text,
+                    Clients = clients,
                     KwhValue = float.Parse(txtBox_ValorKwH.Text),
                     DestinyFolder = destinyReportsPath,
                     PdfModelPath = Path.Combine(AppContext.BaseDirectory, "Assets", "modeloapresentacao.pdf"),
@@ -135,8 +123,7 @@ namespace GeradorRelatoriosSolarwelleEnergia
         private void habilitarBotao()
         {
             btn_GerarRelatorios.Enabled =
-                !string.IsNullOrWhiteSpace(txtBox_CaminhoTabelaCemig.Text) &&
-                !string.IsNullOrWhiteSpace(txtBox_CaminhoTabelaClientes.Text) &&
+                !string.IsNullOrWhiteSpace(txtBox_CaminhoTabelaCemig.Text) &&               
                 !string.IsNullOrWhiteSpace(txtBox_ValorKwH.Text);
         }
 

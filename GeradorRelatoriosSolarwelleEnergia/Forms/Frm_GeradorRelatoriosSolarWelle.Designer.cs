@@ -33,8 +33,6 @@
             txtBox_CaminhoTabelaCemig = new TextBox();
             lbl_ValorKwH = new Label();
             txtBox_ValorKwH = new TextBox();
-            txtBox_CaminhoTabelaClientes = new TextBox();
-            lbl_TabelaClientes = new Label();
             clientes = new Button();
             SuspendLayout();
             // 
@@ -50,7 +48,7 @@
             // btn_GerarRelatorios
             // 
             btn_GerarRelatorios.Enabled = false;
-            btn_GerarRelatorios.Location = new Point(243, 175);
+            btn_GerarRelatorios.Location = new Point(243, 116);
             btn_GerarRelatorios.Name = "btn_GerarRelatorios";
             btn_GerarRelatorios.Size = new Size(119, 23);
             btn_GerarRelatorios.TabIndex = 1;
@@ -70,7 +68,7 @@
             // lbl_ValorKwH
             // 
             lbl_ValorKwH.AutoSize = true;
-            lbl_ValorKwH.Location = new Point(12, 132);
+            lbl_ValorKwH.Location = new Point(12, 73);
             lbl_ValorKwH.Name = "lbl_ValorKwH";
             lbl_ValorKwH.Size = new Size(129, 15);
             lbl_ValorKwH.TabIndex = 3;
@@ -78,33 +76,15 @@
             // 
             // txtBox_ValorKwH
             // 
-            txtBox_ValorKwH.Location = new Point(12, 150);
+            txtBox_ValorKwH.Location = new Point(12, 91);
             txtBox_ValorKwH.Name = "txtBox_ValorKwH";
             txtBox_ValorKwH.Size = new Size(129, 23);
             txtBox_ValorKwH.TabIndex = 4;
             txtBox_ValorKwH.KeyPress += txtBox_ValorKwH_KeyPress;
             // 
-            // txtBox_CaminhoTabelaClientes
-            // 
-            txtBox_CaminhoTabelaClientes.Location = new Point(12, 94);
-            txtBox_CaminhoTabelaClientes.Name = "txtBox_CaminhoTabelaClientes";
-            txtBox_CaminhoTabelaClientes.ReadOnly = true;
-            txtBox_CaminhoTabelaClientes.Size = new Size(269, 23);
-            txtBox_CaminhoTabelaClientes.TabIndex = 6;
-            txtBox_CaminhoTabelaClientes.Click += txtBox_CaminhoTabelaClientes_Click;
-            // 
-            // lbl_TabelaClientes
-            // 
-            lbl_TabelaClientes.AutoSize = true;
-            lbl_TabelaClientes.Location = new Point(12, 76);
-            lbl_TabelaClientes.Name = "lbl_TabelaClientes";
-            lbl_TabelaClientes.Size = new Size(171, 15);
-            lbl_TabelaClientes.TabIndex = 5;
-            lbl_TabelaClientes.Text = "Selecione a tabela de CLIENTES";
-            // 
             // clientes
             // 
-            clientes.Location = new Point(162, 175);
+            clientes.Location = new Point(162, 116);
             clientes.Name = "clientes";
             clientes.Size = new Size(75, 23);
             clientes.TabIndex = 7;
@@ -116,10 +96,8 @@
             // 
             AutoScaleDimensions = new SizeF(7F, 15F);
             AutoScaleMode = AutoScaleMode.Font;
-            ClientSize = new Size(374, 210);
+            ClientSize = new Size(374, 149);
             Controls.Add(clientes);
-            Controls.Add(txtBox_CaminhoTabelaClientes);
-            Controls.Add(lbl_TabelaClientes);
             Controls.Add(txtBox_ValorKwH);
             Controls.Add(lbl_ValorKwH);
             Controls.Add(txtBox_CaminhoTabelaCemig);
@@ -138,8 +116,6 @@
         private TextBox txtBox_CaminhoTabelaCemig;
         private Label lbl_ValorKwH;
         private TextBox txtBox_ValorKwH;
-        private TextBox txtBox_CaminhoTabelaClientes;
-        private Label lbl_TabelaClientes;
         private Button clientes;
     }
 }

@@ -64,7 +64,7 @@ namespace GeradorRelatoriosSolarwelleEnergia.Forms
 
                 MessageBox.Show("Cliente removido com sucesso.", "Sucesso", MessageBoxButtons.OK, MessageBoxIcon.Information);
 
-                LoadClients(); // Recarrega a grid
+                LoadClients(); 
             }
             catch (Exception ex)
             {
@@ -96,6 +96,7 @@ namespace GeradorRelatoriosSolarwelleEnergia.Forms
 
                 var importer = new ClientImporter();
                 importer.ImportFromExcelToDb(filePath);
+                LoadClients();
 
                 MessageBox.Show("Clientes importados com sucesso!", "Importação", MessageBoxButtons.OK, MessageBoxIcon.Information);
             }

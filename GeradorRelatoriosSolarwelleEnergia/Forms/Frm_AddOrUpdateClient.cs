@@ -67,6 +67,56 @@ namespace GeradorRelatoriosSolarwelleEnergia.Forms
                 MessageBox.Show("Erro ao salvar cliente: " + ex.Message);
             }
         }
+        private void ClearFormFields()
+        {
+            txtBox_NumeroInstalacao.Clear();
+            txtBox_NumeroCliente.Clear();
+            txtBox_NomeOuRazaoSocial.Clear();
+            txtBox_CpfOuCnpj.Clear();
+            txtBox_Telefone.Clear();
+            txtBox_RgOuRepresentanteLegal.Clear();
+            txtBox_Email.Clear();
+            txtBox_DistribuidoraEnergia.Clear();
+            txtBox_DescontoCliente.Clear();
+
+            txtBox_Logradouro.Clear();
+            txtBox_NumeroEndereco.Clear();
+            txtBox_ComplementoEndereco.Clear();
+            txtBox_Bairro.Clear();
+            txtBox_Cidade.Clear();
+            txtBox_Estado.Clear();
+            txtBox_Cep.Clear();
+
+            txtBox_NumeroInstalacao.Focus();
+        }
+        private void PopulateFields(Cliente cliente)
+
+        {
+
+            txtBox_NumeroInstalacao.Text = cliente.NumeroInstalacao;
+            txtBox_NumeroCliente.Text = cliente.NumeroCliente;
+            txtBox_Telefone.Text = cliente.Telefone;
+            //txtEndereco.Text = cliente.Endereco;
+            txtBox_Email.Text = cliente.Email;
+            txtBox_DistribuidoraEnergia.Text = cliente.DistribuidoraLocal;
+            txtBox_DescontoCliente.Text = cliente.DescontoPercentual;
+
+            if (cliente is ClientePessoaJuridica pj)
+            {
+                txtBox_NomeOuRazaoSocial.Text = pj.RazaoSocial;
+                txtBox_CpfOuCnpj.Text = pj.Cnpj;
+                txtBox_RgOuRepresentanteLegal.Text = pj.RepresentanteLegal;
+                rbtn_PessoaJuridica.Checked = true;
+
+            }
+            else if (cliente is ClientePessoaFisica pf)
+            {
+                txtBox_NomeOuRazaoSocial.Text = pf.Nome;
+                txtBox_CpfOuCnpj.Text = pf.Cpf;
+                txtBox_RgOuRepresentanteLegal.Text = pf.Rg;
+                rbtn_PessoaFisica.Checked = true;
+            }
+        }
         private Cliente BuildClientFromForm()
         {
             string numeroInstalacao = txtBox_NumeroInstalacao.Text;
@@ -126,56 +176,6 @@ namespace GeradorRelatoriosSolarwelleEnergia.Forms
             cliente.DescontoPercentual = descontoCliente;
 
             return cliente;
-        }
-        private void ClearFormFields()
-        {
-            txtBox_NumeroInstalacao.Clear();
-            txtBox_NumeroCliente.Clear();
-            txtBox_NomeOuRazaoSocial.Clear();
-            txtBox_CpfOuCnpj.Clear();
-            txtBox_Telefone.Clear();
-            txtBox_RgOuRepresentanteLegal.Clear();
-            txtBox_Email.Clear();
-            txtBox_DistribuidoraEnergia.Clear();
-            txtBox_DescontoCliente.Clear();
-
-            txtBox_Logradouro.Clear();
-            txtBox_NumeroEndereco.Clear();
-            txtBox_ComplementoEndereco.Clear();
-            txtBox_Bairro.Clear();
-            txtBox_Cidade.Clear();
-            txtBox_Estado.Clear();
-            txtBox_Cep.Clear();
-
-            txtBox_NumeroInstalacao.Focus();
-        }
-        private void PopulateFields(Cliente cliente)
-
-        {
-
-            txtBox_NumeroInstalacao.Text = cliente.NumeroInstalacao;
-            txtBox_NumeroCliente.Text = cliente.NumeroCliente;
-            txtBox_Telefone.Text = cliente.Telefone;
-            //txtEndereco.Text = cliente.Endereco;
-            txtBox_Email.Text = cliente.Email;
-            txtBox_DistribuidoraEnergia.Text = cliente.DistribuidoraLocal;
-            txtBox_DescontoCliente.Text = cliente.DescontoPercentual;
-
-            if (cliente is ClientePessoaJuridica pj)
-            {
-                txtBox_NomeOuRazaoSocial.Text = pj.RazaoSocial;
-                txtBox_CpfOuCnpj.Text = pj.Cnpj;
-                txtBox_RgOuRepresentanteLegal.Text = pj.RepresentanteLegal;
-                rbtn_PessoaJuridica.Checked = true;
-
-            }
-            else if (cliente is ClientePessoaFisica pf)
-            {
-                txtBox_NomeOuRazaoSocial.Text = pf.Nome;
-                txtBox_CpfOuCnpj.Text = pf.Cpf;
-                txtBox_RgOuRepresentanteLegal.Text = pf.Rg;
-                rbtn_PessoaFisica.Checked = true;
-            }
         }
 
     }

@@ -37,6 +37,7 @@ namespace GeradorRelatoriosSolarwelleEnergia.ApplicationLayer.Services
         public void Generate(ReportGenerationInputDto input)
         {
             var extension = Path.GetExtension(input.CemigTablePath).ToLower();
+
             List<TabelaCemig> cemigTableList = extension switch
             {
                 ".xml" => _cemigService.LerTabelaXml(input.CemigTablePath),
@@ -44,8 +45,8 @@ namespace GeradorRelatoriosSolarwelleEnergia.ApplicationLayer.Services
                 _ => throw new NotSupportedException("Formato de arquivo da Tabela CEMIG não suportado.")
             };
 
-            input.UseDatabase = string.IsNullOrWhiteSpace(input.ClientsTablePath);
-            var clientsList = input.UseDatabase ? _clientReader.ReadClients() : _clientReader.ReadClients(input.ClientsTablePath);
+            
+            var clientsList = input.Clients;
             var economyHistory = _historyReader.Load();
             var relatorios = _reportService.MontarTabelaDeRelatorios(
                 cemigTableList,
