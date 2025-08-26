@@ -11,9 +11,9 @@ using GeradorRelatoriosSolarwelleEnergia.Domain.Builders;
 
 namespace GeradorRelatoriosSolarwelleEnergia.Domain.Services
 {
-    internal class TabelaCemigService
+    internal class CemigTableService
     {
-        public List<TabelaCemig> LerTabelaExcel(string filePath)
+        public List<TabelaCemig> ReadExcelTable(string filePath)
         {
             var tabela = new List<TabelaCemig>();
 
@@ -35,7 +35,6 @@ namespace GeradorRelatoriosSolarwelleEnergia.Domain.Services
 
             return tabela;
         }
-
         public List<TabelaCemig> LerTabelaXml(string filePath)
         {
             var doc = XDocument.Load(filePath);

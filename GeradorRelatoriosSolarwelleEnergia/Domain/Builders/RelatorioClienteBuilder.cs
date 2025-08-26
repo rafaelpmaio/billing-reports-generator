@@ -22,7 +22,7 @@ namespace GeradorRelatoriosSolarwelleEnergia.Domain.Builders
                 NumeroInstalacao = tabelaCemig.NumeroInstalacao,
                 QtdConsumo = float.Parse(tabelaCemig.QtdConsumo, CultureInfo.InvariantCulture),
                 QtdCompensacao = float.Parse(tabelaCemig.QtdCompensacao, CultureInfo.InvariantCulture),
-                Endereco = cliente.Endereco,
+                Endereco = cliente.Endereco?.ToString() ?? "",
                 Email = cliente.Email,
                 ValorKwhHora = kwhHora,
                 Vencimento = vencimento,

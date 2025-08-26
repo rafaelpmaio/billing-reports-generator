@@ -14,15 +14,15 @@ using GeradorRelatoriosSolarwelleEnergia.Infrastructure.Readers;
 
 namespace GeradorRelatoriosSolarwelleEnergia
 {
-    public partial class Frm_GeradorRelatoriosSolarWelle : Form
+    public partial class Frm_SolarWelleReportsGenerator : Form
     {
         private readonly ReportGeneratorAppService _handler;
-        public Frm_GeradorRelatoriosSolarWelle()
+        public Frm_SolarWelleReportsGenerator()
         {
             InitializeComponent();
 
             _handler = new ReportGeneratorAppService(
-                new TabelaCemigService(),
+                new CemigTableService(),
                 new ClientExcelReader(),
                 new ClientEconomyHistoryReader(),
                 new ClientReportService(),
@@ -30,7 +30,7 @@ namespace GeradorRelatoriosSolarwelleEnergia
                 );
         }
 
-        private void txtBox_CaminhoTabelaCemig_Click(object sender, EventArgs e)
+        private void txtBox_CemigTablePath_Click(object sender, EventArgs e)
         {
             OpenFileDialog openFileDialog = new OpenFileDialog();
             openFileDialog.Title = "Selecione um arquivo XML ou XLSX";
@@ -39,11 +39,11 @@ namespace GeradorRelatoriosSolarwelleEnergia
 
             if (openFileDialog.ShowDialog() == DialogResult.OK)
             {
-                txtBox_CaminhoTabelaCemig.Text = openFileDialog.FileName;
-                habilitarBotao();
+                txtBox_CemigTablePath.Text = openFileDialog.FileName;
+                EnableGenerateButton();
             }
         }
-        private void txtBox_ValorKwH_KeyPress(object sender, KeyPressEventArgs e)
+        private void txtBox_KwhValue_KeyPress(object sender, KeyPressEventArgs e)
         {
             TextBox txt = sender as TextBox;
 
@@ -75,11 +75,10 @@ namespace GeradorRelatoriosSolarwelleEnergia
                     }
                 }
             }
-            habilitarBotao();
+            EnableGenerateButton();
 
         }
-
-        private void btn_GerarRelatorios_Click(object sender, EventArgs e)
+        private void btn_GenerateReports_Click(object sender, EventArgs e)
         {
             try
             {
@@ -96,9 +95,9 @@ namespace GeradorRelatoriosSolarwelleEnergia
 
                 var input = new ReportGenerationInputDto
                 {
-                    CemigTablePath = txtBox_CaminhoTabelaCemig.Text,
+                    CemigTablePath = txtBox_CemigTablePath.Text,
                     Clients = clients,
-                    KwhValue = float.Parse(txtBox_ValorKwH.Text),
+                    KwhValue = float.Parse(txtBox_KwhValue.Text),
                     DestinyFolder = destinyReportsPath,
                     PdfModelPath = Path.Combine(AppContext.BaseDirectory, "Assets", "modeloapresentacao.pdf"),
                 };
@@ -119,15 +118,13 @@ namespace GeradorRelatoriosSolarwelleEnergia
             }
 
         }
-
-        private void habilitarBotao()
+        private void EnableGenerateButton()
         {
-            btn_GerarRelatorios.Enabled =
-                !string.IsNullOrWhiteSpace(txtBox_CaminhoTabelaCemig.Text) &&               
-                !string.IsNullOrWhiteSpace(txtBox_ValorKwH.Text);
+            btn_GenerateReports.Enabled =
+                !string.IsNullOrWhiteSpace(txtBox_CemigTablePath.Text) &&               
+                !string.IsNullOrWhiteSpace(txtBox_KwhValue.Text);
         }
-
-        private void btn_Clientes_Click(object sender, EventArgs e)
+        private void btn_Clients_Click(object sender, EventArgs e)
         {        
             var clientsForm = new Frm_Clients();
             clientsForm.ShowDialog();

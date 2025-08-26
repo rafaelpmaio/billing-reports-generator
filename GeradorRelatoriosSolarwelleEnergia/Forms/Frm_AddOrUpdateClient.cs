@@ -7,6 +7,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using System.Windows.Forms;
+using GeradorRelatoriosSolarwelleEnergia.Domain.Entities;
 using GeradorRelatoriosSolarwelleEnergia.Dominio.Entidades;
 using GeradorRelatoriosSolarwelleEnergia.Infrastructure.Database;
 using iText.StyledXmlParser.Jsoup.Nodes;
@@ -20,22 +21,65 @@ namespace GeradorRelatoriosSolarwelleEnergia.Forms
         public Frm_AddOrUpdateClient(Cliente? client = null)
         {
             InitializeComponent();
+            InitializeComboBoxes();
+            SetFormTitle();
+          
             _client = client;
+
+            if (_client != null) ConfigureEditMode();
+        }
+
+        private void InitializeComboBoxes()
+        {
+            cmb_DiscountRate.Items.Clear();
+            cmb_DiscountRate.Items.AddRange(new object[] { "0%", "5%", "10%", "15%", "20%", "25%", "30%" });
+            cmb_DiscountRate.SelectedIndex = 0;
+
+            cmb_EnergyDistributor.Items.Clear();
+            cmb_EnergyDistributor.Items.AddRange(new object[]
+            {
+                "ELETROBRAS",
+                "CPFL ENERGIA",
+                "LIGHT",
+                "ENEL DISTRIBUIÇÃO SÃO PAULO",
+                "ENEL DISTRIBUIÇÃO RIO",
+                "EQUATORIAL ENERGIA",
+                "CEMIG",
+                "NEOENERGIA",
+                "CELESC",
+                "CIA ENERGÉTICA DE MINAS GERAIS",
+                "COELBA",
+                "CELG-D",
+                "COSERN",
+                "ENERGISA",
+                "CEEE",
+                "COPEL"
+            });
+            cmb_EnergyDistributor.SelectedIndex = 0;
+        }
+        private void SetFormTitle()
+        {
             if (_client != null)
             {
-                this.Text = $"Editando cliente {(_client is ClientePessoaFisica pf? pf.Nome : (_client as ClientePessoaJuridica)?.RazaoSocial ?? "")}";
-                PopulateFields(_client);
-                txtBox_NumeroInstalacao.ReadOnly = true;
-                txtBox_NumeroInstalacao.BackColor = SystemColors.Control;
-                txtBox_NumeroInstalacao.TabStop = false;
+                var name = _client is ClientePessoaFisica pf
+                    ? pf.Nome
+                    : (_client as ClientePessoaJuridica)?.RazaoSocial ?? "";
+
+                this.Text = $"Editando cliente {name}";
             }
             else
             {
                 this.Text = "Adicionando novo cliente";
             }
         }
-
-        private void btn_Enviar_Click(object sender, EventArgs e)
+        private void ConfigureEditMode()
+        {
+            PopulateFields(_client);
+            txtBox_NumeroInstalacao.ReadOnly = true;
+            txtBox_NumeroInstalacao.BackColor = SystemColors.Control;
+            txtBox_NumeroInstalacao.TabStop = false;
+        }
+        private void btn_Send_Click(object sender, EventArgs e)
         {
             try
             {
@@ -76,8 +120,8 @@ namespace GeradorRelatoriosSolarwelleEnergia.Forms
             txtBox_Telefone.Clear();
             txtBox_RgOuRepresentanteLegal.Clear();
             txtBox_Email.Clear();
-            txtBox_DistribuidoraEnergia.Clear();
-            txtBox_DescontoCliente.Clear();
+            cmb_EnergyDistributor.SelectedIndex = 0;
+            cmb_DiscountRate.SelectedIndex = 0; ;
 
             txtBox_Logradouro.Clear();
             txtBox_NumeroEndereco.Clear();
@@ -90,16 +134,23 @@ namespace GeradorRelatoriosSolarwelleEnergia.Forms
             txtBox_NumeroInstalacao.Focus();
         }
         private void PopulateFields(Cliente cliente)
-
         {
-
             txtBox_NumeroInstalacao.Text = cliente.NumeroInstalacao;
             txtBox_NumeroCliente.Text = cliente.NumeroCliente;
             txtBox_Telefone.Text = cliente.Telefone;
-            //txtEndereco.Text = cliente.Endereco;
             txtBox_Email.Text = cliente.Email;
-            txtBox_DistribuidoraEnergia.Text = cliente.DistribuidoraLocal;
-            txtBox_DescontoCliente.Text = cliente.DescontoPercentual;
+            cmb_EnergyDistributor.Text = cliente.DistribuidoraLocal;
+            cmb_DiscountRate.Text = $"{cliente.DescontoPercentual}%";
+
+            var endereco = cliente.Endereco ?? new Endereco();
+
+            txtBox_Logradouro.Text = endereco.Logradouro;
+            txtBox_NumeroEndereco.Text = endereco.Numero;
+            txtBox_ComplementoEndereco.Text = endereco.Complemento;
+            txtBox_Bairro.Text = endereco.Bairro;
+            txtBox_Cidade.Text = endereco.Cidade;
+            txtBox_Estado.Text = endereco.Estado;
+            txtBox_Cep.Text = endereco.Cep;
 
             if (cliente is ClientePessoaJuridica pj)
             {
@@ -116,7 +167,8 @@ namespace GeradorRelatoriosSolarwelleEnergia.Forms
                 txtBox_RgOuRepresentanteLegal.Text = pf.Rg;
                 rbtn_PessoaFisica.Checked = true;
             }
-        }
+        }       
+
         private Cliente BuildClientFromForm()
         {
             string numeroInstalacao = txtBox_NumeroInstalacao.Text;
@@ -126,21 +178,30 @@ namespace GeradorRelatoriosSolarwelleEnergia.Forms
             string telefone = txtBox_Telefone.Text;
             string rgOuRepresentanteLegal = txtBox_RgOuRepresentanteLegal.Text;
             string email = txtBox_Email.Text;
-            string distribuidoraEnergia = txtBox_DistribuidoraEnergia.Text;
-            string descontoCliente = txtBox_DescontoCliente.Text;
+            string distribuidoraEnergia = cmb_EnergyDistributor.SelectedItem.ToString();
+            string descontoCliente = cmb_DiscountRate.SelectedItem.ToString().Replace("%", "");
 
             string[] partesEndereco = new string[]
             {
-        txtBox_Logradouro.Text,
-        "Nº " + txtBox_NumeroEndereco.Text,
-        txtBox_ComplementoEndereco.Text,
-        txtBox_Bairro.Text,
-        txtBox_Cidade.Text,
-        txtBox_Estado.Text,
-        "CEP: " + txtBox_Cep.Text,
+                txtBox_Logradouro.Text,
+                "Nº " + txtBox_NumeroEndereco.Text,
+                txtBox_ComplementoEndereco.Text,
+                txtBox_Bairro.Text,
+                txtBox_Cidade.Text,
+                txtBox_Estado.Text,
+                "CEP: " + txtBox_Cep.Text,
             };
 
-            string enderecoCompleto = string.Join(",", partesEndereco.Where(p => !string.IsNullOrWhiteSpace(p)));
+            var endereco = new Endereco
+            {
+                Logradouro = txtBox_Logradouro.Text,
+                Numero = txtBox_NumeroEndereco.Text,
+                Complemento = txtBox_ComplementoEndereco.Text,
+                Bairro = txtBox_Bairro.Text,
+                Cidade = txtBox_Cidade.Text,
+                Estado = txtBox_Estado.Text,
+                Cep = txtBox_Cep.Text,
+            };
 
             Cliente cliente;
 
@@ -170,13 +231,12 @@ namespace GeradorRelatoriosSolarwelleEnergia.Forms
             cliente.NumeroInstalacao = numeroInstalacao;
             cliente.NumeroCliente = numeroCliente;
             cliente.Telefone = telefone;
-            cliente.Endereco = enderecoCompleto;
+            cliente.Endereco = endereco;
             cliente.Email = email;
             cliente.DistribuidoraLocal = distribuidoraEnergia;
             cliente.DescontoPercentual = descontoCliente;
 
             return cliente;
         }
-
     }
 }

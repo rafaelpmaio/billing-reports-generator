@@ -4,6 +4,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using DocumentFormat.OpenXml.Spreadsheet;
+using GeradorRelatoriosSolarwelleEnergia.Domain.Entities;
 using GeradorRelatoriosSolarwelleEnergia.Dominio.Entidades;
 using OfficeOpenXml;
 
@@ -37,7 +38,7 @@ namespace GeradorRelatoriosSolarwelleEnergia.Infrastructure.Mappers
             cliente.NumeroCliente = ws.Cells[row, COL_NUMERO_CLIENTE].Text;
             cliente.NumeroInstalacao = ws.Cells[row, COL_NUMERO_INSTALACAO].Text;
             cliente.Telefone = ws.Cells[row, COL_TELEFONE].Text;
-            cliente.Endereco = ws.Cells[row, COL_ENDERECO].Text;
+            cliente.Endereco = Endereco.Parse(ws.Cells[row, COL_ENDERECO].Text);
             cliente.Email = ws.Cells[row, COL_EMAIL].Text;
             cliente.DistribuidoraLocal = ws.Cells[row, COL_DISTRIBUIDORA].Text;
             cliente.DescontoPercentual = ws.Cells[row, COL_DESCONTO_PERCENTUAL].Text;

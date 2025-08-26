@@ -11,8 +11,8 @@ namespace GeradorRelatoriosSolarwelleEnergia.Infrastructure.Readers
     {
         public Dictionary<string, Dictionary<string, float>> Load()
         {
-            string caminho = Path.Combine(AppContext.BaseDirectory, "Assets", "historicoEconomiaClientes.json");
-            string json = File.ReadAllText(caminho);
+            string path = Path.Combine(AppContext.BaseDirectory, "Assets", "historicoEconomiaClientes.json");
+            string json = File.ReadAllText(path);
             return JsonConvert.DeserializeObject<Dictionary<string, Dictionary<string, float>>>(json) ?? new();
         }
     }

@@ -8,6 +8,7 @@ using System.Text;
 using System.Threading.Tasks;
 using System.Windows.Forms;
 using GeradorRelatoriosSolarwelleEnergia.ApplicationLayer.Services;
+using GeradorRelatoriosSolarwelleEnergia.Domain.Entities;
 using GeradorRelatoriosSolarwelleEnergia.Dominio.Entidades;
 using GeradorRelatoriosSolarwelleEnergia.Infrastructure.Database;
 
@@ -172,11 +173,13 @@ namespace GeradorRelatoriosSolarwelleEnergia.Forms
             string representante = selectedRow.Cells["RepresentanteLegal"].Value?.ToString();
             string rg = selectedRow.Cells["RG"].Value?.ToString();
             string telefone = selectedRow.Cells["Telefone"].Value?.ToString();
-            string endereco = selectedRow.Cells["Endereco"].Value?.ToString();
+            string enderecoStr = selectedRow.Cells["Endereco"].Value?.ToString();
             string email = selectedRow.Cells["Email"].Value?.ToString();
             string distribuidora = selectedRow.Cells["DistribuidoraLocal"].Value?.ToString();
             string desconto = selectedRow.Cells["DescontoPercentual"].Value?.ToString();
             int tipo = Convert.ToInt32(selectedRow.Cells["TipoCliente"].Value);
+
+            Endereco endereco = Endereco.Parse(enderecoStr);
 
             Cliente cliente;
 
@@ -208,7 +211,5 @@ namespace GeradorRelatoriosSolarwelleEnergia.Forms
             cliente.DescontoPercentual = desconto;
             return cliente;
         }
-
-
     }
 }

@@ -13,7 +13,7 @@ namespace GeradorRelatoriosSolarwelleEnergia.Infrastructure.Readers
     {
         public List<Cliente> ReadClients(string filePath)
         {
-            var tabela = new List<Cliente>();
+            var table = new List<Cliente>();
             using (var package = new ExcelPackage(new FileInfo(filePath)))
             {
                 ExcelPackage.License.SetNonCommercialPersonal("GeradorRelatorios");
@@ -25,9 +25,9 @@ namespace GeradorRelatoriosSolarwelleEnergia.Infrastructure.Readers
                 {
                     try
                     {
-                        Cliente cliente = ClientRowMapper.Map(worksheet, row);
-                        if (cliente != null)
-                            tabela.Add(cliente);
+                        Cliente client = ClientRowMapper.Map(worksheet, row);
+                        if (client != null)
+                            table.Add(client);
                     }
                     catch (Exception ex)
                     {
@@ -35,7 +35,7 @@ namespace GeradorRelatoriosSolarwelleEnergia.Infrastructure.Readers
                     }
                 }
             }
-            return tabela;
+            return table;
 
         }
     }

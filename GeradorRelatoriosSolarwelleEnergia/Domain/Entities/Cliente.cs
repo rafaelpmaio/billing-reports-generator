@@ -4,6 +4,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using System.Xml.Linq;
+using GeradorRelatoriosSolarwelleEnergia.Domain.Entities;
 using OfficeOpenXml;
 
 namespace GeradorRelatoriosSolarwelleEnergia.Dominio.Entidades
@@ -13,7 +14,7 @@ namespace GeradorRelatoriosSolarwelleEnergia.Dominio.Entidades
         public string NumeroCliente { get; set; }
         public string NumeroInstalacao { get; set; }
         public string Telefone { get; set; }
-        public string Endereco { get; set; }
+        public Endereco Endereco = new Endereco();
         public string Email { get; set; }
         public string DistribuidoraLocal { get; set; } //pertinente?
         public string DescontoPercentual { get; set; }

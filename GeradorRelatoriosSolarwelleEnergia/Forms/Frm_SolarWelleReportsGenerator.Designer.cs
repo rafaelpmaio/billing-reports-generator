@@ -1,6 +1,6 @@
 ﻿namespace GeradorRelatoriosSolarwelleEnergia
 {
-    partial class Frm_GeradorRelatoriosSolarWelle
+    partial class Frm_SolarWelleReportsGenerator
     {
         /// <summary>
         ///  Required designer variable.
@@ -29,11 +29,11 @@
         private void InitializeComponent()
         {
             lbl_RelatorioCemig = new Label();
-            btn_GerarRelatorios = new Button();
-            txtBox_CaminhoTabelaCemig = new TextBox();
+            btn_GenerateReports = new Button();
+            txtBox_CemigTablePath = new TextBox();
             lbl_ValorKwH = new Label();
-            txtBox_ValorKwH = new TextBox();
-            clientes = new Button();
+            txtBox_KwhValue = new TextBox();
+            btn_Clients = new Button();
             SuspendLayout();
             // 
             // lbl_RelatorioCemig
@@ -45,25 +45,25 @@
             lbl_RelatorioCemig.TabIndex = 0;
             lbl_RelatorioCemig.Text = "Selecione o Relatório CEMIG";
             // 
-            // btn_GerarRelatorios
+            // btn_GenerateReports
             // 
-            btn_GerarRelatorios.Enabled = false;
-            btn_GerarRelatorios.Location = new Point(243, 116);
-            btn_GerarRelatorios.Name = "btn_GerarRelatorios";
-            btn_GerarRelatorios.Size = new Size(119, 23);
-            btn_GerarRelatorios.TabIndex = 1;
-            btn_GerarRelatorios.Text = "gerar relatórios";
-            btn_GerarRelatorios.UseVisualStyleBackColor = true;
-            btn_GerarRelatorios.Click += btn_GerarRelatorios_Click;
+            btn_GenerateReports.Enabled = false;
+            btn_GenerateReports.Location = new Point(243, 116);
+            btn_GenerateReports.Name = "btn_GenerateReports";
+            btn_GenerateReports.Size = new Size(119, 23);
+            btn_GenerateReports.TabIndex = 1;
+            btn_GenerateReports.Text = "gerar relatórios";
+            btn_GenerateReports.UseVisualStyleBackColor = true;
+            btn_GenerateReports.Click += btn_GenerateReports_Click;
             // 
-            // txtBox_CaminhoTabelaCemig
+            // txtBox_CemigTablePath
             // 
-            txtBox_CaminhoTabelaCemig.Location = new Point(12, 39);
-            txtBox_CaminhoTabelaCemig.Name = "txtBox_CaminhoTabelaCemig";
-            txtBox_CaminhoTabelaCemig.ReadOnly = true;
-            txtBox_CaminhoTabelaCemig.Size = new Size(269, 23);
-            txtBox_CaminhoTabelaCemig.TabIndex = 2;
-            txtBox_CaminhoTabelaCemig.Click += txtBox_CaminhoTabelaCemig_Click;
+            txtBox_CemigTablePath.Location = new Point(12, 39);
+            txtBox_CemigTablePath.Name = "txtBox_CemigTablePath";
+            txtBox_CemigTablePath.ReadOnly = true;
+            txtBox_CemigTablePath.Size = new Size(269, 23);
+            txtBox_CemigTablePath.TabIndex = 2;
+            txtBox_CemigTablePath.Click += txtBox_CemigTablePath_Click;
             // 
             // lbl_ValorKwH
             // 
@@ -74,34 +74,34 @@
             lbl_ValorKwH.TabIndex = 3;
             lbl_ValorKwH.Text = "Digite o valor do KW/H";
             // 
-            // txtBox_ValorKwH
+            // txtBox_KwhValue
             // 
-            txtBox_ValorKwH.Location = new Point(12, 91);
-            txtBox_ValorKwH.Name = "txtBox_ValorKwH";
-            txtBox_ValorKwH.Size = new Size(129, 23);
-            txtBox_ValorKwH.TabIndex = 4;
-            txtBox_ValorKwH.KeyPress += txtBox_ValorKwH_KeyPress;
+            txtBox_KwhValue.Location = new Point(12, 91);
+            txtBox_KwhValue.Name = "txtBox_KwhValue";
+            txtBox_KwhValue.Size = new Size(129, 23);
+            txtBox_KwhValue.TabIndex = 4;
+            txtBox_KwhValue.KeyPress += txtBox_KwhValue_KeyPress;
             // 
-            // clientes
+            // btn_Clients
             // 
-            clientes.Location = new Point(162, 116);
-            clientes.Name = "clientes";
-            clientes.Size = new Size(75, 23);
-            clientes.TabIndex = 7;
-            clientes.Text = "clientes";
-            clientes.UseVisualStyleBackColor = true;
-            clientes.Click += btn_Clientes_Click;
+            btn_Clients.Location = new Point(162, 116);
+            btn_Clients.Name = "btn_Clients";
+            btn_Clients.Size = new Size(75, 23);
+            btn_Clients.TabIndex = 7;
+            btn_Clients.Text = "clientes";
+            btn_Clients.UseVisualStyleBackColor = true;
+            btn_Clients.Click += btn_Clients_Click;
             // 
             // Frm_GeradorRelatoriosSolarWelle
             // 
             AutoScaleDimensions = new SizeF(7F, 15F);
             AutoScaleMode = AutoScaleMode.Font;
             ClientSize = new Size(374, 149);
-            Controls.Add(clientes);
-            Controls.Add(txtBox_ValorKwH);
+            Controls.Add(btn_Clients);
+            Controls.Add(txtBox_KwhValue);
             Controls.Add(lbl_ValorKwH);
-            Controls.Add(txtBox_CaminhoTabelaCemig);
-            Controls.Add(btn_GerarRelatorios);
+            Controls.Add(txtBox_CemigTablePath);
+            Controls.Add(btn_GenerateReports);
             Controls.Add(lbl_RelatorioCemig);
             Name = "Frm_GeradorRelatoriosSolarWelle";
             Text = "SolarWelle - Gerador de Relatórios";
@@ -112,10 +112,10 @@
         #endregion
 
         private Label lbl_RelatorioCemig;
-        private Button btn_GerarRelatorios;
-        private TextBox txtBox_CaminhoTabelaCemig;
+        private Button btn_GenerateReports;
+        private TextBox txtBox_CemigTablePath;
         private Label lbl_ValorKwH;
-        private TextBox txtBox_ValorKwH;
-        private Button clientes;
+        private TextBox txtBox_KwhValue;
+        private Button btn_Clients;
     }
 }

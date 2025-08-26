@@ -71,10 +71,11 @@ namespace GeradorRelatoriosSolarwelleEnergia.Infrastructure.Database
                         cliente.NumeroCliente = reader["NumeroCliente"]?.ToString();
                         cliente.NumeroInstalacao = reader["NumeroInstalacao"]?.ToString();
                         cliente.Telefone = reader["Telefone"]?.ToString();
-                        cliente.Endereco = reader["Endereco"]?.ToString();
                         cliente.Email = reader["Email"]?.ToString();
                         cliente.DistribuidoraLocal = reader["DistribuidoraLocal"]?.ToString();
                         cliente.DescontoPercentual = reader["DescontoPercentual"]?.ToString();
+                        string enderecoStr = reader["Endereco"]?.ToString();
+                        cliente.Endereco = Endereco.Parse(enderecoStr);
 
                         if (cliente is ClientePessoaJuridica pj)
                         {
@@ -196,7 +197,7 @@ namespace GeradorRelatoriosSolarwelleEnergia.Infrastructure.Database
 
             cmd.Parameters.AddWithValue("@NumeroCliente", client.NumeroCliente);
             cmd.Parameters.AddWithValue("@Telefone", client.Telefone ?? "");
-            cmd.Parameters.AddWithValue("@Endereco", client.Endereco ?? "");
+            cmd.Parameters.AddWithValue("@Endereco", client.Endereco?.ToString() ?? "");
             cmd.Parameters.AddWithValue("@Email", client.Email ?? "");
             cmd.Parameters.AddWithValue("@DistribuidoraLocal", client.DistribuidoraLocal ?? "");
             cmd.Parameters.AddWithValue("@DescontoPercentual", client.DescontoPercentual ?? "");
@@ -205,7 +206,6 @@ namespace GeradorRelatoriosSolarwelleEnergia.Infrastructure.Database
             cmd.Parameters.AddWithValue("@RepresentanteLegal", representanteLegal);
             cmd.Parameters.AddWithValue("@Rg", Rg);
             cmd.Parameters.AddWithValue("@TipoCliente", tipoCliente);
-
         }
     }
 }

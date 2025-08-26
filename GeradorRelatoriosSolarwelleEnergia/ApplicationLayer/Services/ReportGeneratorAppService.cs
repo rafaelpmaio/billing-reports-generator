@@ -14,14 +14,14 @@ namespace GeradorRelatoriosSolarwelleEnergia.ApplicationLayer.Services
 {
     internal class ReportGeneratorAppService
     {
-        private readonly TabelaCemigService _cemigService;
+        private readonly CemigTableService _cemigService;
         private readonly IClientReader _clientReader;
         private readonly IClientEconomyHistoryReader _historyReader;
         private readonly IClientReportService _reportService;
         private readonly IPdfReportSaver _pdfGenerator;
 
         public ReportGeneratorAppService(
-            TabelaCemigService cemigService,
+            CemigTableService cemigService,
             IClientReader clientReader,
             IClientEconomyHistoryReader historyReader,
             IClientReportService reportService,
@@ -41,7 +41,7 @@ namespace GeradorRelatoriosSolarwelleEnergia.ApplicationLayer.Services
             List<TabelaCemig> cemigTableList = extension switch
             {
                 ".xml" => _cemigService.LerTabelaXml(input.CemigTablePath),
-                ".xlsx" => _cemigService.LerTabelaExcel(input.CemigTablePath),
+                ".xlsx" => _cemigService.ReadExcelTable(input.CemigTablePath),
                 _ => throw new NotSupportedException("Formato de arquivo da Tabela CEMIG não suportado.")
             };
 
