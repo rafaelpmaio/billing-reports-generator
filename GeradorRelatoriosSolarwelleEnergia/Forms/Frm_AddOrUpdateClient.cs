@@ -20,11 +20,11 @@ namespace GeradorRelatoriosSolarwelleEnergia.Forms
         public string NumeroInstalacao { get; set; }
         public Frm_AddOrUpdateClient(Cliente? client = null)
         {
+            _client = client;
             InitializeComponent();
             InitializeComboBoxes();
             SetFormTitle();
           
-            _client = client;
 
             if (_client != null) ConfigureEditMode();
         }
