@@ -77,4 +77,4 @@ namespace GeradorRelatoriosSolarwelleEnergia.Infrastructure.Database
         }
     }
 }
-}
+

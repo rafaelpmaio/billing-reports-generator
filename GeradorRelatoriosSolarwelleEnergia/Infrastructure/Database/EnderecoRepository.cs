@@ -49,7 +49,7 @@ namespace GeradorRelatoriosSolarwelleEnergia.Infrastructure.Database
                 }
             }
         }
-    }
+    
 
     public Endereco GetById(int id)
         {
@@ -68,13 +68,13 @@ namespace GeradorRelatoriosSolarwelleEnergia.Infrastructure.Database
                             return new Endereco
                             {
                                 Id = reader.GetInt32(reader.GetOrdinal("Id")),
-                                Rua = reader["Rua"].ToString(),
+                                Logradouro = reader["Rua"].ToString(),
                                 Numero = reader["Numero"].ToString(),
                                 Complemento = reader["Complemento"].ToString(),
                                 Bairro = reader["Bairro"].ToString(),
                                 Cidade = reader["Cidade"].ToString(),
                                 Estado = reader["Estado"].ToString(),
-                                CEP = reader["CEP"].ToString()
+                                Cep = reader["CEP"].ToString()
                             };
                         }
                     }
