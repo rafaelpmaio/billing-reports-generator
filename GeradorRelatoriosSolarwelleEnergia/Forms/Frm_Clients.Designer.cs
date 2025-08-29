@@ -43,7 +43,7 @@
             dataGridView.Location = new Point(0, 0);
             dataGridView.Name = "dataGridView";
             dataGridView.SelectionMode = DataGridViewSelectionMode.FullRowSelect;
-            dataGridView.Size = new Size(800, 409);
+            dataGridView.Size = new Size(800, 390);
             dataGridView.TabIndex = 0;
             // 
             // btn_AddClient

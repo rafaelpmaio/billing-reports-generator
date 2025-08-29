@@ -21,14 +21,12 @@ namespace GeradorRelatoriosSolarwelleEnergia.Infrastructure.Database
                             NumeroInstalacao,
                             NumeroCliente,
                             DistribuidoraLocal,
-                            DescontoPercentual,
-                            TipoCliente
+                            DescontoPercentual,                            
                         ) VALUES (
                             @NumeroInstalacao,
                             @NumeroCliente,
                             @DistribuidoraLocal,
-                            @DescontoPercentual,
-                            @TipoCliente
+                            @DescontoPercentual,                         
                         );";
 
                 using (var cmd = new SQLiteCommand(sql, conn))
@@ -36,8 +34,7 @@ namespace GeradorRelatoriosSolarwelleEnergia.Infrastructure.Database
                     cmd.Parameters.AddWithValue("@NumeroInstalacao", instalacao.NumeroInstalacao);
                     cmd.Parameters.AddWithValue("@NumeroCliente", instalacao.NumeroCliente);
                     cmd.Parameters.AddWithValue("@DistribuidoraLocal", instalacao.DistribuidoraLocal);
-                    cmd.Parameters.AddWithValue("@DescontoPercentual", instalacao.DescontoPercentual);
-                    cmd.Parameters.AddWithValue("@TipoCliente", instalacao.TipoCliente);
+                    cmd.Parameters.AddWithValue("@DescontoPercentual", instalacao.DescontoPercentual);                   
                     cmd.ExecuteNonQuery();
                 }
             }
@@ -65,8 +62,7 @@ namespace GeradorRelatoriosSolarwelleEnergia.Infrastructure.Database
                                 NumeroInstalacao = reader["NumeroInstalacao"].ToString(),
                                 NumeroCliente = reader["NumeroCliente"].ToString(),
                                 DistribuidoraLocal = reader["DistribuidoraLocal"].ToString(),
-                                DescontoPercentual = reader["DescontoPercentual"].ToString(),
-                                TipoCliente = Convert.ToInt32(reader["TipoCliente"])
+                                DescontoPercentual = reader["DescontoPercentual"].ToString()
                             };
                             list.Add(instalacao);
                         }

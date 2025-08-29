@@ -11,18 +11,38 @@ namespace GeradorRelatoriosSolarwelleEnergia.Domain.Services
 {
     internal class ClientReportService : IClientReportService
     {
-        public List<RelatorioCliente> MontarTabelaDeRelatorios(List<TabelaCemig> listaTabelaCemig, List<Cliente> listaClientes, float valorKwhH, Dictionary<string, Dictionary<string, float>> historicoEconomia)
+        public List<RelatorioCliente> MontarTabelaDeRelatorios(
+            List<TabelaCemig> listaTabelaCemig,
+            List<Instalacao> listaInstalacoes,
+            List<Cliente> listaClientes,
+            float valorKwhH,
+            Dictionary<string, Dictionary<string, float>> historicoEconomia
+            )
         {
             var listaRelatorios = new List<RelatorioCliente>();
 
             foreach (var tabelaCemig in listaTabelaCemig)
             {
-                foreach (var cliente in listaClientes)
+                foreach (var instalacao in listaInstalacoes)
                 {
-                    if (cliente.NumeroInstalacao.Contains(tabelaCemig.NumeroInstalacao))
+                    if (instalacao.NumeroInstalacao.Trim() == tabelaCemig.NumeroInstalacao.Trim())
                     {
-                        var relatorio = RelatorioClienteBuilder.Criar(cliente, tabelaCemig, valorKwhH, historicoEconomia);
-                        listaRelatorios.Add(relatorio);
+                        var cliente = listaClientes.FirstOrDefault(c => c.NumeroCliente == instalacao.NumeroCliente);
+
+                        if (cliente != null)
+                        {
+                            var relatorio = RelatorioClienteBuilder.Criar(instalacao, cliente, tabelaCemig, valorKwhH, historicoEconomia);
+                            listaRelatorios.Add(relatorio);
+                        }
+                        else
+                        {
+                            MessageBox.Show(
+                                   $"Cliente não encontrado para a instalação de número {instalacao.NumeroInstalacao}.",
+                                   "Cliente não encontrado",
+                                   MessageBoxButtons.OK,
+                                   MessageBoxIcon.Warning
+                                   );
+                        }
                     }
                 }
             }

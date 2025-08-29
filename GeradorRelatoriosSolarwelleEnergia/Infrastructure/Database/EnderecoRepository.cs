@@ -37,7 +37,7 @@ namespace GeradorRelatoriosSolarwelleEnergia.Infrastructure.Database
 
                 using (var cmd = new SQLiteCommand(sql, conn))
                 {
-                    cmd.Parameters.AddWithValue("@Rua", endereco.Logradouro);
+                    cmd.Parameters.AddWithValue("@Logradouro", endereco.Logradouro);
                     cmd.Parameters.AddWithValue("@Numero", endereco.Numero);
                     cmd.Parameters.AddWithValue("@Complemento", endereco.Complemento);
                     cmd.Parameters.AddWithValue("@Bairro", endereco.Bairro);

@@ -12,6 +12,6 @@ namespace GeradorRelatoriosSolarwelleEnergia.Domain.Entities
         public string NumeroCliente { get; set; }
         public string DistribuidoraLocal { get; set; }
         public string DescontoPercentual { get; set; }
-        public int TipoCliente { get; set; }
+        public bool Ativo {  get; set; }
     }
 }

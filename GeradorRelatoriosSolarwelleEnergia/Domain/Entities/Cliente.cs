@@ -14,10 +14,12 @@ namespace GeradorRelatoriosSolarwelleEnergia.Dominio.Entidades
         public string NumeroCliente { get; set; }
         public string NumeroInstalacao { get; set; }
         public string Telefone { get; set; }
+        public int IdEndereco { get; set; }
         public Endereco Endereco = new Endereco();
         public string Email { get; set; }
-        public string DistribuidoraLocal { get; set; } //pertinente?
+        public string DistribuidoraLocal { get; set; } 
         public string DescontoPercentual { get; set; }
+        public int TipoCliente { get; set; }
              
                 
         public override string ToString()

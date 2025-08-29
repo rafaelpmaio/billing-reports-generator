@@ -92,7 +92,7 @@
             btn_Clients.UseVisualStyleBackColor = true;
             btn_Clients.Click += btn_Clients_Click;
             // 
-            // Frm_GeradorRelatoriosSolarWelle
+            // Frm_SolarWelleReportsGenerator
             // 
             AutoScaleDimensions = new SizeF(7F, 15F);
             AutoScaleMode = AutoScaleMode.Font;
@@ -103,7 +103,7 @@
             Controls.Add(txtBox_CemigTablePath);
             Controls.Add(btn_GenerateReports);
             Controls.Add(lbl_RelatorioCemig);
-            Name = "Frm_GeradorRelatoriosSolarWelle";
+            Name = "Frm_SolarWelleReportsGenerator";
             Text = "SolarWelle - Gerador de Relatórios";
             ResumeLayout(false);
             PerformLayout();
