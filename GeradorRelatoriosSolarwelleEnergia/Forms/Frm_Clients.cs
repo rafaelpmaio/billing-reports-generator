@@ -116,16 +116,14 @@ namespace GeradorRelatoriosSolarwelleEnergia.Forms
             DataTable table = new DataTable();
 
             table.Columns.Add("NumeroCLiente", typeof(string));
-            table.Columns.Add("NumeroInstalacao", typeof(string));
+            table.Columns.Add("Instalacoes", typeof(string));
             table.Columns.Add("RazaoSocialOuNome", typeof(string));
             table.Columns.Add("CnpjOuCpf", typeof(string));
             table.Columns.Add("RepresentanteLegal", typeof(string));
             table.Columns.Add("RG", typeof(string));
             table.Columns.Add("Telefone", typeof(string));
-            table.Columns.Add("Endereco", typeof(string));
+            table.Columns.Add("IdEndereco", typeof(string));
             table.Columns.Add("Email", typeof(string));
-            table.Columns.Add("DistribuidoraLocal", typeof(string));
-            table.Columns.Add("DescontoPercentual", typeof(string));
             table.Columns.Add("TipoCliente", typeof(int));
 
             foreach (var client in clients)
@@ -147,16 +145,14 @@ namespace GeradorRelatoriosSolarwelleEnergia.Forms
 
                 table.Rows.Add(
                     client.NumeroCliente,
-                    client.NumeroInstalacao,
+                    client.Instalacoes,
                     nome,
                     doc,
                     representante,
                     rg,
                     client.Telefone,
-                    client.Endereco,
+                    client.IdEndereco,
                     client.Email,
-                    client.DistribuidoraLocal,
-                    client.DescontoPercentual,
                     client is ClientePessoaJuridica ? 1 : 0
                 );
             }
@@ -166,20 +162,18 @@ namespace GeradorRelatoriosSolarwelleEnergia.Forms
         {
             DataGridViewRow selectedRow = dataGridView.SelectedRows[0];
 
-            string numeroInstalacao = selectedRow.Cells["NumeroInstalacao"].Value?.ToString();
             string numeroCliente = selectedRow.Cells["NumeroCLiente"].Value?.ToString();
-            string nome = selectedRow.Cells["RazaoSocialOuNome"].Value?.ToString();
-            string doc = selectedRow.Cells["CnpjOuCpf"].Value?.ToString();
-            string representante = selectedRow.Cells["RepresentanteLegal"].Value?.ToString();
+            string numeroInstalacao = selectedRow.Cells["NumeroInstalacao"].Value?.ToString();
+            string razaoSocialOuNome = selectedRow.Cells["RazaoSocialOuNome"].Value?.ToString();
+            string cnpjOuCpf = selectedRow.Cells["CnpjOuCpf"].Value?.ToString();
+            string representanteLegal = selectedRow.Cells["RepresentanteLegal"].Value?.ToString();
             string rg = selectedRow.Cells["RG"].Value?.ToString();
             string telefone = selectedRow.Cells["Telefone"].Value?.ToString();
-            string enderecoStr = selectedRow.Cells["Endereco"].Value?.ToString();
+            int idEndereco = 0;
+            int.TryParse(selectedRow.Cells["IdEndereco"].Value?.ToString(), out idEndereco);
             string email = selectedRow.Cells["Email"].Value?.ToString();
-            string distribuidora = selectedRow.Cells["DistribuidoraLocal"].Value?.ToString();
-            string desconto = selectedRow.Cells["DescontoPercentual"].Value?.ToString();
             int tipo = Convert.ToInt32(selectedRow.Cells["TipoCliente"].Value);
-
-            Endereco endereco = Endereco.Parse(enderecoStr);
+            bool ativo = Convert.ToString(selectedRow.Cells["Ativo"].Value) == "1";
 
             Cliente cliente;
 
@@ -187,28 +181,27 @@ namespace GeradorRelatoriosSolarwelleEnergia.Forms
             {
                 cliente = new ClientePessoaJuridica
                 {
-                    RazaoSocial = nome,
-                    Cnpj = doc,
-                    RepresentanteLegal = representante
+                    RazaoSocial = razaoSocialOuNome,
+                    Cnpj = cnpjOuCpf,
+                    RepresentanteLegal = representanteLegal
                 };
             }
             else
             {
                 cliente = new ClientePessoaFisica
                 {
-                    Nome = nome,
-                    Cpf = doc,
+                    Nome = razaoSocialOuNome,
+                    Cpf = cnpjOuCpf,
                     Rg = rg
                 };
             }
 
-            cliente.NumeroInstalacao = numeroInstalacao;
             cliente.NumeroCliente = numeroCliente;
+            cliente.NumeroInstalacao = numeroInstalacao;
             cliente.Telefone = telefone;
-            cliente.Endereco = endereco;
+            cliente.IdEndereco = idEndereco;
             cliente.Email = email;
-            cliente.DistribuidoraLocal = distribuidora;
-            cliente.DescontoPercentual = desconto;
+            cliente.Ativo = ativo;
             return cliente;
         }
     }

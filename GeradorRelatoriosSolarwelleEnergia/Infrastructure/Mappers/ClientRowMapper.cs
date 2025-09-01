@@ -13,46 +13,53 @@ namespace GeradorRelatoriosSolarwelleEnergia.Infrastructure.Mappers
     internal class ClientRowMapper
     {
         private const int COL_NUMERO_CLIENTE = 1;
-        private const int COL_NUMERO_INSTALACAO = 2;
-        private const int COL_RAZAO_SOCIAL = 3;
-        private const int COL_CNPJ = 4;
+        private const int COL_INSTALACOES = 2;
+        private const int COL_RAZAO_SOCIAL_NOME = 3;
+        private const int COL_CNPJ_CPF = 4;
         private const int COL_REPRESENTANTE = 5;
-        private const int COL_NOME = 6;
-        private const int COL_CPF = 7;
-        private const int COL_RG = 8;
-        private const int COL_TELEFONE = 9;
-        private const int COL_ENDERECO = 10;
-        private const int COL_EMAIL = 11;
-        private const int COL_DISTRIBUIDORA = 12;
-        private const int COL_DESCONTO_PERCENTUAL = 13;
-        private const int COL_TIPO_CLIENTE = 14;
+        private const int COL_RG = 6;
+        private const int COL_TELEFONE = 7;
+        private const int COL_ID_ENDERECO = 8;
+        private const int COL_EMAIL = 9;
+        private const int COL_TIPO_CLIENTE = 10;
 
         public static Cliente Map(ExcelWorksheet ws, int row)
         {
-            int tipoCliente = int.Parse(ws.Cells[row, COL_TIPO_CLIENTE].Text);
+            int tipoCliente = int.TryParse(ws.Cells[row, COL_TIPO_CLIENTE].Text, out var tipo) ? tipo : 0;
 
-            Cliente cliente = tipoCliente == 1 
-                ? new ClientePessoaJuridica() 
+            Cliente cliente = tipoCliente == 1
+                ? new ClientePessoaJuridica()
                 : new ClientePessoaFisica();
 
+            cliente.TipoCliente = tipoCliente;
             cliente.NumeroCliente = ws.Cells[row, COL_NUMERO_CLIENTE].Text;
-            cliente.NumeroInstalacao = ws.Cells[row, COL_NUMERO_INSTALACAO].Text;
+
+            //Instalacoes
+            string instalacoesRaw = ws.Cells[row, COL_INSTALACOES].Text;
+            cliente.Instalacoes = string.IsNullOrWhiteSpace(instalacoesRaw)
+                ? Array.Empty<string>()
+                : instalacoesRaw.Split(',').Select(inst => inst.Trim()).ToArray();
+
+            //Endereco
+            if (int.TryParse(ws.Cells[row, COL_ID_ENDERECO].Text, out int idEndereco))
+                cliente.IdEndereco = idEndereco;
+
             cliente.Telefone = ws.Cells[row, COL_TELEFONE].Text;
-            cliente.Endereco = Endereco.Parse(ws.Cells[row, COL_ENDERECO].Text);
             cliente.Email = ws.Cells[row, COL_EMAIL].Text;
-            cliente.DistribuidoraLocal = ws.Cells[row, COL_DISTRIBUIDORA].Text;
-            cliente.DescontoPercentual = ws.Cells[row, COL_DESCONTO_PERCENTUAL].Text;
+
+            string nomeOuRazaoSocial = ws.Cells[row, COL_RAZAO_SOCIAL_NOME].Text;
+            string cpfOuCnpj = ws.Cells[row, COL_CNPJ_CPF].Text;
 
             if (cliente is ClientePessoaJuridica pj)
             {
-                pj.RazaoSocial = ws.Cells[row, COL_RAZAO_SOCIAL].Text;
-                pj.Cnpj = ws.Cells[row, COL_CNPJ].Text;
+                pj.RazaoSocial = nomeOuRazaoSocial;
+                pj.Cnpj = cpfOuCnpj;
                 pj.RepresentanteLegal = ws.Cells[row, COL_REPRESENTANTE].Text;
             }
             else if (cliente is ClientePessoaFisica pf)
             {
-                pf.Nome = ws.Cells[row, COL_NOME].Text;
-                pf.Cpf = ws.Cells[row, COL_CPF].Text;
+                pf.Nome = nomeOuRazaoSocial;
+                pf.Cpf = cpfOuCnpj;
                 pf.Rg = ws.Cells[row, COL_RG].Text;
             }
             return cliente;

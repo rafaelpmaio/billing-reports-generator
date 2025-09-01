@@ -101,24 +101,28 @@ namespace GeradorRelatoriosSolarwelleEnergia.Infrastructure.Database
                             : new ClientePessoaFisica();
 
                         cliente.NumeroCliente = reader["NumeroCliente"]?.ToString();
-                        cliente.NumeroInstalacao = reader["NumeroInstalacao"]?.ToString();
+                        string rawInstalacoes = reader["NumeroInstalacao"]?.ToString();
+                        cliente.Instalacoes = string.IsNullOrWhiteSpace(rawInstalacoes)
+                            ? Array.Empty<string>()
+                            : rawInstalacoes.Split(',').Select(i => i.Trim()).ToArray();
                         cliente.Telefone = reader["Telefone"]?.ToString();
                         cliente.Email = reader["Email"]?.ToString();
-                        cliente.DistribuidoraLocal = reader["DistribuidoraLocal"]?.ToString();
-                        cliente.DescontoPercentual = reader["DescontoPercentual"]?.ToString();
-                        string enderecoStr = reader["Endereco"]?.ToString();
-                        cliente.Endereco = Endereco.Parse(enderecoStr);
+                        cliente.IdEndereco = Convert.ToInt32(reader["IdEndereco"]);
+                        cliente.TipoCliente = tipoCliente;
+
+                        string razaoSocialOuNome = reader["RazaoSocialOuNome"]?.ToString();
+                        string cpfOuCnpj = reader["CnpjOuCpf"]?.ToString();
 
                         if (cliente is ClientePessoaJuridica pj)
                         {
-                            pj.RazaoSocial = reader["RazaoSocialOuNome"]?.ToString();
-                            pj.Cnpj = reader["CnpjOuCpf"]?.ToString();
+                            pj.RazaoSocial = razaoSocialOuNome;
+                            pj.Cnpj = cpfOuCnpj;
                             pj.RepresentanteLegal = reader["RepresentanteLegal"]?.ToString();
                         }
                         else if (cliente is ClientePessoaFisica pf)
                         {
-                            pf.Nome = reader["RazaoSocialOuNome"]?.ToString();
-                            pf.Cpf = reader["CnpjOuCpf"]?.ToString();
+                            pf.Nome = razaoSocialOuNome;
+                            pf.Cpf = cpfOuCnpj;
                             pf.Rg = reader["RG"]?.ToString();
                         }
                         list.Add(cliente);
@@ -133,31 +137,29 @@ namespace GeradorRelatoriosSolarwelleEnergia.Infrastructure.Database
             {
                 conn.Open();
                 string sql = @"INSERT INTO Clientes (
-                                NumeroInstalacao,
                                 NumeroCliente,
+                                Instalacoes,
                                 Telefone,
-                                Endereco,
+                                IdEndereco,
                                 Email,
-                                DistribuidoraLocal,
-                                DescontoPercentual,
                                 RazaoSocialOuNome,
                                 CnpjOuCpf,
                                 Rg,
                                 RepresentanteLegal,
-                                TipoCliente
+                                TipoCliente,
+                                Ativo
                              ) VALUES (
-                                @NumeroInstalacao,
                                 @NumeroCliente,
+                                @Instalacoes,
                                 @Telefone,
-                                @Endereco,
+                                @IdEndereco,
                                 @Email,
-                                @DistribuidoraLocal,
-                                @DescontoPercentual,
                                 @RazaoSocialOuNome,
                                 @CnpjOuCpf,
                                 @Rg,
                                 @RepresentanteLegal,
-                                @TipoCliente
+                                @TipoCliente,
+                                @Ativo
                               );";
 
                 var cmd = new SQLiteCommand(sql, conn);
@@ -306,8 +308,6 @@ namespace GeradorRelatoriosSolarwelleEnergia.Infrastructure.Database
             cmd.Parameters.AddWithValue("@Telefone", client.Telefone ?? "");
             cmd.Parameters.AddWithValue("@Endereco", client.Endereco?.ToString() ?? "");
             cmd.Parameters.AddWithValue("@Email", client.Email ?? "");
-            cmd.Parameters.AddWithValue("@DistribuidoraLocal", client.DistribuidoraLocal ?? "");
-            cmd.Parameters.AddWithValue("@DescontoPercentual", client.DescontoPercentual ?? "");
             cmd.Parameters.AddWithValue("@RazaoSocialOuNome", razaoSocialOuNome);
             cmd.Parameters.AddWithValue("@CnpjOuCpf", cnpjOuCpf);
             cmd.Parameters.AddWithValue("@RepresentanteLegal", representanteLegal);
