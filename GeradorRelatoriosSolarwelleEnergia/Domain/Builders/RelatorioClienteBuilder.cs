@@ -14,6 +14,7 @@ namespace GeradorRelatoriosSolarwelleEnergia.Domain.Builders
         public static RelatorioCliente Criar(
             Instalacao instalacao, 
             Cliente cliente,
+            Endereco endereco,
             TabelaCemig tabelaCemig, 
             float kwhHora, 
             Dictionary<string, 
@@ -30,7 +31,7 @@ namespace GeradorRelatoriosSolarwelleEnergia.Domain.Builders
                 NumeroInstalacao = tabelaCemig.NumeroInstalacao,
                 QtdConsumo = float.Parse(tabelaCemig.QtdConsumo, CultureInfo.InvariantCulture),
                 QtdCompensacao = float.Parse(tabelaCemig.QtdCompensacao, CultureInfo.InvariantCulture),
-                Endereco = cliente.Endereco?.ToString() ?? "",
+                Endereco = endereco?.ToString() ?? "",
                 Email = cliente.Email,
                 ValorKwhHora = kwhHora,
                 Vencimento = vencimento,

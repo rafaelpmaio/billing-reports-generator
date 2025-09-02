@@ -13,6 +13,8 @@ namespace GeradorRelatoriosSolarwelleEnergia.Domain.Services
         public List<RelatorioCliente> MontarTabelaDeRelatorios(
             List<TabelaCemig> listaTabelaCemig,
             List<Cliente> listaClientes,
+            List<Instalacao> listaInstalacoes,
+            List<Endereco> listaEnderecos,
             float valorKwhH,
             Dictionary<string,
             Dictionary<string,

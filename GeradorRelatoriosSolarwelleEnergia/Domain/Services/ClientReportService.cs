@@ -13,8 +13,9 @@ namespace GeradorRelatoriosSolarwelleEnergia.Domain.Services
     {
         public List<RelatorioCliente> MontarTabelaDeRelatorios(
             List<TabelaCemig> listaTabelaCemig,
-            List<Instalacao> listaInstalacoes,
             List<Cliente> listaClientes,
+            List<Instalacao> listaInstalacoes,
+            List<Endereco> listaEnderecos,
             float valorKwhH,
             Dictionary<string, Dictionary<string, float>> historicoEconomia
             )
@@ -31,7 +32,8 @@ namespace GeradorRelatoriosSolarwelleEnergia.Domain.Services
 
                         if (cliente != null)
                         {
-                            var relatorio = RelatorioClienteBuilder.Criar(instalacao, cliente, tabelaCemig, valorKwhH, historicoEconomia);
+                            var endereco = listaEnderecos.FirstOrDefault(e => e.Id == cliente.IdEndereco);
+                            var relatorio = RelatorioClienteBuilder.Criar(instalacao, cliente, endereco, tabelaCemig, valorKwhH, historicoEconomia);
                             listaRelatorios.Add(relatorio);
                         }
                         else

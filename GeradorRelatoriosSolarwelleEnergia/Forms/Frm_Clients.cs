@@ -163,7 +163,7 @@ namespace GeradorRelatoriosSolarwelleEnergia.Forms
             DataGridViewRow selectedRow = dataGridView.SelectedRows[0];
 
             string numeroCliente = selectedRow.Cells["NumeroCLiente"].Value?.ToString();
-            string numeroInstalacao = selectedRow.Cells["NumeroInstalacao"].Value?.ToString();
+            string instalacoes = selectedRow.Cells["Instalacoes"].Value?.ToString();
             string razaoSocialOuNome = selectedRow.Cells["RazaoSocialOuNome"].Value?.ToString();
             string cnpjOuCpf = selectedRow.Cells["CnpjOuCpf"].Value?.ToString();
             string representanteLegal = selectedRow.Cells["RepresentanteLegal"].Value?.ToString();
@@ -173,7 +173,6 @@ namespace GeradorRelatoriosSolarwelleEnergia.Forms
             int.TryParse(selectedRow.Cells["IdEndereco"].Value?.ToString(), out idEndereco);
             string email = selectedRow.Cells["Email"].Value?.ToString();
             int tipo = Convert.ToInt32(selectedRow.Cells["TipoCliente"].Value);
-            bool ativo = Convert.ToString(selectedRow.Cells["Ativo"].Value) == "1";
 
             Cliente cliente;
 
@@ -197,11 +196,10 @@ namespace GeradorRelatoriosSolarwelleEnergia.Forms
             }
 
             cliente.NumeroCliente = numeroCliente;
-            cliente.NumeroInstalacao = numeroInstalacao;
+            cliente.Instalacoes = instalacoes.Split(",");
             cliente.Telefone = telefone;
             cliente.IdEndereco = idEndereco;
             cliente.Email = email;
-            cliente.Ativo = ativo;
             return cliente;
         }
     }

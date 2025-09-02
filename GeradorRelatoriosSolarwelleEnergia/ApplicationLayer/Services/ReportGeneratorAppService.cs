@@ -47,10 +47,15 @@ namespace GeradorRelatoriosSolarwelleEnergia.ApplicationLayer.Services
 
             
             var clientsList = input.Clients;
+            var installationsList = input.Installations;
+            var addressesList = input.Addresses;
             var economyHistory = _historyReader.Load();
+
             var relatorios = _reportService.MontarTabelaDeRelatorios(
                 cemigTableList,
                 clientsList,
+                installationsList,
+                addressesList,
                 input.KwhValue,
                 economyHistory
                 );

@@ -18,6 +18,7 @@ namespace GeradorRelatoriosSolarwelleEnergia.Forms
     {
         private Cliente? _client;
         private Instalacao? _instalacao;
+        private Endereco? _endereco;
         public string NumeroInstalacao { get; set; }
         public Frm_AddOrUpdateClient(Cliente? client = null, Instalacao? instalacao = null)
         {
@@ -76,7 +77,7 @@ namespace GeradorRelatoriosSolarwelleEnergia.Forms
         }
         private void ConfigureEditMode()
         {
-            PopulateFields(_client, _instalacao);
+            PopulateFields(_client, _instalacao, _endereco);
             txtBox_NumeroInstalacao.ReadOnly = true;
             txtBox_NumeroInstalacao.BackColor = SystemColors.Control;
             txtBox_NumeroInstalacao.TabStop = false;
@@ -133,7 +134,7 @@ namespace GeradorRelatoriosSolarwelleEnergia.Forms
 
             txtBox_NumeroInstalacao.Focus();
         }
-        private void PopulateFields(Cliente cliente, Instalacao instalacao)
+        private void PopulateFields(Cliente cliente, Instalacao instalacao, Endereco endereco)
         {
             txtBox_NumeroInstalacao.Text = instalacao.NumeroInstalacao;
             txtBox_NumeroCliente.Text = instalacao.NumeroCliente;
@@ -141,9 +142,7 @@ namespace GeradorRelatoriosSolarwelleEnergia.Forms
             txtBox_Email.Text = cliente.Email;
             cmb_EnergyDistributor.Text = instalacao.DistribuidoraLocal;
             cmb_DiscountRate.Text = $"{instalacao.DescontoPercentual}%";
-
-            var endereco = cliente.Endereco ?? new Endereco();
-
+                      
             txtBox_Logradouro.Text = endereco.Logradouro;
             txtBox_NumeroEndereco.Text = endereco.Numero;
             txtBox_ComplementoEndereco.Text = endereco.Complemento;
@@ -222,6 +221,7 @@ namespace GeradorRelatoriosSolarwelleEnergia.Forms
             cliente.Email = email;
             cliente.IdEndereco = enderecoId;
             cliente.TipoCliente = rbtn_PessoaFisica.Checked ? 0 : 1;
+            cliente.Ativo = true;
 
             return cliente;
         }

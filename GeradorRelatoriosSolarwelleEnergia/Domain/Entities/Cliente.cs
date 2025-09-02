@@ -16,22 +16,19 @@ namespace GeradorRelatoriosSolarwelleEnergia.Dominio.Entidades
         public string Telefone { get; set; }
         public int IdEndereco { get; set; }
         public string Email { get; set; }
-        public int TipoCliente { get; set; }
+        public int TipoCliente { get; set; }         
         public bool Ativo {  get; set; }
-             
-        public string NumeroInstalacao { get; set; }
-        public string DescontoPercentual { get; set; }
-        public string DistribuidoraLocal { get; set; } 
-        public Endereco Endereco = new Endereco();
-                
+
+        public string InstalacoesString { get; set; }
+
         public override string ToString()
         {
             return $"Número Cliente: {NumeroCliente}, " +
-                   $"Número de Instalação: {NumeroInstalacao}, " +
+                   $"Instalações: {InstalacoesString}, " +
                    $"Telefone: {Telefone}, " +
-                   $"Endereco: {Endereco}, " +
+                   $"IdEndereço: {IdEndereco}, " +
                    $"Email: {Email}, " +
-                   $"Distribuidora Local: {DistribuidoraLocal}";
+                   $"Tipo do Cliente: {(TipoCliente == 1 ? "PJ" : "PF")}";
         }
     }
 }
