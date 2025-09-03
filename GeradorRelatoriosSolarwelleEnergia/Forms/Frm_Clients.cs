@@ -42,7 +42,6 @@ namespace GeradorRelatoriosSolarwelleEnergia.Forms
                     LoadClients();
                 }
             }
-
         }
         private void btn_DeleteClient_Click(object sender, EventArgs e)
         {
@@ -58,10 +57,10 @@ namespace GeradorRelatoriosSolarwelleEnergia.Forms
             try
             {
                 DataGridViewRow selectedRow = dataGridView.SelectedRows[0];
-                string numeroInstalacao = Convert.ToString(selectedRow.Cells["NumeroInstalacao"].Value);
+                string numeroCliente = Convert.ToString(selectedRow.Cells["NumeroCliente"].Value);
 
                 var repo = new ClientRepository();
-                repo.Remove(numeroInstalacao);
+                repo.Remove(numeroCliente);
 
                 MessageBox.Show("Cliente removido com sucesso.", "Sucesso", MessageBoxButtons.OK, MessageBoxIcon.Information);
 
@@ -115,7 +114,7 @@ namespace GeradorRelatoriosSolarwelleEnergia.Forms
 
             DataTable table = new DataTable();
 
-            table.Columns.Add("NumeroCLiente", typeof(string));
+            table.Columns.Add("NumeroCliente", typeof(string));
             table.Columns.Add("Instalacoes", typeof(string));
             table.Columns.Add("RazaoSocialOuNome", typeof(string));
             table.Columns.Add("CnpjOuCpf", typeof(string));
@@ -125,6 +124,7 @@ namespace GeradorRelatoriosSolarwelleEnergia.Forms
             table.Columns.Add("IdEndereco", typeof(string));
             table.Columns.Add("Email", typeof(string));
             table.Columns.Add("TipoCliente", typeof(int));
+            table.Columns.Add("Ativo", typeof(int));
 
             foreach (var client in clients)
             {
@@ -145,7 +145,7 @@ namespace GeradorRelatoriosSolarwelleEnergia.Forms
 
                 table.Rows.Add(
                     client.NumeroCliente,
-                    client.Instalacoes,
+                    client.InstalacoesString,
                     nome,
                     doc,
                     representante,
@@ -153,7 +153,8 @@ namespace GeradorRelatoriosSolarwelleEnergia.Forms
                     client.Telefone,
                     client.IdEndereco,
                     client.Email,
-                    client is ClientePessoaJuridica ? 1 : 0
+                    client is ClientePessoaJuridica ? 1 : 0,
+                    client.Ativo ? 1 : 0
                 );
             }
             return table;

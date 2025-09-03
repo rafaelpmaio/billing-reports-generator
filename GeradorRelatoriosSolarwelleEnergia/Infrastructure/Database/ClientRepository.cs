@@ -103,8 +103,9 @@ namespace GeradorRelatoriosSolarwelleEnergia.Infrastructure.Database
                         cliente.Telefone = reader["Telefone"]?.ToString();
                         cliente.IdEndereco = Convert.ToInt32(reader["IdEndereco"]);
                         cliente.Email = reader["Email"]?.ToString();
-                        cliente.TipoCliente = tipoCliente;
-
+                        cliente.TipoCliente = tipoCliente;                    
+                        cliente.Ativo = Convert.ToInt32(reader["Ativo"]) == 1 ? true : false;
+                                                                      
                         cliente.Instalacoes = string.IsNullOrWhiteSpace(rawInstalacoes)
                             ? Array.Empty<string>()
                             : rawInstalacoes.Split(',').Select(i => i.Trim()).ToArray();
@@ -161,46 +162,11 @@ namespace GeradorRelatoriosSolarwelleEnergia.Infrastructure.Database
                               );";
 
                 var cmd = new SQLiteCommand(sql, conn);
-                AddClientParameters(cmd, cliente);
+                AddClientParameters(cmd, cliente);                              
+
                 cmd.ExecuteNonQuery();
             }
-        }
-        
-//        public Cliente GetByNumeroCliente(string numeroCliente)
-//        {
-//            using (var conn = new SQLiteConnection(_connString))
-//            {
-//                conn.Open();
-
-//                var sql = "SELECT * FROM Clientes WHERE NumeroCliente = @NumeroCliente";
-
-//                using (var cmd = new SQLiteCommand(sql, conn))
-//                {
-//                    cmd.Parameters.AddWithValue("@NumeroCliente", numeroCliente);
-
-//                    using (var reader = cmd.ExecuteReader())
-//                    {
-//                        if (reader.Read())
-//                        {
-//                            return new Cliente
-//                            {
-//                                NumeroCliente = reader["NumeroCliente"].ToString(),
-//                                RazaoSocialOuNome = reader["RazaoSocialOuNome"].ToString(),
-//                                CnpjOuCpf = reader["CnpjOuCpf"].ToString(),
-//                                RepresentanteLegal = reader["RepresentanteLegal"].ToString(),
-//                                Rg = reader["Rg"].ToString(),
-//                                Telefone = reader["Telefone"].ToString(),
-//                                Email = reader["Email"].ToString(),
-//                                IdEndereco = Convert.ToInt32(reader["IdEndereco"])
-//                            };
-//                        }
-//                    }
-//                }
-//            }
-//            return null;
-//        }
-//}
-
+        }        
         public void Update(Cliente cliente)
         {
             using (var conn = new SQLiteConnection(_connString))
@@ -269,10 +235,10 @@ namespace GeradorRelatoriosSolarwelleEnergia.Infrastructure.Database
             cmd.Parameters.AddWithValue("@RepresentanteLegal", representanteLegal);
             cmd.Parameters.AddWithValue("@Rg", Rg);
             cmd.Parameters.AddWithValue("@Telefone", client.Telefone ?? "");
-            cmd.Parameters.AddWithValue("@IdEndereco", client.IdEndereco.ToString() ?? "");
+            cmd.Parameters.AddWithValue("@IdEndereco", client.IdEndereco);
             cmd.Parameters.AddWithValue("@Email", client.Email ?? "");
             cmd.Parameters.AddWithValue("@TipoCliente", tipoCliente);
-            cmd.Parameters.AddWithValue("Ativo", client.Ativo);
+            cmd.Parameters.AddWithValue("@Ativo", client.Ativo ? 1 : 0);
         }
     }
 }

@@ -22,6 +22,7 @@ namespace GeradorRelatoriosSolarwelleEnergia.Infrastructure.Mappers
         private const int COL_ID_ENDERECO = 8;
         private const int COL_EMAIL = 9;
         private const int COL_TIPO_CLIENTE = 10;
+        private const int COL_ATIVO = 11;
 
         public static Cliente Map(ExcelWorksheet ws, int row)
         {
@@ -33,22 +34,21 @@ namespace GeradorRelatoriosSolarwelleEnergia.Infrastructure.Mappers
 
             cliente.TipoCliente = tipoCliente;
             cliente.NumeroCliente = ws.Cells[row, COL_NUMERO_CLIENTE].Text;
+            string nomeOuRazaoSocial = ws.Cells[row, COL_RAZAO_SOCIAL_NOME].Text;
+            string cpfOuCnpj = ws.Cells[row, COL_CNPJ_CPF].Text;
+            cliente.Telefone = ws.Cells[row, COL_TELEFONE].Text;
+            cliente.Email = ws.Cells[row, COL_EMAIL].Text;
+            cliente.Ativo = ws.Cells[row, COL_ATIVO].Text.Trim() == "1";
+
+            //Endereco
+            if (int.TryParse(ws.Cells[row, COL_ID_ENDERECO].Text, out int idEndereco))
+                cliente.IdEndereco = idEndereco;
 
             //Instalacoes
             string instalacoesRaw = ws.Cells[row, COL_INSTALACOES].Text;
             cliente.Instalacoes = string.IsNullOrWhiteSpace(instalacoesRaw)
                 ? Array.Empty<string>()
                 : instalacoesRaw.Split(',').Select(inst => inst.Trim()).ToArray();
-
-            //Endereco
-            if (int.TryParse(ws.Cells[row, COL_ID_ENDERECO].Text, out int idEndereco))
-                cliente.IdEndereco = idEndereco;
-
-            cliente.Telefone = ws.Cells[row, COL_TELEFONE].Text;
-            cliente.Email = ws.Cells[row, COL_EMAIL].Text;
-
-            string nomeOuRazaoSocial = ws.Cells[row, COL_RAZAO_SOCIAL_NOME].Text;
-            string cpfOuCnpj = ws.Cells[row, COL_CNPJ_CPF].Text;
 
             if (cliente is ClientePessoaJuridica pj)
             {
