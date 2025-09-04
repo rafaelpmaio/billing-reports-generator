@@ -9,7 +9,7 @@ using GeradorRelatoriosSolarwelleEnergia.Infrastructure.Readers.Interface;
 
 namespace GeradorRelatoriosSolarwelleEnergia.Infrastructure.Readers
 {
-    internal class ClientDbReader : IEntityReader
+    internal class ClientDbReader : IEntityReader<Client>
     {
         private readonly ClientRepository _repository;
 

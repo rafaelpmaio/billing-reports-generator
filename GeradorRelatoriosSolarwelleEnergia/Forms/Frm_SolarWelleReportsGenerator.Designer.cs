@@ -34,6 +34,7 @@
             lbl_ValorKwH = new Label();
             txtBox_KwhValue = new TextBox();
             btn_Clients = new Button();
+            btn_Instalacoes = new Button();
             SuspendLayout();
             // 
             // lbl_RelatorioCemig
@@ -48,7 +49,7 @@
             // btn_GenerateReports
             // 
             btn_GenerateReports.Enabled = false;
-            btn_GenerateReports.Location = new Point(243, 116);
+            btn_GenerateReports.Location = new Point(394, 116);
             btn_GenerateReports.Name = "btn_GenerateReports";
             btn_GenerateReports.Size = new Size(119, 23);
             btn_GenerateReports.TabIndex = 1;
@@ -84,7 +85,7 @@
             // 
             // btn_Clients
             // 
-            btn_Clients.Location = new Point(162, 116);
+            btn_Clients.Location = new Point(313, 116);
             btn_Clients.Name = "btn_Clients";
             btn_Clients.Size = new Size(75, 23);
             btn_Clients.TabIndex = 7;
@@ -92,11 +93,22 @@
             btn_Clients.UseVisualStyleBackColor = true;
             btn_Clients.Click += btn_Clients_Click;
             // 
+            // btn_Instalacoes
+            // 
+            btn_Instalacoes.Location = new Point(232, 116);
+            btn_Instalacoes.Name = "btn_Instalacoes";
+            btn_Instalacoes.Size = new Size(75, 23);
+            btn_Instalacoes.TabIndex = 8;
+            btn_Instalacoes.Text = "Instalações";
+            btn_Instalacoes.UseVisualStyleBackColor = true;
+            btn_Instalacoes.Click += btn_Instalacoes_Click;
+            // 
             // Frm_SolarWelleReportsGenerator
             // 
             AutoScaleDimensions = new SizeF(7F, 15F);
             AutoScaleMode = AutoScaleMode.Font;
-            ClientSize = new Size(374, 149);
+            ClientSize = new Size(525, 149);
+            Controls.Add(btn_Instalacoes);
             Controls.Add(btn_Clients);
             Controls.Add(txtBox_KwhValue);
             Controls.Add(lbl_ValorKwH);
@@ -117,5 +129,6 @@
         private Label lbl_ValorKwH;
         private TextBox txtBox_KwhValue;
         private Button btn_Clients;
+        private Button btn_Instalacoes;
     }
 }

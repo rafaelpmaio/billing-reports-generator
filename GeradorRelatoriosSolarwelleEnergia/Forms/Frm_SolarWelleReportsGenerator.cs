@@ -120,13 +120,19 @@ namespace GeradorRelatoriosSolarwelleEnergia
         private void EnableGenerateButton()
         {
             btn_GenerateReports.Enabled =
-                !string.IsNullOrWhiteSpace(txtBox_CemigTablePath.Text) &&               
+                !string.IsNullOrWhiteSpace(txtBox_CemigTablePath.Text) &&
                 !string.IsNullOrWhiteSpace(txtBox_KwhValue.Text);
         }
         private void btn_Clients_Click(object sender, EventArgs e)
-        {        
+        {
             var clientsForm = new Frm_Clients();
             clientsForm.ShowDialog();
+        }
+
+        private void btn_Instalacoes_Click(object sender, EventArgs e)
+        {
+            var instalacoesForm = new Frm_Instalacao();
+            instalacoesForm.ShowDialog();
         }
     }
 }

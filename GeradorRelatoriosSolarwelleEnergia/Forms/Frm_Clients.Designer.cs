@@ -33,6 +33,7 @@
             btn_DeleteClient = new Button();
             btn_ImportClients = new Button();
             btn_UpdateClient = new Button();
+            btn_ExportClients = new Button();
             ((System.ComponentModel.ISupportInitialize)dataGridView).BeginInit();
             SuspendLayout();
             // 
@@ -88,11 +89,21 @@
             btn_UpdateClient.UseVisualStyleBackColor = true;
             btn_UpdateClient.Click += btn_UpdateClient_Click;
             // 
+            // btn_ExportClients
+            // 
+            btn_ExportClients.Location = new Point(93, 415);
+            btn_ExportClients.Name = "btn_ExportClients";
+            btn_ExportClients.Size = new Size(75, 23);
+            btn_ExportClients.TabIndex = 5;
+            btn_ExportClients.Text = "Exportar";
+            btn_ExportClients.UseVisualStyleBackColor = true;
+            // 
             // Frm_Clients
             // 
             AutoScaleDimensions = new SizeF(7F, 15F);
             AutoScaleMode = AutoScaleMode.Font;
             ClientSize = new Size(800, 450);
+            Controls.Add(btn_ExportClients);
             Controls.Add(btn_UpdateClient);
             Controls.Add(btn_ImportClients);
             Controls.Add(btn_DeleteClient);
@@ -111,5 +122,6 @@
         private Button btn_DeleteClient;
         private Button btn_ImportClients;
         private Button btn_UpdateClient;
+        private Button btn_ExportClients;
     }
 }
