@@ -9,7 +9,7 @@ using OfficeOpenXml;
 
 namespace GeradorRelatoriosSolarwelleEnergia.Dominio.Entidades
 {
-    public class Cliente
+    public class Client
     {
         public string NumeroCliente { get; set; }
         public string[] Instalacoes { get; set; }

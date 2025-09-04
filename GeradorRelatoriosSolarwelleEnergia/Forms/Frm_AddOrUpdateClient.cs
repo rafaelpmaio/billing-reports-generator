@@ -16,11 +16,11 @@ namespace GeradorRelatoriosSolarwelleEnergia.Forms
 {
     public partial class Frm_AddOrUpdateClient : Form
     {
-        private Cliente? _client;
+        private Client? _client;
         private Instalacao? _instalacao;
         private Endereco? _endereco;
         public string NumeroInstalacao { get; set; }
-        public Frm_AddOrUpdateClient(Cliente? client = null, Instalacao? instalacao = null)
+        public Frm_AddOrUpdateClient(Client? client = null, Instalacao? instalacao = null)
         {
             _instalacao = instalacao;
             _client = client;
@@ -134,7 +134,7 @@ namespace GeradorRelatoriosSolarwelleEnergia.Forms
 
             txtBox_NumeroInstalacao.Focus();
         }
-        private void PopulateFields(Cliente cliente, Instalacao instalacao, Endereco endereco)
+        private void PopulateFields(Client cliente, Instalacao instalacao, Endereco endereco)
         {
             txtBox_NumeroInstalacao.Text = instalacao.NumeroInstalacao;
             txtBox_NumeroCliente.Text = instalacao.NumeroCliente;
@@ -182,7 +182,7 @@ namespace GeradorRelatoriosSolarwelleEnergia.Forms
                 DescontoPercentual = desconto                
             };
         }
-        private Cliente BuildClientFromForm(int enderecoId)
+        private Client BuildClientFromForm(int enderecoId)
         {
             string numeroCliente = txtBox_NumeroCliente.Text;
             string telefone = txtBox_Telefone.Text;
@@ -191,7 +191,7 @@ namespace GeradorRelatoriosSolarwelleEnergia.Forms
             string nomeOuRazaoSocial = txtBox_NomeOuRazaoSocial.Text;
             string rgOuRepresentanteLegal = txtBox_RgOuRepresentanteLegal.Text;
                         
-            Cliente cliente;
+            Client cliente;
 
             if (rbtn_PessoaFisica.Checked)
             {

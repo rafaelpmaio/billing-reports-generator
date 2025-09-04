@@ -11,7 +11,7 @@ namespace GeradorRelatoriosSolarwelleEnergia.Domain.DTO
     internal class ReportGenerationInputDto
     {
         public string CemigTablePath { get; set; }
-        public List<Cliente> Clients {  get; set; }
+        public List<Client> Clients {  get; set; }
         public List<Instalacao> Installations { get; set; }
         public List<Endereco> Addresses { get; set; }
         public float KwhValue { get; set; }

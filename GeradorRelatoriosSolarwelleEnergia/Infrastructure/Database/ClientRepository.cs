@@ -6,6 +6,7 @@ using System.Text;
 using System.Threading.Tasks;
 using GeradorRelatoriosSolarwelleEnergia.Domain.Entities;
 using GeradorRelatoriosSolarwelleEnergia.Dominio.Entidades;
+using GeradorRelatoriosSolarwelleEnergia.Infrastructure.Database;
 using Org.BouncyCastle.Pqc.Crypto.Cmce;
 
 namespace GeradorRelatoriosSolarwelleEnergia.Infrastructure.Database
@@ -78,9 +79,9 @@ namespace GeradorRelatoriosSolarwelleEnergia.Infrastructure.Database
                 }
             }
         }
-        public List<Cliente> GetClients()
+        public List<Client> GetClients()
         {
-            var list = new List<Cliente>();
+            var list = new List<Client>();
 
             using (var conn = new SQLiteConnection(_connString))
             {
@@ -92,7 +93,7 @@ namespace GeradorRelatoriosSolarwelleEnergia.Infrastructure.Database
                     {
                         int tipoCliente = reader.GetInt32(reader.GetOrdinal("TipoCliente"));
 
-                        Cliente cliente = tipoCliente == 1
+                        Client cliente = tipoCliente == 1
                             ? new ClientePessoaJuridica()
                             : new ClientePessoaFisica();
 
@@ -130,7 +131,7 @@ namespace GeradorRelatoriosSolarwelleEnergia.Infrastructure.Database
             }
             return list;
         }
-        public void Insert(Cliente cliente)
+        public void Insert(Client cliente)
         {
             using (var conn = new SQLiteConnection(_connString))
             {
@@ -167,7 +168,7 @@ namespace GeradorRelatoriosSolarwelleEnergia.Infrastructure.Database
                 cmd.ExecuteNonQuery();
             }
         }        
-        public void Update(Cliente cliente)
+        public void Update(Client cliente)
         {
             using (var conn = new SQLiteConnection(_connString))
             {
@@ -202,7 +203,7 @@ namespace GeradorRelatoriosSolarwelleEnergia.Infrastructure.Database
                 cmd.ExecuteNonQuery();
             }
         }
-        private void AddClientParameters(SQLiteCommand cmd, Cliente client)
+        private void AddClientParameters(SQLiteCommand cmd, Client client)
         {
             string razaoSocialOuNome = "";
             string cnpjOuCpf = "";
@@ -242,3 +243,27 @@ namespace GeradorRelatoriosSolarwelleEnergia.Infrastructure.Database
         }
     }
 }
+
+//public class DatabaseInitializer
+//{
+//    private readonly EnderecoRepository _enderecoRepo = new();
+//    private readonly ClienteRepository _clienteRepo = new();
+//    private readonly InstalacaoRepository _instalacaoRepo = new();
+
+//    public void CreateDatabaseIfNotExists()
+//    {
+//        if (!File.Exists("clients.db"))
+//        {
+//            SQLiteConnection.CreateFile("clients.db");
+
+//            using (var conn = new SQLiteConnection("Data Source=clients.db"))
+//            {
+//                conn.Open();
+
+//                _enderecoRepo.CreateTable(conn);
+//                _clienteRepo.CreateTable(conn);
+//                _instalacaoRepo.CreateTable(conn);
+//            }
+//        }
+//    }
+//}

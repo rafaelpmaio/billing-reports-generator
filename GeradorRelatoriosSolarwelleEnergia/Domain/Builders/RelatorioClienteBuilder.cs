@@ -13,7 +13,7 @@ namespace GeradorRelatoriosSolarwelleEnergia.Domain.Builders
     {
         public static RelatorioCliente Criar(
             Instalacao instalacao, 
-            Cliente cliente,
+            Client cliente,
             Endereco endereco,
             TabelaCemig tabelaCemig, 
             float kwhHora, 

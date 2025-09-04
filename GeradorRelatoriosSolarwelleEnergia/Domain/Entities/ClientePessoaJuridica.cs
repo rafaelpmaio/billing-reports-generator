@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 
 namespace GeradorRelatoriosSolarwelleEnergia.Dominio.Entidades
 {
-    internal class ClientePessoaJuridica : Cliente
+    internal class ClientePessoaJuridica : Client
     {
         public string Cnpj { get; set; }
         public string RazaoSocial { get; set; }

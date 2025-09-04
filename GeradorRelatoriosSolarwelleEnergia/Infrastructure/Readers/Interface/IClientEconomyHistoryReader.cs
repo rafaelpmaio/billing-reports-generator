@@ -4,7 +4,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace GeradorRelatoriosSolarwelleEnergia.Infrastructure.Readers
+namespace GeradorRelatoriosSolarwelleEnergia.Infrastructure.Readers.Interface
 {
     internal interface IClientEconomyHistoryReader
     {

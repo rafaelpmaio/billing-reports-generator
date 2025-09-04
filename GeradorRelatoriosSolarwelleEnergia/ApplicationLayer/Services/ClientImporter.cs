@@ -16,7 +16,7 @@ namespace GeradorRelatoriosSolarwelleEnergia.ApplicationLayer.Services
 
         public void ImportFromExcelToDb(string filePath)
         {
-            var clients = _reader.ReadClients(filePath);
+            var clients = _reader.Read(filePath);
             foreach (var client in clients)
             {               
                 _repository.Insert(client);

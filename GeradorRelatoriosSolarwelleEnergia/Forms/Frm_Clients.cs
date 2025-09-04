@@ -159,7 +159,7 @@ namespace GeradorRelatoriosSolarwelleEnergia.Forms
             }
             return table;
         }
-        private Cliente CreateClientFromSelectedRow()
+        private Client CreateClientFromSelectedRow()
         {
             DataGridViewRow selectedRow = dataGridView.SelectedRows[0];
 
@@ -175,7 +175,7 @@ namespace GeradorRelatoriosSolarwelleEnergia.Forms
             string email = selectedRow.Cells["Email"].Value?.ToString();
             int tipo = Convert.ToInt32(selectedRow.Cells["TipoCliente"].Value);
 
-            Cliente cliente;
+            Client cliente;
 
             if (tipo == 1)
             {

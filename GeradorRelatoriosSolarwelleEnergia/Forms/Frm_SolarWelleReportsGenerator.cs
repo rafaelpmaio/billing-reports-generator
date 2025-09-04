@@ -23,7 +23,6 @@ namespace GeradorRelatoriosSolarwelleEnergia
 
             _handler = new ReportGeneratorAppService(
                 new CemigTableService(),
-                new ClientExcelReader(),
                 new ClientEconomyHistoryReader(),
                 new ClientReportService(),
                 new PdfReportSaver()

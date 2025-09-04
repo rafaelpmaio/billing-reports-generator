@@ -24,11 +24,11 @@ namespace GeradorRelatoriosSolarwelleEnergia.Infrastructure.Mappers
         private const int COL_TIPO_CLIENTE = 10;
         private const int COL_ATIVO = 11;
 
-        public static Cliente Map(ExcelWorksheet ws, int row)
+        public static Client Map(ExcelWorksheet ws, int row)
         {
             int tipoCliente = int.TryParse(ws.Cells[row, COL_TIPO_CLIENTE].Text, out var tipo) ? tipo : 0;
 
-            Cliente cliente = tipoCliente == 1
+            Client cliente = tipoCliente == 1
                 ? new ClientePessoaJuridica()
                 : new ClientePessoaFisica();
 

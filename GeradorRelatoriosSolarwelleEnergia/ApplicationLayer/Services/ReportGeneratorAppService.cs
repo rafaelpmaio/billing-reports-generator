@@ -7,28 +7,26 @@ using GeradorRelatoriosSolarwelleEnergia.Domain.DTO;
 using GeradorRelatoriosSolarwelleEnergia.Domain.Entities;
 using GeradorRelatoriosSolarwelleEnergia.Domain.Services;
 using GeradorRelatoriosSolarwelleEnergia.Domain.Utils;
+using GeradorRelatoriosSolarwelleEnergia.Dominio.Entidades;
 using GeradorRelatoriosSolarwelleEnergia.Infrastructure.Pdf;
-using GeradorRelatoriosSolarwelleEnergia.Infrastructure.Readers;
+using GeradorRelatoriosSolarwelleEnergia.Infrastructure.Readers.Interface;
 
 namespace GeradorRelatoriosSolarwelleEnergia.ApplicationLayer.Services
 {
     internal class ReportGeneratorAppService
     {
         private readonly CemigTableService _cemigService;
-        private readonly IClientReader _clientReader;
         private readonly IClientEconomyHistoryReader _historyReader;
         private readonly IClientReportService _reportService;
         private readonly IPdfReportSaver _pdfGenerator;
 
         public ReportGeneratorAppService(
             CemigTableService cemigService,
-            IClientReader clientReader,
             IClientEconomyHistoryReader historyReader,
             IClientReportService reportService,
             IPdfReportSaver pdfGenerator)
         {
             _cemigService = cemigService;
-            _clientReader = clientReader;
             _historyReader = historyReader;
             _reportService = reportService;
             _pdfGenerator = pdfGenerator;
