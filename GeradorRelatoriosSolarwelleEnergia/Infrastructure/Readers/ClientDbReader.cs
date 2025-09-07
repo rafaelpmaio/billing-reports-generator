@@ -20,7 +20,7 @@ namespace GeradorRelatoriosSolarwelleEnergia.Infrastructure.Readers
 
         public List<Client> Read(string? filePath = null)
         {
-            return _repository.GetClients();
+            return _repository.GetAll();
         }
     }
 }

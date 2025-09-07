@@ -3,25 +3,25 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
-using GeradorRelatoriosSolarwelleEnergia.Dominio.Entidades;
 using GeradorRelatoriosSolarwelleEnergia.Infrastructure.Database;
 using GeradorRelatoriosSolarwelleEnergia.Infrastructure.Readers;
 
 namespace GeradorRelatoriosSolarwelleEnergia.ApplicationLayer.Services
 {
-    internal class ClientImporter
+    internal class EnderecoImporter
     {
-        private readonly ClientRepository _repository = new();
-        private readonly ClientExcelReader _reader = new();
+        private readonly EnderecoRepository _repository = new();
+        private readonly EnderecoExcelReader _reader = new();
 
         public void ImportFromExcelToDb(string filePath)
         {
-            var clientsDto = _reader.Read(filePath);
-            foreach (var dto in clientsDto)
-            {               
-                _repository.Insert(dto);
+            var enderecos = _reader.Read(filePath);
+            foreach (var endereco in enderecos)
+            {
+                _repository.Insert(endereco);
             }
             Console.WriteLine("Importação concluída com sucesso");
         }
     }
 }
+

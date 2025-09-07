@@ -2,34 +2,43 @@
 using System.Collections.Generic;
 using System.ComponentModel;
 using System.Data;
+using System.Data.SQLite;
 using System.Drawing;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using System.Windows.Forms;
 using GeradorRelatoriosSolarwelleEnergia.ApplicationLayer.Services;
+using GeradorRelatoriosSolarwelleEnergia.Domain.Entities;
 using GeradorRelatoriosSolarwelleEnergia.Dominio.Entidades;
 using GeradorRelatoriosSolarwelleEnergia.Infrastructure.Database;
 
 namespace GeradorRelatoriosSolarwelleEnergia.Forms
 {
-    public partial class Frm_Instalacao : Form
+    public partial class Frm_Instalacoes : Form
     {
-        public Frm_Instalacao()
+        public Frm_Instalacoes()
         {
             InitializeComponent();
+            this.Load += Frm_Instalacoes_Load;
+            dataGridView.SelectionChanged += DataGridView_SelectionChanged;
         }
-
+        private void DataGridView_SelectionChanged(object? sender, EventArgs e)
+        {
+            bool rowSelected = dataGridView.SelectedRows.Count > 0;
+            btn_DeleteInstalacao.Enabled = rowSelected;
+            btn_UpdateInstalacao.Enabled = rowSelected;
+        }
         public void LoadInstalacoes()
         {
             dataGridView.DataSource = GetInstalacoesAsDataTable();
             dataGridView.ClearSelection();
         }
-        private void Frm_Clients_Load(object? sender, EventArgs e)
+        private void Frm_Instalacoes_Load(object? sender, EventArgs e)
         {
             LoadInstalacoes();
-        }
-        private void btn_AddClient_Click(object sender, EventArgs e)
+        }      
+        private void btn_AddInstalacao_Click(object sender, EventArgs e)
         {
             using (var form = new Frm_AddOrUpdateClient())
             {
@@ -40,11 +49,10 @@ namespace GeradorRelatoriosSolarwelleEnergia.Forms
                 }
             }
         }
-
         private DataTable GetInstalacoesAsDataTable()
         {
             var repo = new InstalacaoRepository();
-            var instalacoes = repo.GetInstalacoes();
+            var instalacoes = repo.GetAll();
 
             DataTable table = new DataTable();
 
@@ -69,22 +77,5 @@ namespace GeradorRelatoriosSolarwelleEnergia.Forms
             return table;
         }
 
-        private void btn_ImportInstalacoes_Click(object sender, EventArgs e)
-        {
-            OpenFileDialog openFileDialog = new OpenFileDialog();
-            openFileDialog.Filter = "Arquivos Excel (*.xlsx)|*.xlsx|Todos os arquivos (*.*)|*.*";
-            openFileDialog.Title = "Selecione a planilha de clientes";
-
-            if (openFileDialog.ShowDialog() == DialogResult.OK)
-            {
-                string filePath = openFileDialog.FileName;
-
-                var importer = new InstalacaoImporter();
-                importer.ImportFromExcelToDb(filePath);
-                LoadInstalacoes();
-
-                MessageBox.Show("Clientes importados com sucesso!", "Importação", MessageBoxButtons.OK, MessageBoxIcon.Information);
-            }
-        }
     }
 }

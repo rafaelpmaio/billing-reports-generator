@@ -9,6 +9,7 @@ using GeradorRelatoriosSolarwelleEnergia.Domain.Utils;
 using GeradorRelatoriosSolarwelleEnergia.Dominio.Entidades;
 using GeradorRelatoriosSolarwelleEnergia.Forms;
 using GeradorRelatoriosSolarwelleEnergia.Infrastructure.Database;
+using GeradorRelatoriosSolarwelleEnergia.Infrastructure.Exporters;
 using GeradorRelatoriosSolarwelleEnergia.Infrastructure.Pdf;
 using GeradorRelatoriosSolarwelleEnergia.Infrastructure.Readers;
 
@@ -90,7 +91,7 @@ namespace GeradorRelatoriosSolarwelleEnergia
                 }
 
                 var repo = new ClientRepository();
-                var clients = repo.GetClients();
+                var clients = repo.GetAll();
 
                 var input = new ReportGenerationInputDto
                 {
@@ -128,11 +129,79 @@ namespace GeradorRelatoriosSolarwelleEnergia
             var clientsForm = new Frm_Clients();
             clientsForm.ShowDialog();
         }
-
         private void btn_Instalacoes_Click(object sender, EventArgs e)
         {
-            var instalacoesForm = new Frm_Instalacao();
+            var instalacoesForm = new Frm_Instalacoes();
             instalacoesForm.ShowDialog();
+        }
+
+        private void btn_ImportDB_Click(object sender, EventArgs e)
+        {
+            OpenFileDialog openFileDialog = new OpenFileDialog()
+            {
+                Filter = "Arquivos Excel (*.xlsx)|*.xlsx|Todos os arquivos (*.*)|*.*",
+                Title = "Selecione a planilha de base de dados"
+            };
+
+            if (openFileDialog.ShowDialog() == DialogResult.OK)
+            {
+                string filePath = openFileDialog.FileName;
+
+                try
+                {
+                    var enderecoImporter = new EnderecoImporter();
+                    enderecoImporter.ImportFromExcelToDb(filePath);
+
+                    var clientEmporter = new ClientImporter();
+                    clientEmporter.ImportFromExcelToDb(filePath);
+
+                    var instalacaoImporter = new InstalacaoImporter();
+                    instalacaoImporter.ImportFromExcelToDb(filePath);
+
+                    MessageBox.Show("Base de dados importada com sucesso!", "Importação", MessageBoxButtons.OK, MessageBoxIcon.Information);
+                }
+                catch (Exception ex)
+                {
+                    MessageBox.Show("Erro durante a importação: " + ex.Message, "Erro", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                }
+            }
+        }
+
+        private void btn_ExportDB_Click(object sender, EventArgs e)
+        {
+            SaveFileDialog saveFileDialog = new SaveFileDialog
+            {
+                Filter = "Arquivos Excel (*.xlsx)|*.xlsx",
+                Title = "Salvar base de dados como Excel",
+                FileName = "bd_sollarwelle.xlsx"
+            };
+
+            if (saveFileDialog.ShowDialog() == DialogResult.OK)
+            {
+                string filePath = saveFileDialog.FileName;
+
+                try
+                {
+                    // 1. Recupera os dados do banco
+                    var enderecoRepo = new EnderecoRepository();
+                    var clienteRepo = new ClientRepository();
+                    var instalacaoRepo = new InstalacaoRepository();
+
+                    var enderecos = enderecoRepo.GetAll();
+                    var clientes = clienteRepo.GetAll();
+                    var instalacoes = instalacaoRepo.GetAll();
+
+                    // 2. Exporta os dados para Excel
+                    var exporter = new ExcelExporter();
+                    exporter.ExportToExcel(filePath, enderecos, clientes, instalacoes);
+
+                    MessageBox.Show("Base de dados exportada com sucesso!", "Exportação", MessageBoxButtons.OK, MessageBoxIcon.Information);
+                }
+                catch (Exception ex)
+                {
+                    MessageBox.Show("Erro durante a exportação: " + ex.Message, "Erro", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                }
+            }
         }
     }
 }

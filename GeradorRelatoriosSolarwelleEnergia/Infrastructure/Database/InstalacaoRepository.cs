@@ -11,9 +11,41 @@ namespace GeradorRelatoriosSolarwelleEnergia.Infrastructure.Database
 {
     internal class InstalacaoRepository
     {
-        private readonly string _connString = "Data Source=clients.db";
+        private readonly string _connString = "Data Source=instalacoes.db";
 
-        public List<Instalacao> GetInstalacoes()
+        public InstalacaoRepository()
+        {
+            CreateDB();
+        }
+
+        private void CreateDB()
+        {
+            if (!File.Exists("instalacoes.db"))
+            {
+                SQLiteConnection.CreateFile("instalacoes.db");
+
+                using (var conn = new SQLiteConnection(_connString))
+                {
+                    conn.Open();
+
+                    string sqlInstalacoes = @"CREATE TABLE Instalacoes (
+                                    NumeroInstalacao TEXT PRIMARY KEY,
+                                    NumeroCliente TEXT NOT NULL,
+                                    DistribuidoraLocal TEXT NOT NULL,
+                                    DescontoPercentual TEXT,
+                                    Ativo INTEGER NOT NULL,
+                                    FOREIGN KEY (NumeroCliente) REFERENCES Clientes(NumeroCliente)
+                                   );";
+
+                    using (var cmd = new SQLiteCommand(conn))
+                    {
+                        cmd.CommandText = sqlInstalacoes;
+                        cmd.ExecuteNonQuery();
+                    }
+                }
+            }
+        }
+        public List<Instalacao> GetAll()
         {
             var list = new List<Instalacao>();
 
@@ -60,16 +92,13 @@ namespace GeradorRelatoriosSolarwelleEnergia.Infrastructure.Database
 
                 using (var cmd = new SQLiteCommand(sql, conn))
                 {
-                    cmd.Parameters.AddWithValue("@NumeroInstalacao", instalacao.NumeroInstalacao);
-                    cmd.Parameters.AddWithValue("@NumeroCliente", instalacao.NumeroCliente);
-                    cmd.Parameters.AddWithValue("@DistribuidoraLocal", instalacao.DistribuidoraLocal);
-                    cmd.Parameters.AddWithValue("@DescontoPercentual", instalacao.DescontoPercentual);                   
-                    cmd.Parameters.AddWithValue("@Ativo", instalacao.Ativo);                   
+                    AddInstalacaoParameters(cmd, instalacao);
                     cmd.ExecuteNonQuery();
                 }
             }
         }
-        public List<Instalacao> GetByInstalacao(string numeroInstalacao)
+
+        public List<Instalacao> GetById(string numeroInstalacao)
         {
             var list = new List<Instalacao>();
 
@@ -99,6 +128,14 @@ namespace GeradorRelatoriosSolarwelleEnergia.Infrastructure.Database
                 }
             }
             return list;
+        }
+        private void AddInstalacaoParameters(SQLiteCommand cmd, Instalacao instalacao)
+        {
+            cmd.Parameters.AddWithValue("@NumeroInstalacao", instalacao.NumeroInstalacao);
+            cmd.Parameters.AddWithValue("@NumeroCliente", instalacao.NumeroCliente);
+            cmd.Parameters.AddWithValue("@DistribuidoraLocal", instalacao.DistribuidoraLocal);
+            cmd.Parameters.AddWithValue("@DescontoPercentual", instalacao.DescontoPercentual);
+            cmd.Parameters.AddWithValue("@Ativo", instalacao.Ativo);
         }
     }
 }

@@ -19,7 +19,7 @@ namespace GeradorRelatoriosSolarwelleEnergia.Infrastructure.Readers
             {
                 ExcelPackage.License.SetNonCommercialPersonal("GeradorRelatorios");
 
-                var worksheet = package.Workbook.Worksheets[0];
+                var worksheet = package.Workbook.Worksheets["ENDERECOS"];
                 int rowCount = worksheet.Dimension.Rows;
 
                 for (int row = 2; row <= rowCount; row++)

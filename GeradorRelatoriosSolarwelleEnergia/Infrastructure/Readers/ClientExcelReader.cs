@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using GeradorRelatoriosSolarwelleEnergia.Domain.DTO;
 using GeradorRelatoriosSolarwelleEnergia.Dominio.Entidades;
 using GeradorRelatoriosSolarwelleEnergia.Infrastructure.Mappers;
 using GeradorRelatoriosSolarwelleEnergia.Infrastructure.Readers.Interface;
@@ -10,25 +11,25 @@ using OfficeOpenXml;
 
 namespace GeradorRelatoriosSolarwelleEnergia.Infrastructure.Readers
 {
-    internal class ClientExcelReader : IEntityReader<Client>
+    internal class ClientExcelReader : IEntityReader<ClientDto>
     {
-        public List<Client> Read(string filePath)
+        public List<ClientDto> Read(string filePath)
         {
-            var table = new List<Client>();
+            var table = new List<ClientDto>();
             using (var package = new ExcelPackage(new FileInfo(filePath)))
             {
                 ExcelPackage.License.SetNonCommercialPersonal("GeradorRelatorios");
 
-                var worksheet = package.Workbook.Worksheets[0];
+                var worksheet = package.Workbook.Worksheets["CLIENTES"];
                 int rowCount = worksheet.Dimension.Rows;
 
                 for (int row = 2; row <= rowCount; row++)
                 {
                     try
                     {
-                        Client client = ClientRowMapper.Map(worksheet, row); 
-                        if (client != null)
-                            table.Add(client);
+                        var dto = ClientRowMapper.Map(worksheet, row); 
+                        if (dto != null)
+                            table.Add(dto);
                     }
                     catch (Exception ex)
                     {

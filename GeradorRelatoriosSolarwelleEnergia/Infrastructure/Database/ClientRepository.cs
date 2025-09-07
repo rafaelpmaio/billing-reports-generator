@@ -4,6 +4,8 @@ using System.Data.SQLite;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using GeradorRelatoriosSolarwelleEnergia.Domain.Builders;
+using GeradorRelatoriosSolarwelleEnergia.Domain.DTO;
 using GeradorRelatoriosSolarwelleEnergia.Domain.Entities;
 using GeradorRelatoriosSolarwelleEnergia.Dominio.Entidades;
 using GeradorRelatoriosSolarwelleEnergia.Infrastructure.Database;
@@ -30,17 +32,6 @@ namespace GeradorRelatoriosSolarwelleEnergia.Infrastructure.Database
                 {
                     conn.Open();
 
-                    string sqlEnderecos = @"CREATE TABLE Enderecos (
-                                    Id INTEGER PRIMARY KEY AUTOINCREMENT,
-                                    Logradouro TEXT NOT NULL,
-                                    Numero TEXT,
-                                    Complemento TEXT,
-                                    Bairro TEXT NOT NULL,
-                                    Cidade TEXT NOT NULL,
-                                    Estado TEXT NOT NULL,
-                                    CEP TEXT NOT NULL
-                                   );";
-
                     string sqlClientes = @"CREATE TABLE Clientes (
                                     NumeroCliente TEXT PRIMARY KEY,
                                     Instalacoes TEXT,
@@ -56,30 +47,15 @@ namespace GeradorRelatoriosSolarwelleEnergia.Infrastructure.Database
                                     FOREIGN KEY (IdEndereco) REFERENCES Enderecos(Id)
                                    );";
 
-                    string sqlInstalacoes = @"CREATE TABLE Instalacoes (
-                                    NumeroInstalacao TEXT PRIMARY KEY,
-                                    NumeroCliente TEXT NOT NULL,
-                                    DistribuidoraLocal TEXT NOT NULL,
-                                    DescontoPercentual TEXT,
-                                    Ativo INTEGER NOT NULL,
-                                    FOREIGN KEY (NumeroCliente) REFERENCES Clientes(NumeroCliente)
-                                   );";
-
                     using (var cmd = new SQLiteCommand(conn))
                     {
-                        cmd.CommandText = sqlEnderecos;
-                        cmd.ExecuteNonQuery();
-
                         cmd.CommandText = sqlClientes;
-                        cmd.ExecuteNonQuery();
-
-                        cmd.CommandText = sqlInstalacoes;
                         cmd.ExecuteNonQuery();
                     }
                 }
             }
         }
-        public List<Client> GetClients()
+        public List<Client> GetAll()
         {
             var list = new List<Client>();
 
@@ -98,40 +74,33 @@ namespace GeradorRelatoriosSolarwelleEnergia.Infrastructure.Database
                             : new ClientePessoaFisica();
 
                         cliente.NumeroCliente = reader["NumeroCliente"]?.ToString();
-                        string rawInstalacoes = reader["Instalacoes"]?.ToString();
-                        string razaoSocialOuNome = reader["RazaoSocialOuNome"]?.ToString();
-                        string cpfOuCnpj = reader["CnpjOuCpf"]?.ToString();
                         cliente.Telefone = reader["Telefone"]?.ToString();
                         cliente.IdEndereco = Convert.ToInt32(reader["IdEndereco"]);
                         cliente.Email = reader["Email"]?.ToString();
-                        cliente.TipoCliente = tipoCliente;                    
+                        cliente.TipoCliente = tipoCliente;
                         cliente.Ativo = Convert.ToInt32(reader["Ativo"]) == 1 ? true : false;
-                                                                      
+
+                        string rawInstalacoes = reader["Instalacoes"]?.ToString();
+                        string razaoSocialOuNome = reader["RazaoSocialOuNome"]?.ToString();
+                        string cpfOuCnpj = reader["CnpjOuCpf"]?.ToString();
+                        string representanteLegal = reader["RepresentanteLegal"]?.ToString();
+                        string rg = reader["RG"]?.ToString();
+
                         cliente.Instalacoes = string.IsNullOrWhiteSpace(rawInstalacoes)
                             ? Array.Empty<string>()
                             : rawInstalacoes.Split(',').Select(i => i.Trim()).ToArray();
 
                         cliente.InstalacoesString = string.Join(", ", cliente.Instalacoes);
 
-                        if (cliente is ClientePessoaJuridica pj)
-                        {
-                            pj.RazaoSocial = razaoSocialOuNome;
-                            pj.Cnpj = cpfOuCnpj;
-                            pj.RepresentanteLegal = reader["RepresentanteLegal"]?.ToString();
-                        }
-                        else if (cliente is ClientePessoaFisica pf)
-                        {
-                            pf.Nome = razaoSocialOuNome;
-                            pf.Cpf = cpfOuCnpj;
-                            pf.Rg = reader["RG"]?.ToString();
-                        }
+                        ClientDtoBuilder.PreeencherDadosPjOuPf(cliente, razaoSocialOuNome, cpfOuCnpj, representanteLegal, rg);
+                                              
                         list.Add(cliente);
                     }
                 }
             }
             return list;
         }
-        public void Insert(Client cliente)
+        public void Insert(ClientDto dto)
         {
             using (var conn = new SQLiteConnection(_connString))
             {
@@ -162,13 +131,14 @@ namespace GeradorRelatoriosSolarwelleEnergia.Infrastructure.Database
                                 @Ativo
                               );";
 
-                var cmd = new SQLiteCommand(sql, conn);
-                AddClientParameters(cmd, cliente);                              
-
-                cmd.ExecuteNonQuery();
+                using (var cmd = new SQLiteCommand(sql, conn))
+                {
+                    AddClientParameters(cmd, dto);
+                    cmd.ExecuteNonQuery();
+                }
             }
-        }        
-        public void Update(Client cliente)
+        }
+        public void Update(ClientDto dto)
         {
             using (var conn = new SQLiteConnection(_connString))
             {
@@ -188,7 +158,7 @@ namespace GeradorRelatoriosSolarwelleEnergia.Infrastructure.Database
                     WHERE NumeroCliente = @NumeroCliente";
 
                 var cmd = new SQLiteCommand(sql, conn);
-                AddClientParameters(cmd, cliente);
+                AddClientParameters(cmd, dto);
                 cmd.ExecuteNonQuery();
             }
         }
@@ -203,67 +173,20 @@ namespace GeradorRelatoriosSolarwelleEnergia.Infrastructure.Database
                 cmd.ExecuteNonQuery();
             }
         }
-        private void AddClientParameters(SQLiteCommand cmd, Client client)
+        private void AddClientParameters(SQLiteCommand cmd, ClientDto dto)
         {
-            string razaoSocialOuNome = "";
-            string cnpjOuCpf = "";
-            string representanteLegal = "";
-            string Rg = "";
-            int tipoCliente = 0;
-
-            if (client is ClientePessoaJuridica pj)
-            {
-                razaoSocialOuNome = pj.RazaoSocial ?? "";
-                cnpjOuCpf = pj.Cnpj ?? "";
-                representanteLegal = pj.RepresentanteLegal ?? "";
-                tipoCliente = 1;
-
-            }
-            else if (client is ClientePessoaFisica pf)
-            {
-                razaoSocialOuNome = pf.Nome ?? "";
-                cnpjOuCpf = pf.Cpf ?? "";
-                Rg = pf.Rg;
-                tipoCliente = 0;
-            }
-
-            string instalacoesString = string.Join(",", client.Instalacoes);
-
-            cmd.Parameters.AddWithValue("@NumeroCliente", client.NumeroCliente);
-            cmd.Parameters.AddWithValue("@Instalacoes", instalacoesString);
-            cmd.Parameters.AddWithValue("@RazaoSocialOuNome", razaoSocialOuNome);
-            cmd.Parameters.AddWithValue("@CnpjOuCpf", cnpjOuCpf);
-            cmd.Parameters.AddWithValue("@RepresentanteLegal", representanteLegal);
-            cmd.Parameters.AddWithValue("@Rg", Rg);
-            cmd.Parameters.AddWithValue("@Telefone", client.Telefone ?? "");
-            cmd.Parameters.AddWithValue("@IdEndereco", client.IdEndereco);
-            cmd.Parameters.AddWithValue("@Email", client.Email ?? "");
-            cmd.Parameters.AddWithValue("@TipoCliente", tipoCliente);
-            cmd.Parameters.AddWithValue("@Ativo", client.Ativo ? 1 : 0);
+            cmd.Parameters.AddWithValue("@NumeroCliente", dto.NumeroCliente);
+            cmd.Parameters.AddWithValue("@Instalacoes", dto.Instalacoes);
+            cmd.Parameters.AddWithValue("@RazaoSocialOuNome", dto.RazaoSocialOuNome);
+            cmd.Parameters.AddWithValue("@CnpjOuCpf", dto.CnpjOuCpf);
+            cmd.Parameters.AddWithValue("@RepresentanteLegal", dto.RepresentanteLegal ?? "");
+            cmd.Parameters.AddWithValue("@Rg", dto.Rg ?? "");
+            cmd.Parameters.AddWithValue("@Telefone", dto.Telefone ?? "");
+            cmd.Parameters.AddWithValue("@IdEndereco", dto.IdEndereco);
+            cmd.Parameters.AddWithValue("@Email", dto.Email ?? "");
+            cmd.Parameters.AddWithValue("@TipoCliente", dto.TipoCliente);
+            cmd.Parameters.AddWithValue("@Ativo", dto.Ativo ? 1 : 0);
         }
     }
 }
 
-//public class DatabaseInitializer
-//{
-//    private readonly EnderecoRepository _enderecoRepo = new();
-//    private readonly ClienteRepository _clienteRepo = new();
-//    private readonly InstalacaoRepository _instalacaoRepo = new();
-
-//    public void CreateDatabaseIfNotExists()
-//    {
-//        if (!File.Exists("clients.db"))
-//        {
-//            SQLiteConnection.CreateFile("clients.db");
-
-//            using (var conn = new SQLiteConnection("Data Source=clients.db"))
-//            {
-//                conn.Open();
-
-//                _enderecoRepo.CreateTable(conn);
-//                _clienteRepo.CreateTable(conn);
-//                _instalacaoRepo.CreateTable(conn);
-//            }
-//        }
-//    }
-//}

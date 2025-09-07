@@ -7,6 +7,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using System.Windows.Forms;
+using GeradorRelatoriosSolarwelleEnergia.Domain.DTO;
 using GeradorRelatoriosSolarwelleEnergia.Domain.Entities;
 using GeradorRelatoriosSolarwelleEnergia.Dominio.Entidades;
 using GeradorRelatoriosSolarwelleEnergia.Infrastructure.Database;
@@ -90,7 +91,7 @@ namespace GeradorRelatoriosSolarwelleEnergia.Forms
                 var enderecoRepo = new EnderecoRepository();
                 int enderecoId = enderecoRepo.Insert(endereco);
 
-                var cliente = BuildClientFromForm(enderecoId);
+                var cliente = BuildClientDtoFromForm(enderecoId);
                 var clienteRepo = new ClientRepository();
                 clienteRepo.Insert(cliente);
 
@@ -182,48 +183,39 @@ namespace GeradorRelatoriosSolarwelleEnergia.Forms
                 DescontoPercentual = desconto                
             };
         }
-        private Client BuildClientFromForm(int enderecoId)
+        private ClientDto BuildClientDtoFromForm(int enderecoId)
         {
             string numeroCliente = txtBox_NumeroCliente.Text;
+            string RazaoSocialOuNome = txtBox_NomeOuRazaoSocial.Text;
+            string CnpjOuCpf = txtBox_CpfOuCnpj.Text;
+            string rgOuRepresentanteLegal = txtBox_RgOuRepresentanteLegal.Text;
             string telefone = txtBox_Telefone.Text;
             string email = txtBox_Email.Text;
-            string cpfOuCnpj = txtBox_CpfOuCnpj.Text;
-            string nomeOuRazaoSocial = txtBox_NomeOuRazaoSocial.Text;
-            string rgOuRepresentanteLegal = txtBox_RgOuRepresentanteLegal.Text;
-                        
-            Client cliente;
 
+            int tipoCliente;
             if (rbtn_PessoaFisica.Checked)
-            {
-                cliente = new ClientePessoaFisica
-                {
-                    Nome = nomeOuRazaoSocial,
-                    Cpf = cpfOuCnpj,
-                    Rg = rgOuRepresentanteLegal,
-                };
-            }
+                tipoCliente = 0;
             else if (rbtn_PessoaJuridica.Checked)
-            {
-                cliente = new ClientePessoaJuridica
-                {
-                    RazaoSocial = nomeOuRazaoSocial,
-                    Cnpj = cpfOuCnpj,
-                    RepresentanteLegal = rgOuRepresentanteLegal,
-                };
-            }
+                tipoCliente = 1;
             else
+                throw new InvalidOperationException("Tipo de cliente não selecionado");
+
+            return new ClientDto
             {
-                throw new InvalidOperationException("Tipo de cliente não selecionado.");
-            }
-
-            cliente.NumeroCliente = numeroCliente;
-            cliente.Telefone = telefone;
-            cliente.Email = email;
-            cliente.IdEndereco = enderecoId;
-            cliente.TipoCliente = rbtn_PessoaFisica.Checked ? 0 : 1;
-            cliente.Ativo = true;
-
-            return cliente;
+                NumeroCliente = numeroCliente,
+                Instalacoes = "",
+                RazaoSocialOuNome = RazaoSocialOuNome,
+                CnpjOuCpf = CnpjOuCpf,
+                RepresentanteLegal = rgOuRepresentanteLegal,
+                Rg = rgOuRepresentanteLegal,
+                Telefone = telefone,
+                IdEndereco = 1,
+                Email = email,
+                TipoCliente = tipoCliente,
+                Ativo = true
+            };
+                        
+          
         }
         private Endereco BuildEnderecoFromForm()
         {

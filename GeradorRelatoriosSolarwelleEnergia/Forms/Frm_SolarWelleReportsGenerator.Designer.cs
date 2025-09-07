@@ -35,6 +35,10 @@
             txtBox_KwhValue = new TextBox();
             btn_Clients = new Button();
             btn_Instalacoes = new Button();
+            btn_ImportDB = new Button();
+            groupBox1 = new GroupBox();
+            btn_ExportDB = new Button();
+            groupBox1.SuspendLayout();
             SuspendLayout();
             // 
             // lbl_RelatorioCemig
@@ -49,11 +53,11 @@
             // btn_GenerateReports
             // 
             btn_GenerateReports.Enabled = false;
-            btn_GenerateReports.Location = new Point(394, 116);
+            btn_GenerateReports.Location = new Point(12, 129);
             btn_GenerateReports.Name = "btn_GenerateReports";
             btn_GenerateReports.Size = new Size(119, 23);
             btn_GenerateReports.TabIndex = 1;
-            btn_GenerateReports.Text = "gerar relatórios";
+            btn_GenerateReports.Text = "Gerar Relatórios";
             btn_GenerateReports.UseVisualStyleBackColor = true;
             btn_GenerateReports.Click += btn_GenerateReports_Click;
             // 
@@ -62,7 +66,7 @@
             txtBox_CemigTablePath.Location = new Point(12, 39);
             txtBox_CemigTablePath.Name = "txtBox_CemigTablePath";
             txtBox_CemigTablePath.ReadOnly = true;
-            txtBox_CemigTablePath.Size = new Size(269, 23);
+            txtBox_CemigTablePath.Size = new Size(156, 23);
             txtBox_CemigTablePath.TabIndex = 2;
             txtBox_CemigTablePath.Click += txtBox_CemigTablePath_Click;
             // 
@@ -79,23 +83,23 @@
             // 
             txtBox_KwhValue.Location = new Point(12, 91);
             txtBox_KwhValue.Name = "txtBox_KwhValue";
-            txtBox_KwhValue.Size = new Size(129, 23);
+            txtBox_KwhValue.Size = new Size(156, 23);
             txtBox_KwhValue.TabIndex = 4;
             txtBox_KwhValue.KeyPress += txtBox_KwhValue_KeyPress;
             // 
             // btn_Clients
             // 
-            btn_Clients.Location = new Point(313, 116);
+            btn_Clients.Location = new Point(6, 80);
             btn_Clients.Name = "btn_Clients";
             btn_Clients.Size = new Size(75, 23);
             btn_Clients.TabIndex = 7;
-            btn_Clients.Text = "clientes";
+            btn_Clients.Text = "Clientes";
             btn_Clients.UseVisualStyleBackColor = true;
             btn_Clients.Click += btn_Clients_Click;
             // 
             // btn_Instalacoes
             // 
-            btn_Instalacoes.Location = new Point(232, 116);
+            btn_Instalacoes.Location = new Point(6, 109);
             btn_Instalacoes.Name = "btn_Instalacoes";
             btn_Instalacoes.Size = new Size(75, 23);
             btn_Instalacoes.TabIndex = 8;
@@ -103,13 +107,45 @@
             btn_Instalacoes.UseVisualStyleBackColor = true;
             btn_Instalacoes.Click += btn_Instalacoes_Click;
             // 
+            // btn_ImportDB
+            // 
+            btn_ImportDB.Location = new Point(6, 22);
+            btn_ImportDB.Name = "btn_ImportDB";
+            btn_ImportDB.Size = new Size(113, 23);
+            btn_ImportDB.TabIndex = 9;
+            btn_ImportDB.Text = "Importar BD";
+            btn_ImportDB.UseVisualStyleBackColor = true;
+            btn_ImportDB.Click += btn_ImportDB_Click;
+            // 
+            // groupBox1
+            // 
+            groupBox1.Controls.Add(btn_ExportDB);
+            groupBox1.Controls.Add(btn_Clients);
+            groupBox1.Controls.Add(btn_ImportDB);
+            groupBox1.Controls.Add(btn_Instalacoes);
+            groupBox1.Location = new Point(190, 12);
+            groupBox1.Name = "groupBox1";
+            groupBox1.Size = new Size(133, 140);
+            groupBox1.TabIndex = 10;
+            groupBox1.TabStop = false;
+            groupBox1.Text = "Base de Dados";
+            // 
+            // btn_ExportDB
+            // 
+            btn_ExportDB.Location = new Point(6, 51);
+            btn_ExportDB.Name = "btn_ExportDB";
+            btn_ExportDB.Size = new Size(113, 23);
+            btn_ExportDB.TabIndex = 10;
+            btn_ExportDB.Text = "Exportar BD";
+            btn_ExportDB.UseVisualStyleBackColor = true;
+            btn_ExportDB.Click += btn_ExportDB_Click;
+            // 
             // Frm_SolarWelleReportsGenerator
             // 
             AutoScaleDimensions = new SizeF(7F, 15F);
             AutoScaleMode = AutoScaleMode.Font;
-            ClientSize = new Size(525, 149);
-            Controls.Add(btn_Instalacoes);
-            Controls.Add(btn_Clients);
+            ClientSize = new Size(339, 164);
+            Controls.Add(groupBox1);
             Controls.Add(txtBox_KwhValue);
             Controls.Add(lbl_ValorKwH);
             Controls.Add(txtBox_CemigTablePath);
@@ -117,6 +153,7 @@
             Controls.Add(lbl_RelatorioCemig);
             Name = "Frm_SolarWelleReportsGenerator";
             Text = "SolarWelle - Gerador de Relatórios";
+            groupBox1.ResumeLayout(false);
             ResumeLayout(false);
             PerformLayout();
         }
@@ -130,5 +167,8 @@
         private TextBox txtBox_KwhValue;
         private Button btn_Clients;
         private Button btn_Instalacoes;
+        private Button btn_ImportDB;
+        private GroupBox groupBox1;
+        private Button btn_ExportDB;
     }
 }

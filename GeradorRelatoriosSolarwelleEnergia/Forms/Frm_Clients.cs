@@ -8,6 +8,7 @@ using System.Text;
 using System.Threading.Tasks;
 using System.Windows.Forms;
 using GeradorRelatoriosSolarwelleEnergia.ApplicationLayer.Services;
+using GeradorRelatoriosSolarwelleEnergia.Domain.Builders;
 using GeradorRelatoriosSolarwelleEnergia.Domain.Entities;
 using GeradorRelatoriosSolarwelleEnergia.Dominio.Entidades;
 using GeradorRelatoriosSolarwelleEnergia.Infrastructure.Database;
@@ -22,7 +23,6 @@ namespace GeradorRelatoriosSolarwelleEnergia.Forms
             this.Load += Frm_Clients_Load;
             dataGridView.SelectionChanged += DataGridView_SelectionChanged;
         }
-
         public void LoadClients()
         {
             dataGridView.DataSource = GetClientsAsDataTable();
@@ -64,7 +64,7 @@ namespace GeradorRelatoriosSolarwelleEnergia.Forms
 
                 MessageBox.Show("Cliente removido com sucesso.", "Sucesso", MessageBoxButtons.OK, MessageBoxIcon.Information);
 
-                LoadClients(); 
+                LoadClients();
             }
             catch (Exception ex)
             {
@@ -74,31 +74,14 @@ namespace GeradorRelatoriosSolarwelleEnergia.Forms
         private void btn_UpdateClient_Click(object sender, EventArgs e)
         {
             var client = CreateClientFromSelectedRow();
- 
+
             using (var form = new Frm_AddOrUpdateClient(client))
             {
                 var result = form.ShowDialog();
-                if(result == DialogResult.OK)
+                if (result == DialogResult.OK)
                 {
                     LoadClients();
                 }
-            }
-        }
-        private void btn_ImportClients_Click(object sender, EventArgs e)
-        {
-            OpenFileDialog openFileDialog = new OpenFileDialog();
-            openFileDialog.Filter = "Arquivos Excel (*.xlsx)|*.xlsx|Todos os arquivos (*.*)|*.*";
-            openFileDialog.Title = "Selecione a planilha de clientes";
-
-            if (openFileDialog.ShowDialog() == DialogResult.OK)
-            {
-                string filePath = openFileDialog.FileName;
-
-                var importer = new ClientImporter();
-                importer.ImportFromExcelToDb(filePath);
-                LoadClients();
-
-                MessageBox.Show("Clientes importados com sucesso!", "Importação", MessageBoxButtons.OK, MessageBoxIcon.Information);
             }
         }
         private void DataGridView_SelectionChanged(object? sender, EventArgs e)
@@ -107,10 +90,12 @@ namespace GeradorRelatoriosSolarwelleEnergia.Forms
             btn_DeleteClient.Enabled = rowSelected;
             btn_UpdateClient.Enabled = rowSelected;
         }
-        private DataTable GetClientsAsDataTable() 
+        private DataTable GetClientsAsDataTable()
         {
             var repo = new ClientRepository();
-            var clients = repo.GetClients();
+            var clients = repo.GetAll();
+
+            var clientsDto = clients.Select(ClientDtoBuilder.FromClient).ToList();
 
             DataTable table = new DataTable();
 
@@ -126,35 +111,20 @@ namespace GeradorRelatoriosSolarwelleEnergia.Forms
             table.Columns.Add("TipoCliente", typeof(int));
             table.Columns.Add("Ativo", typeof(int));
 
-            foreach (var client in clients)
-            {
-                string nome = "", doc = "", representante = "", rg = "";
-
-                if (client is ClientePessoaJuridica pj)
-                {
-                    nome = pj.RazaoSocial;
-                    doc = pj.Cnpj;
-                    representante = pj.RepresentanteLegal;
-                }
-                else if (client is ClientePessoaFisica pf)
-                {
-                    nome = pf.Nome;
-                    doc = pf.Cpf;
-                    rg = pf.Rg;
-                }
-
+            foreach (var dto in clientsDto)
+            {           
                 table.Rows.Add(
-                    client.NumeroCliente,
-                    client.InstalacoesString,
-                    nome,
-                    doc,
-                    representante,
-                    rg,
-                    client.Telefone,
-                    client.IdEndereco,
-                    client.Email,
-                    client is ClientePessoaJuridica ? 1 : 0,
-                    client.Ativo ? 1 : 0
+                    dto.NumeroCliente,
+                    dto.Instalacoes,
+                    dto.RazaoSocialOuNome,
+                    dto.CnpjOuCpf,
+                    dto.RepresentanteLegal,
+                    dto.Rg,
+                    dto.Telefone,
+                    dto.IdEndereco,
+                    dto.Email,
+                    dto.TipoCliente,
+                    dto.Ativo ? 1 : 0
                 );
             }
             return table;
@@ -203,5 +173,6 @@ namespace GeradorRelatoriosSolarwelleEnergia.Forms
             cliente.Email = email;
             return cliente;
         }
+
     }
 }
