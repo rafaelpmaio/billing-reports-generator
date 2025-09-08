@@ -21,7 +21,6 @@ namespace GeradorRelatoriosSolarwelleEnergia.Infrastructure.Database
         {
             CreateDB();
         }
-
         private void CreateDB()
         {
             if (!File.Exists("clients.db"))
@@ -67,34 +66,23 @@ namespace GeradorRelatoriosSolarwelleEnergia.Infrastructure.Database
                 {
                     while (reader.Read())
                     {
-                        int tipoCliente = reader.GetInt32(reader.GetOrdinal("TipoCliente"));
+                        var dto = new ClientDto
+                        {
+                            NumeroCliente = reader["NumeroCliente"]?.ToString(),
+                            Instalacoes = reader["Instalacoes"]?.ToString(),
+                            RazaoSocialOuNome = reader["RazaoSocialOuNome"]?.ToString(),
+                            CnpjOuCpf = reader["CnpjOuCpf"]?.ToString(),
+                            RepresentanteLegal = reader["RepresentanteLegal"]?.ToString(),
+                            Rg = reader["RG"]?.ToString(),
+                            Telefone = reader["Telefone"]?.ToString(),
+                            IdEndereco = Convert.ToInt32(reader["IdEndereco"]),
+                            Email = reader["Email"]?.ToString(),
+                            TipoCliente = reader.GetInt32(reader.GetOrdinal("TipoCliente")),
+                            Ativo = Convert.ToInt32(reader["Ativo"]) == 1 ? true : false
+                        };
 
-                        Client cliente = tipoCliente == 1
-                            ? new ClientePessoaJuridica()
-                            : new ClientePessoaFisica();
-
-                        cliente.NumeroCliente = reader["NumeroCliente"]?.ToString();
-                        cliente.Telefone = reader["Telefone"]?.ToString();
-                        cliente.IdEndereco = Convert.ToInt32(reader["IdEndereco"]);
-                        cliente.Email = reader["Email"]?.ToString();
-                        cliente.TipoCliente = tipoCliente;
-                        cliente.Ativo = Convert.ToInt32(reader["Ativo"]) == 1 ? true : false;
-
-                        string rawInstalacoes = reader["Instalacoes"]?.ToString();
-                        string razaoSocialOuNome = reader["RazaoSocialOuNome"]?.ToString();
-                        string cpfOuCnpj = reader["CnpjOuCpf"]?.ToString();
-                        string representanteLegal = reader["RepresentanteLegal"]?.ToString();
-                        string rg = reader["RG"]?.ToString();
-
-                        cliente.Instalacoes = string.IsNullOrWhiteSpace(rawInstalacoes)
-                            ? Array.Empty<string>()
-                            : rawInstalacoes.Split(',').Select(i => i.Trim()).ToArray();
-
-                        cliente.InstalacoesString = string.Join(", ", cliente.Instalacoes);
-
-                        ClientDtoBuilder.PreeencherDadosPjOuPf(cliente, razaoSocialOuNome, cpfOuCnpj, representanteLegal, rg);
-                                              
-                        list.Add(cliente);
+                        var client = ClientDtoBuilder.ToClient(dto);
+                        list.Add(client);
                     }
                 }
             }

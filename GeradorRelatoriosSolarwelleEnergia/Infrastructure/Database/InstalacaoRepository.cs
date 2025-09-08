@@ -17,7 +17,6 @@ namespace GeradorRelatoriosSolarwelleEnergia.Infrastructure.Database
         {
             CreateDB();
         }
-
         private void CreateDB()
         {
             if (!File.Exists("instalacoes.db"))
@@ -97,8 +96,7 @@ namespace GeradorRelatoriosSolarwelleEnergia.Infrastructure.Database
                 }
             }
         }
-
-        public List<Instalacao> GetById(string numeroInstalacao)
+        public List<Instalacao> GetByNumeroinstalacao(string numeroInstalacao)
         {
             var list = new List<Instalacao>();
 

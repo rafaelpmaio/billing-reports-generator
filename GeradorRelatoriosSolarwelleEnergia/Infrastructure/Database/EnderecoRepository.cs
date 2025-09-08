@@ -62,9 +62,9 @@ namespace GeradorRelatoriosSolarwelleEnergia.Infrastructure.Database
                         Endereco endereco = new Endereco();
 
                         endereco.Id = Convert.ToInt32(reader["Id"]);
-                        endereco.Logradouro= reader["Logradouro"]?.ToString();
-                        endereco.Numero= reader["Numero"]?.ToString();
-                        endereco.Complemento= reader["Complemento"]?.ToString();
+                        endereco.Logradouro = reader["Logradouro"]?.ToString();
+                        endereco.Numero = reader["Numero"]?.ToString();
+                        endereco.Complemento = reader["Complemento"]?.ToString();
                         endereco.Bairro = reader["Bairro"]?.ToString();
                         endereco.Cidade = reader["Cidade"]?.ToString();
                         endereco.Estado = reader["Estado"]?.ToString();
@@ -78,6 +78,9 @@ namespace GeradorRelatoriosSolarwelleEnergia.Infrastructure.Database
         }
         public int Insert(Endereco endereco)
         {
+            int nextId = GetNextId();
+            endereco.Id = nextId;
+
             using (var conn = new SQLiteConnection(_connString))
             {
                 conn.Open();
@@ -102,7 +105,46 @@ namespace GeradorRelatoriosSolarwelleEnergia.Infrastructure.Database
                 using (var cmd = new SQLiteCommand(sql, conn))
                 {
                     AddEnderecoParameters(cmd, endereco);
-                    return Convert.ToInt32(cmd.ExecuteScalar());
+                    cmd.ExecuteNonQuery();
+                }
+                return endereco.Id;
+            }
+        }
+        public void Update(Endereco endereco)
+        {
+            using (var conn = new SQLiteConnection(_connString))
+            {
+                conn.Open();
+
+                var sql = @"UPDATE Enderecos SET
+                        Logradouro = @Logradouro,
+                        Numero = @Numero,
+                        Complemento = @Complemento,
+                        Bairro = @Bairro,
+                        Cidade = @Cidade,
+                        Estado = @Estado,
+                        CEP = @CEP
+                    WHERE Id = @Id";
+
+                using (var cmd = new SQLiteCommand(sql, conn))
+                {
+                    AddEnderecoParameters(cmd, endereco);
+                    cmd.ExecuteNonQuery();
+                }
+            }
+        }
+        public void Delete(int id)
+        {
+            using (var conn = new SQLiteConnection(_connString))
+            {
+                conn.Open();
+
+                var sql = "DELETE FROM Enderecos WHERE Id = @Id";
+
+                using (var cmd = new SQLiteCommand(sql, conn))
+                {
+                    cmd.Parameters.AddWithValue("@Id", id);
+                    cmd.ExecuteNonQuery();
                 }
             }
         }
@@ -123,7 +165,7 @@ namespace GeradorRelatoriosSolarwelleEnergia.Infrastructure.Database
                             return new Endereco
                             {
                                 Id = reader.GetInt32(reader.GetOrdinal("Id")),
-                                Logradouro = reader["Rua"].ToString(),
+                                Logradouro = reader["Logradouro"].ToString(),
                                 Numero = reader["Numero"].ToString(),
                                 Complemento = reader["Complemento"].ToString(),
                                 Bairro = reader["Bairro"].ToString(),
@@ -137,8 +179,19 @@ namespace GeradorRelatoriosSolarwelleEnergia.Infrastructure.Database
             }
             return null;
         }
+        public int GetNextId()
+        {
+            using (var conn = new SQLiteConnection(_connString))
+            {
+                conn.Open();
+                var cmd = new SQLiteCommand("SELECT MAX(Id) FROM Enderecos", conn);
+                var result = cmd.ExecuteScalar();
+                return (result != DBNull.Value && int.TryParse(result.ToString(), out int maxId)) ? maxId + 1 : 1;
+            }
+        }
         private void AddEnderecoParameters(SQLiteCommand cmd, Endereco endereco)
         {
+            cmd.Parameters.AddWithValue("@Id", endereco.Id);
             cmd.Parameters.AddWithValue("@Logradouro", endereco.Logradouro);
             cmd.Parameters.AddWithValue("@Numero", endereco.Numero);
             cmd.Parameters.AddWithValue("@Complemento", endereco.Complemento);

@@ -29,6 +29,49 @@ namespace GeradorRelatoriosSolarwelleEnergia.Domain.Builders
             };
         }
 
+        public static Client ToClient(ClientDto dto)
+        {
+            if (dto == null)
+                throw new ArgumentNullException(nameof(dto));
+
+            Client client;
+
+            if (dto.TipoCliente == 1)
+            {
+                client = new ClientePessoaJuridica
+                {
+                    RazaoSocial = dto.RazaoSocialOuNome,
+                    Cnpj = dto.CnpjOuCpf,
+                    RepresentanteLegal = dto.RepresentanteLegal
+                };
+            }
+            else
+            {
+                client = new ClientePessoaFisica
+                {
+                    Nome = dto.RazaoSocialOuNome,
+                    Cpf = dto.CnpjOuCpf,
+                    Rg = dto.Rg
+                };
+            }
+            client.NumeroCliente = dto.NumeroCliente;
+            client.Telefone = dto.Telefone;
+            client.Email = dto.Email;
+            client.IdEndereco = dto.IdEndereco;
+            client.Ativo = dto.Ativo;
+            client.TipoCliente = dto.TipoCliente;
+
+            client.Instalacoes = (dto.Instalacoes ?? "")
+                .Split(',')
+                .Select(i => i.Trim())
+                .Where(i => !string.IsNullOrEmpty(i))
+                .ToArray();
+
+            client.InstalacoesString = dto.Instalacoes;
+
+            return client;
+        }
+
         public static void PreencherDadosPjOuPf(ClientDto dto, Client client)
         {
             if (client is ClientePessoaJuridica pj)
@@ -44,21 +87,6 @@ namespace GeradorRelatoriosSolarwelleEnergia.Domain.Builders
                 dto.CnpjOuCpf = pf.Cpf;
                 dto.Rg = pf.Rg;
                 dto.TipoCliente = 0;
-            }
-        }
-        public static void PreeencherDadosPjOuPf(Client client, string nomeOuRazaoSocial, string cpfOuCnpj, string representanteLegal,string rg)
-        {
-            if (client is ClientePessoaJuridica pj)
-            {
-                pj.RazaoSocial = nomeOuRazaoSocial;
-                pj.Cnpj = cpfOuCnpj;
-                pj.RepresentanteLegal = representanteLegal;
-            }
-            else if (client is ClientePessoaFisica pf)
-            {
-                pf.Nome = nomeOuRazaoSocial;
-                pf.Cpf = cpfOuCnpj;
-                pf.Rg = rg;
             }
         }
 

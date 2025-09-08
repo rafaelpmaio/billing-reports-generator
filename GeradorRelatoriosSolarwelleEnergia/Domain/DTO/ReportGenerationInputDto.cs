@@ -12,12 +12,11 @@ namespace GeradorRelatoriosSolarwelleEnergia.Domain.DTO
     {
         public string CemigTablePath { get; set; }
         public List<Client> Clients {  get; set; }
-        public List<Instalacao> Installations { get; set; }
-        public List<Endereco> Addresses { get; set; }
+        public List<Instalacao> Instalacoes { get; set; }
+        public List<Endereco> Enderecos { get; set; }
         public float KwhValue { get; set; }
         public string PdfModelPath { get; set; }
         public string DestinyFolder {  get; set; }
-
-
+        
     }
 }

@@ -7,7 +7,7 @@ using GeradorRelatoriosSolarwelleEnergia.Dominio.Entidades;
 
 namespace GeradorRelatoriosSolarwelleEnergia.Domain.DTO
 {
-    internal class ClientDto
+    public class ClientDto
     {
         public string NumeroCliente { get; set; }
         public string Instalacoes { get; set; } 

@@ -82,21 +82,22 @@ namespace GeradorRelatoriosSolarwelleEnergia
         {
             try
             {
-                string desktopPath = Environment.GetFolderPath(Environment.SpecialFolder.Desktop);
-                string destinyReportsPath = Path.Combine(desktopPath, "relatorios");
+                string destinyReportsPath = GetOrCreateReportsFolder();
 
-                if (!Directory.Exists(destinyReportsPath))
-                {
-                    Directory.CreateDirectory(destinyReportsPath);
-                }
+                var clientRepo = new ClientRepository();
+                var instalacaoRepo = new InstalacaoRepository();
+                var enderecoRepo = new EnderecoRepository();
 
-                var repo = new ClientRepository();
-                var clients = repo.GetAll();
+                var clients = clientRepo.GetAll();
+                var instalacoes = instalacaoRepo.GetAll();
+                var enderecos = enderecoRepo.GetAll();
 
                 var input = new ReportGenerationInputDto
                 {
                     CemigTablePath = txtBox_CemigTablePath.Text,
                     Clients = clients,
+                    Instalacoes = instalacoes,
+                    Enderecos = enderecos,
                     KwhValue = float.Parse(txtBox_KwhValue.Text),
                     DestinyFolder = destinyReportsPath,
                     PdfModelPath = Path.Combine(AppContext.BaseDirectory, "Assets", "modeloapresentacao.pdf"),
@@ -116,7 +117,18 @@ namespace GeradorRelatoriosSolarwelleEnergia
             {
                 MessageBox.Show($"Erro ao gerar relatórios: {ex.Message}", "Erro", MessageBoxButtons.OK, MessageBoxIcon.Error);
             }
+        }
+        private string GetOrCreateReportsFolder()
+        {
+            string desktopPath = Environment.GetFolderPath(Environment.SpecialFolder.Desktop);
+            string destinyReportsPath = Path.Combine(desktopPath, "relatorios");
 
+            if (!Directory.Exists(destinyReportsPath))
+            {
+                Directory.CreateDirectory(destinyReportsPath);
+            }
+
+            return destinyReportsPath;
         }
         private void EnableGenerateButton()
         {
@@ -134,7 +146,6 @@ namespace GeradorRelatoriosSolarwelleEnergia
             var instalacoesForm = new Frm_Instalacoes();
             instalacoesForm.ShowDialog();
         }
-
         private void btn_ImportDB_Click(object sender, EventArgs e)
         {
             OpenFileDialog openFileDialog = new OpenFileDialog()
@@ -166,7 +177,6 @@ namespace GeradorRelatoriosSolarwelleEnergia
                 }
             }
         }
-
         private void btn_ExportDB_Click(object sender, EventArgs e)
         {
             SaveFileDialog saveFileDialog = new SaveFileDialog

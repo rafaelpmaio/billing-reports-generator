@@ -17,59 +17,23 @@ namespace GeradorRelatoriosSolarwelleEnergia.Forms
 {
     public partial class Frm_AddOrUpdateClient : Form
     {
-        private Client? _client;
-        private Instalacao? _instalacao;
+        private ClientDto? _clientDto;
         private Endereco? _endereco;
         public string NumeroInstalacao { get; set; }
-        public Frm_AddOrUpdateClient(Client? client = null, Instalacao? instalacao = null)
+        public Frm_AddOrUpdateClient(ClientDto? clientDto = null)
         {
-            _instalacao = instalacao;
-            _client = client;
+            _clientDto = clientDto;
+
             InitializeComponent();
-            InitializeComboBoxes();
             SetFormTitle();
-          
 
-            if (instalacao != null) ConfigureEditMode();
-        }
-
-        private void InitializeComboBoxes()
-        {
-            cmb_DiscountRate.Items.Clear();
-            cmb_DiscountRate.Items.AddRange(new object[] { "0%", "5%", "10%", "15%", "20%", "25%", "30%" });
-            cmb_DiscountRate.SelectedIndex = 0;
-
-            cmb_EnergyDistributor.Items.Clear();
-            cmb_EnergyDistributor.Items.AddRange(new object[]
-            {
-                "ELETROBRAS",
-                "CPFL ENERGIA",
-                "LIGHT",
-                "ENEL DISTRIBUIÇÃO SÃO PAULO",
-                "ENEL DISTRIBUIÇÃO RIO",
-                "EQUATORIAL ENERGIA",
-                "CEMIG",
-                "NEOENERGIA",
-                "CELESC",
-                "CIA ENERGÉTICA DE MINAS GERAIS",
-                "COELBA",
-                "CELG-D",
-                "COSERN",
-                "ENERGISA",
-                "CEEE",
-                "COPEL"
-            });
-            cmb_EnergyDistributor.SelectedIndex = 0;
+            if (clientDto != null) ConfigureEditMode();
         }
         private void SetFormTitle()
         {
-            if (_client != null)
+            if (_clientDto != null)
             {
-                var name = _client is ClientePessoaFisica pf
-                    ? pf.Nome
-                    : (_client as ClientePessoaJuridica)?.RazaoSocial ?? "";
-
-                this.Text = $"Editando cliente {name}";
+                this.Text = $"Editando cliente {_clientDto.RazaoSocialOuNome}";
             }
             else
             {
@@ -78,30 +42,60 @@ namespace GeradorRelatoriosSolarwelleEnergia.Forms
         }
         private void ConfigureEditMode()
         {
-            PopulateFields(_client, _instalacao, _endereco);
-            txtBox_NumeroInstalacao.ReadOnly = true;
-            txtBox_NumeroInstalacao.BackColor = SystemColors.Control;
-            txtBox_NumeroInstalacao.TabStop = false;
+            var enderecoRepo = new EnderecoRepository();
+            _endereco = enderecoRepo.GetById(_clientDto.IdEndereco);
+
+            if (_endereco == null)
+            {
+                MessageBox.Show("Endereço não encontrado.", "Aviso", MessageBoxButtons.OK, MessageBoxIcon.Warning);
+            }
+
+            PopulateFields(_clientDto, _endereco);
+            txtBox_NumeroCliente.ReadOnly = true;
+            txtBox_NumeroCliente.BackColor = SystemColors.Control;
+            txtBox_NumeroCliente.TabStop = false;
+
+            txtBox_Instalacoes.ReadOnly = true;
+            txtBox_Instalacoes.BackColor = SystemColors.Control;
+            txtBox_Instalacoes.TabStop = false;
         }
         private void btn_Send_Click(object sender, EventArgs e)
         {
             try
             {
-                var endereco = BuildEnderecoFromForm();
                 var enderecoRepo = new EnderecoRepository();
-                int enderecoId = enderecoRepo.Insert(endereco);
-
-                var cliente = BuildClientDtoFromForm(enderecoId);
                 var clienteRepo = new ClientRepository();
-                clienteRepo.Insert(cliente);
 
-                var instalacao = BuildInstalacaoFromForm();
-                var instalacaoRepo = new InstalacaoRepository();
-                instalacaoRepo.Insert(instalacao);
+                var endereco = BuildEnderecoFromForm();
+                int enderecoId;
 
+                if (_clientDto != null)
+                {
+                    if (_clientDto.IdEndereco > 0)
+                    {
+                        endereco.Id = _clientDto.IdEndereco;
+                        enderecoRepo.Update(endereco);
+                        enderecoId = endereco.Id;
+                    }
+                    else
+                    {
+                        enderecoId = enderecoRepo.Insert(endereco);
+                    }
+
+                    var cliente = BuildClientDtoFromForm(enderecoId);
+                    cliente.NumeroCliente = _clientDto.NumeroCliente;
+                    clienteRepo.Update(cliente);
+                }
+                else
+                {
+                    enderecoId = enderecoRepo.Insert(endereco);
+
+                    var cliente = BuildClientDtoFromForm(enderecoId);
+                    clienteRepo.Insert(cliente);
+                }
                 MessageBox.Show("Cliente salvo com sucesso!", "Sucesso", MessageBoxButtons.OK, MessageBoxIcon.Information);
                 DialogResult = DialogResult.OK;
-                Close();                             
+                Close();
                 ClearFormFields();
             }
             catch (InvalidOperationException ex)
@@ -115,15 +109,13 @@ namespace GeradorRelatoriosSolarwelleEnergia.Forms
         }
         private void ClearFormFields()
         {
-            txtBox_NumeroInstalacao.Clear();
             txtBox_NumeroCliente.Clear();
+            txtBox_Instalacoes.Clear();
             txtBox_NomeOuRazaoSocial.Clear();
             txtBox_CpfOuCnpj.Clear();
             txtBox_Telefone.Clear();
             txtBox_RgOuRepresentanteLegal.Clear();
             txtBox_Email.Clear();
-            cmb_EnergyDistributor.SelectedIndex = 0;
-            cmb_DiscountRate.SelectedIndex = 0; ;
 
             txtBox_Logradouro.Clear();
             txtBox_NumeroEndereco.Clear();
@@ -133,17 +125,18 @@ namespace GeradorRelatoriosSolarwelleEnergia.Forms
             txtBox_Estado.Clear();
             txtBox_Cep.Clear();
 
-            txtBox_NumeroInstalacao.Focus();
+            txtBox_NumeroCliente.Focus();
         }
-        private void PopulateFields(Client cliente, Instalacao instalacao, Endereco endereco)
+        private void PopulateFields(ClientDto clientDto, Endereco endereco)
         {
-            txtBox_NumeroInstalacao.Text = instalacao.NumeroInstalacao;
-            txtBox_NumeroCliente.Text = instalacao.NumeroCliente;
-            txtBox_Telefone.Text = cliente.Telefone;
-            txtBox_Email.Text = cliente.Email;
-            cmb_EnergyDistributor.Text = instalacao.DistribuidoraLocal;
-            cmb_DiscountRate.Text = $"{instalacao.DescontoPercentual}%";
-                      
+            txtBox_NumeroCliente.Text = clientDto.NumeroCliente;
+            txtBox_Instalacoes.Text = clientDto.Instalacoes;
+            txtBox_NomeOuRazaoSocial.Text = clientDto.RazaoSocialOuNome;
+            txtBox_CpfOuCnpj.Text = clientDto.CnpjOuCpf;
+            txtBox_RgOuRepresentanteLegal.Text = clientDto.RepresentanteLegal;
+            txtBox_Telefone.Text = clientDto.Telefone;
+            txtBox_Email.Text = clientDto.Email;
+
             txtBox_Logradouro.Text = endereco.Logradouro;
             txtBox_NumeroEndereco.Text = endereco.Numero;
             txtBox_ComplementoEndereco.Text = endereco.Complemento;
@@ -152,46 +145,17 @@ namespace GeradorRelatoriosSolarwelleEnergia.Forms
             txtBox_Estado.Text = endereco.Estado;
             txtBox_Cep.Text = endereco.Cep;
 
-            if (cliente is ClientePessoaJuridica pj)
+            if (clientDto.TipoCliente == 1)
             {
-                txtBox_NomeOuRazaoSocial.Text = pj.RazaoSocial;
-                txtBox_CpfOuCnpj.Text = pj.Cnpj;
-                txtBox_RgOuRepresentanteLegal.Text = pj.RepresentanteLegal;
                 rbtn_PessoaJuridica.Checked = true;
-
             }
-            else if (cliente is ClientePessoaFisica pf)
+            else
             {
-                txtBox_NomeOuRazaoSocial.Text = pf.Nome;
-                txtBox_CpfOuCnpj.Text = pf.Cpf;
-                txtBox_RgOuRepresentanteLegal.Text = pf.Rg;
                 rbtn_PessoaFisica.Checked = true;
             }
         }
-        private Instalacao BuildInstalacaoFromForm()
-        {
-            string numeroInstalacao = txtBox_NumeroInstalacao.Text;
-            string numeroCliente = txtBox_NumeroCliente.Text;
-            string distribuidora = cmb_EnergyDistributor.SelectedItem.ToString();
-            string desconto = cmb_DiscountRate.SelectedItem.ToString().Replace("%", "");
-
-            return new Instalacao
-            {
-                NumeroInstalacao = numeroInstalacao,
-                NumeroCliente = numeroCliente,
-                DistribuidoraLocal = distribuidora,
-                DescontoPercentual = desconto                
-            };
-        }
         private ClientDto BuildClientDtoFromForm(int enderecoId)
         {
-            string numeroCliente = txtBox_NumeroCliente.Text;
-            string RazaoSocialOuNome = txtBox_NomeOuRazaoSocial.Text;
-            string CnpjOuCpf = txtBox_CpfOuCnpj.Text;
-            string rgOuRepresentanteLegal = txtBox_RgOuRepresentanteLegal.Text;
-            string telefone = txtBox_Telefone.Text;
-            string email = txtBox_Email.Text;
-
             int tipoCliente;
             if (rbtn_PessoaFisica.Checked)
                 tipoCliente = 0;
@@ -202,20 +166,21 @@ namespace GeradorRelatoriosSolarwelleEnergia.Forms
 
             return new ClientDto
             {
-                NumeroCliente = numeroCliente,
-                Instalacoes = "",
-                RazaoSocialOuNome = RazaoSocialOuNome,
-                CnpjOuCpf = CnpjOuCpf,
-                RepresentanteLegal = rgOuRepresentanteLegal,
-                Rg = rgOuRepresentanteLegal,
-                Telefone = telefone,
-                IdEndereco = 1,
-                Email = email,
+                //Construir um IdFactory para parar de usar txtBox_NumeroCliente.Text
+                NumeroCliente = _clientDto.NumeroCliente ?? txtBox_NumeroCliente.Text,
+                Instalacoes = _clientDto.Instalacoes ?? "",
+                RazaoSocialOuNome = txtBox_NomeOuRazaoSocial.Text,
+                CnpjOuCpf = txtBox_CpfOuCnpj.Text,
+                RepresentanteLegal = txtBox_RgOuRepresentanteLegal.Text,
+                Rg = txtBox_RgOuRepresentanteLegal.Text,
+                Telefone = txtBox_Telefone.Text,
+                IdEndereco = enderecoId,
+                Email = txtBox_Email.Text,
                 TipoCliente = tipoCliente,
-                Ativo = true
+                Ativo = _clientDto != null ? _clientDto.Ativo : true
             };
-                        
-          
+
+
         }
         private Endereco BuildEnderecoFromForm()
         {

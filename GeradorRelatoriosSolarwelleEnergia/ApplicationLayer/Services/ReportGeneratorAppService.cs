@@ -45,8 +45,8 @@ namespace GeradorRelatoriosSolarwelleEnergia.ApplicationLayer.Services
 
             
             var clientsList = input.Clients;
-            var installationsList = input.Installations;
-            var addressesList = input.Addresses;
+            var installationsList = input.Instalacoes;
+            var addressesList = input.Enderecos;
             var economyHistory = _historyReader.Load();
 
             var relatorios = _reportService.MontarTabelaDeRelatorios(

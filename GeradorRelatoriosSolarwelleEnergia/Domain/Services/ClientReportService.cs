@@ -21,7 +21,7 @@ namespace GeradorRelatoriosSolarwelleEnergia.Domain.Services
             )
         {
             var listaRelatorios = new List<RelatorioCliente>();
-
+            
             foreach (var tabelaCemig in listaTabelaCemig)
             {
                 foreach (var instalacao in listaInstalacoes)

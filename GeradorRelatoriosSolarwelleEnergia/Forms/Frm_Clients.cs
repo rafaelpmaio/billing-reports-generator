@@ -9,6 +9,7 @@ using System.Threading.Tasks;
 using System.Windows.Forms;
 using GeradorRelatoriosSolarwelleEnergia.ApplicationLayer.Services;
 using GeradorRelatoriosSolarwelleEnergia.Domain.Builders;
+using GeradorRelatoriosSolarwelleEnergia.Domain.DTO;
 using GeradorRelatoriosSolarwelleEnergia.Domain.Entities;
 using GeradorRelatoriosSolarwelleEnergia.Dominio.Entidades;
 using GeradorRelatoriosSolarwelleEnergia.Infrastructure.Database;
@@ -73,9 +74,9 @@ namespace GeradorRelatoriosSolarwelleEnergia.Forms
         }
         private void btn_UpdateClient_Click(object sender, EventArgs e)
         {
-            var client = CreateClientFromSelectedRow();
+            var dto = CreateClientDtoFromSelectedRow();
 
-            using (var form = new Frm_AddOrUpdateClient(client))
+            using (var form = new Frm_AddOrUpdateClient(dto))
             {
                 var result = form.ShowDialog();
                 if (result == DialogResult.OK)
@@ -129,7 +130,7 @@ namespace GeradorRelatoriosSolarwelleEnergia.Forms
             }
             return table;
         }
-        private Client CreateClientFromSelectedRow()
+        private ClientDto CreateClientDtoFromSelectedRow()
         {
             DataGridViewRow selectedRow = dataGridView.SelectedRows[0];
 
@@ -143,35 +144,26 @@ namespace GeradorRelatoriosSolarwelleEnergia.Forms
             int idEndereco = 0;
             int.TryParse(selectedRow.Cells["IdEndereco"].Value?.ToString(), out idEndereco);
             string email = selectedRow.Cells["Email"].Value?.ToString();
-            int tipo = Convert.ToInt32(selectedRow.Cells["TipoCliente"].Value);
+            int tipoCliente = Convert.ToInt32(selectedRow.Cells["TipoCliente"].Value);
+            bool ativo = selectedRow.Cells["Ativo"].Value?.ToString() == "1";                              
 
-            Client cliente;
-
-            if (tipo == 1)
+            var clientDto = new ClientDto
             {
-                cliente = new ClientePessoaJuridica
-                {
-                    RazaoSocial = razaoSocialOuNome,
-                    Cnpj = cnpjOuCpf,
-                    RepresentanteLegal = representanteLegal
-                };
-            }
-            else
-            {
-                cliente = new ClientePessoaFisica
-                {
-                    Nome = razaoSocialOuNome,
-                    Cpf = cnpjOuCpf,
-                    Rg = rg
-                };
-            }
+                NumeroCliente = numeroCliente,
+                Instalacoes = instalacoes,
+                RazaoSocialOuNome = razaoSocialOuNome,
+                CnpjOuCpf = cnpjOuCpf,
+                RepresentanteLegal = representanteLegal,
+                Rg = rg,
+                Telefone = telefone,
+                IdEndereco = idEndereco,
+                Email = email,
+                TipoCliente = tipoCliente,
+                Ativo = ativo
 
-            cliente.NumeroCliente = numeroCliente;
-            cliente.Instalacoes = instalacoes.Split(",");
-            cliente.Telefone = telefone;
-            cliente.IdEndereco = idEndereco;
-            cliente.Email = email;
-            return cliente;
+            };
+
+            return clientDto;
         }
 
     }

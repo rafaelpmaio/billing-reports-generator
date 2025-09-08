@@ -28,8 +28,8 @@
         /// </summary>
         private void InitializeComponent()
         {
-            lbl_NumeroInstalacao = new Label();
-            txtBox_NumeroInstalacao = new TextBox();
+            lbl_Instalacoes = new Label();
+            txtBox_Instalacoes = new TextBox();
             txtBox_NumeroCliente = new TextBox();
             lbl_NumeroCliente = new Label();
             txtBox_Telefone = new TextBox();
@@ -38,8 +38,6 @@
             lbl_Logradouro = new Label();
             txtBox_Email = new TextBox();
             lbl_Email = new Label();
-            lbl_DistribuidoraEnergia = new Label();
-            lbl_DescontoCliente = new Label();
             txtBox_NomeOuRazaoSocial = new TextBox();
             lbl_NomeOuRazaoSocial = new Label();
             txtBox_CpfOuCnpj = new TextBox();
@@ -62,30 +60,28 @@
             lbl_Cep = new Label();
             grpBox_Endereco = new GroupBox();
             btn_Send = new Button();
-            cmb_DiscountRate = new ComboBox();
-            cmb_EnergyDistributor = new ComboBox();
             grpBox_Endereco.SuspendLayout();
             SuspendLayout();
             // 
-            // lbl_NumeroInstalacao
+            // lbl_Instalacoes
             // 
-            lbl_NumeroInstalacao.AutoSize = true;
-            lbl_NumeroInstalacao.Location = new Point(12, 12);
-            lbl_NumeroInstalacao.Name = "lbl_NumeroInstalacao";
-            lbl_NumeroInstalacao.Size = new Size(107, 15);
-            lbl_NumeroInstalacao.TabIndex = 0;
-            lbl_NumeroInstalacao.Text = "Numero Instalação";
+            lbl_Instalacoes.AutoSize = true;
+            lbl_Instalacoes.Location = new Point(13, 63);
+            lbl_Instalacoes.Name = "lbl_Instalacoes";
+            lbl_Instalacoes.Size = new Size(65, 15);
+            lbl_Instalacoes.TabIndex = 0;
+            lbl_Instalacoes.Text = "Instalacoes";
             // 
-            // txtBox_NumeroInstalacao
+            // txtBox_Instalacoes
             // 
-            txtBox_NumeroInstalacao.Location = new Point(12, 30);
-            txtBox_NumeroInstalacao.Name = "txtBox_NumeroInstalacao";
-            txtBox_NumeroInstalacao.Size = new Size(211, 23);
-            txtBox_NumeroInstalacao.TabIndex = 1;
+            txtBox_Instalacoes.Location = new Point(13, 81);
+            txtBox_Instalacoes.Name = "txtBox_Instalacoes";
+            txtBox_Instalacoes.Size = new Size(211, 23);
+            txtBox_Instalacoes.TabIndex = 1;
             // 
             // txtBox_NumeroCliente
             // 
-            txtBox_NumeroCliente.Location = new Point(12, 81);
+            txtBox_NumeroCliente.Location = new Point(14, 30);
             txtBox_NumeroCliente.Name = "txtBox_NumeroCliente";
             txtBox_NumeroCliente.Size = new Size(214, 23);
             txtBox_NumeroCliente.TabIndex = 3;
@@ -93,7 +89,7 @@
             // lbl_NumeroCliente
             // 
             lbl_NumeroCliente.AutoSize = true;
-            lbl_NumeroCliente.Location = new Point(12, 63);
+            lbl_NumeroCliente.Location = new Point(14, 12);
             lbl_NumeroCliente.Name = "lbl_NumeroCliente";
             lbl_NumeroCliente.Size = new Size(91, 15);
             lbl_NumeroCliente.TabIndex = 2;
@@ -147,24 +143,6 @@
             lbl_Email.TabIndex = 8;
             lbl_Email.Text = "Email";
             // 
-            // lbl_DistribuidoraEnergia
-            // 
-            lbl_DistribuidoraEnergia.AutoSize = true;
-            lbl_DistribuidoraEnergia.Location = new Point(266, 163);
-            lbl_DistribuidoraEnergia.Name = "lbl_DistribuidoraEnergia";
-            lbl_DistribuidoraEnergia.Size = new Size(133, 15);
-            lbl_DistribuidoraEnergia.TabIndex = 10;
-            lbl_DistribuidoraEnergia.Text = "Distribuidora de Energia";
-            // 
-            // lbl_DescontoCliente
-            // 
-            lbl_DescontoCliente.AutoSize = true;
-            lbl_DescontoCliente.Location = new Point(266, 213);
-            lbl_DescontoCliente.Name = "lbl_DescontoCliente";
-            lbl_DescontoCliente.Size = new Size(124, 15);
-            lbl_DescontoCliente.TabIndex = 12;
-            lbl_DescontoCliente.Text = "Valor do Desconto (%)";
-            // 
             // txtBox_NomeOuRazaoSocial
             // 
             txtBox_NomeOuRazaoSocial.Location = new Point(12, 131);
@@ -216,7 +194,7 @@
             // rbtn_PessoaFisica
             // 
             rbtn_PessoaFisica.AutoSize = true;
-            rbtn_PessoaFisica.Location = new Point(122, 219);
+            rbtn_PessoaFisica.Location = new Point(354, 181);
             rbtn_PessoaFisica.Name = "rbtn_PessoaFisica";
             rbtn_PessoaFisica.Size = new Size(93, 19);
             rbtn_PessoaFisica.TabIndex = 20;
@@ -227,7 +205,7 @@
             // 
             rbtn_PessoaJuridica.AutoSize = true;
             rbtn_PessoaJuridica.Checked = true;
-            rbtn_PessoaJuridica.Location = new Point(12, 219);
+            rbtn_PessoaJuridica.Location = new Point(244, 181);
             rbtn_PessoaJuridica.Name = "rbtn_PessoaJuridica";
             rbtn_PessoaJuridica.Size = new Size(104, 19);
             rbtn_PessoaJuridica.TabIndex = 21;
@@ -347,7 +325,7 @@
             grpBox_Endereco.Controls.Add(lbl_Cidade);
             grpBox_Endereco.Controls.Add(lbl_ComplementoEndereco);
             grpBox_Endereco.Controls.Add(txtBox_ComplementoEndereco);
-            grpBox_Endereco.Location = new Point(12, 260);
+            grpBox_Endereco.Location = new Point(12, 225);
             grpBox_Endereco.Name = "grpBox_Endereco";
             grpBox_Endereco.Size = new Size(457, 177);
             grpBox_Endereco.TabIndex = 34;
@@ -356,7 +334,7 @@
             // 
             // btn_Send
             // 
-            btn_Send.Location = new Point(394, 443);
+            btn_Send.Location = new Point(394, 408);
             btn_Send.Name = "btn_Send";
             btn_Send.Size = new Size(75, 23);
             btn_Send.TabIndex = 35;
@@ -364,29 +342,11 @@
             btn_Send.UseVisualStyleBackColor = true;
             btn_Send.Click += btn_Send_Click;
             // 
-            // cmb_DiscountRate
-            // 
-            cmb_DiscountRate.FormattingEnabled = true;
-            cmb_DiscountRate.Location = new Point(266, 231);
-            cmb_DiscountRate.Name = "cmb_DiscountRate";
-            cmb_DiscountRate.Size = new Size(121, 23);
-            cmb_DiscountRate.TabIndex = 36;
-            // 
-            // cmb_EnergyDistributor
-            // 
-            cmb_EnergyDistributor.FormattingEnabled = true;
-            cmb_EnergyDistributor.Location = new Point(267, 181);
-            cmb_EnergyDistributor.Name = "cmb_EnergyDistributor";
-            cmb_EnergyDistributor.Size = new Size(186, 23);
-            cmb_EnergyDistributor.TabIndex = 37;
-            // 
             // Frm_AddOrUpdateClient
             // 
             AutoScaleDimensions = new SizeF(7F, 15F);
             AutoScaleMode = AutoScaleMode.Font;
-            ClientSize = new Size(486, 469);
-            Controls.Add(cmb_EnergyDistributor);
-            Controls.Add(cmb_DiscountRate);
+            ClientSize = new Size(477, 437);
             Controls.Add(btn_Send);
             Controls.Add(grpBox_Endereco);
             Controls.Add(rbtn_PessoaJuridica);
@@ -397,16 +357,14 @@
             Controls.Add(lbl_CpfOuCnpj);
             Controls.Add(txtBox_NomeOuRazaoSocial);
             Controls.Add(lbl_NomeOuRazaoSocial);
-            Controls.Add(lbl_DescontoCliente);
-            Controls.Add(lbl_DistribuidoraEnergia);
             Controls.Add(txtBox_Email);
             Controls.Add(lbl_Email);
             Controls.Add(txtBox_Telefone);
             Controls.Add(lbl_Telefone);
             Controls.Add(txtBox_NumeroCliente);
             Controls.Add(lbl_NumeroCliente);
-            Controls.Add(txtBox_NumeroInstalacao);
-            Controls.Add(lbl_NumeroInstalacao);
+            Controls.Add(txtBox_Instalacoes);
+            Controls.Add(lbl_Instalacoes);
             Name = "Frm_AddOrUpdateClient";
             Text = "Frm_AddOrUpdateClient";
             grpBox_Endereco.ResumeLayout(false);
@@ -417,8 +375,8 @@
 
         #endregion
 
-        private Label lbl_NumeroInstalacao;
-        private TextBox txtBox_NumeroInstalacao;
+        private Label lbl_Instalacoes;
+        private TextBox txtBox_Instalacoes;
         private TextBox txtBox_NumeroCliente;
         private Label lbl_NumeroCliente;
         private TextBox txtBox_Telefone;
@@ -427,8 +385,6 @@
         private Label lbl_Logradouro;
         private TextBox txtBox_Email;
         private Label lbl_Email;
-        private Label lbl_DistribuidoraEnergia;
-        private Label lbl_DescontoCliente;
         private TextBox txtBox_NomeOuRazaoSocial;
         private Label lbl_NomeOuRazaoSocial;
         private TextBox txtBox_CpfOuCnpj;
@@ -451,7 +407,5 @@
         private Label lbl_Cep;
         private GroupBox grpBox_Endereco;
         private Button btn_Send;
-        private ComboBox cmb_DiscountRate;
-        private ComboBox cmb_EnergyDistributor;
     }
 }

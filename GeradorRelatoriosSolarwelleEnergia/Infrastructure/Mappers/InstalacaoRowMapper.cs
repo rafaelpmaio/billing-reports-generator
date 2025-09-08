@@ -25,7 +25,7 @@ namespace GeradorRelatoriosSolarwelleEnergia.Infrastructure.Mappers
             instalacao.NumeroCliente = ws.Cells[row, NUMERO_CLIENTE].Text;
             instalacao.DistribuidoraLocal = ws.Cells[row, DISTRIBUIDORA_LOCAL].Text;
             instalacao.DescontoPercentual = ws.Cells[row, DESCONTO_PERCENTUAL].Text;
-            instalacao.Ativo = ws.Cells[row, DESCONTO_PERCENTUAL].Text.Trim() == "1";
+            instalacao.Ativo = ws.Cells[row, ATIVO].Text.Trim() == "1";
 
             return instalacao;
         }
