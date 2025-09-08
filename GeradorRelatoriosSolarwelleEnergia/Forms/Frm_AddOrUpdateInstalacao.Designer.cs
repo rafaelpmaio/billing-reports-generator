@@ -114,6 +114,7 @@
             btn_Send.TabIndex = 46;
             btn_Send.Text = "Enviar";
             btn_Send.UseVisualStyleBackColor = true;
+            btn_Send.Click += btn_Send_Click;
             // 
             // chk_Ativo
             // 
@@ -129,7 +130,7 @@
             // 
             AutoScaleDimensions = new SizeF(7F, 15F);
             AutoScaleMode = AutoScaleMode.Font;
-            ClientSize = new Size(258, 450);
+            ClientSize = new Size(258, 297);
             Controls.Add(chk_Ativo);
             Controls.Add(btn_Send);
             Controls.Add(txtBox_NumeroCliente);

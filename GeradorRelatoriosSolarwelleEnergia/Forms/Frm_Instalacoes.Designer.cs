@@ -53,6 +53,7 @@
             btn_UpdateInstalacao.TabIndex = 2;
             btn_UpdateInstalacao.Text = "Editar";
             btn_UpdateInstalacao.UseVisualStyleBackColor = true;
+            btn_UpdateInstalacao.Click += btn_UpdateInstalacao_Click;
             // 
             // btn_DeleteInstalacao
             // 
@@ -62,6 +63,7 @@
             btn_DeleteInstalacao.TabIndex = 3;
             btn_DeleteInstalacao.Text = "Deletar";
             btn_DeleteInstalacao.UseVisualStyleBackColor = true;
+            btn_DeleteInstalacao.Click += btn_DeleteInstalacao_Click;
             // 
             // btn_AddInstalacao
             // 
@@ -71,6 +73,7 @@
             btn_AddInstalacao.TabIndex = 4;
             btn_AddInstalacao.Text = "Adicionar";
             btn_AddInstalacao.UseVisualStyleBackColor = true;
+            btn_AddInstalacao.Click += btn_AddInstalacao_Click;
             // 
             // Frm_Instalacoes
             // 

@@ -18,8 +18,7 @@ namespace GeradorRelatoriosSolarwelleEnergia.Forms
     public partial class Frm_AddOrUpdateClient : Form
     {
         private ClientDto? _clientDto;
-        private Endereco? _endereco;
-        public string NumeroInstalacao { get; set; }
+        private Endereco? _endereco;        
         public Frm_AddOrUpdateClient(ClientDto? clientDto = null)
         {
             _clientDto = clientDto;

@@ -22,6 +22,8 @@ namespace GeradorRelatoriosSolarwelleEnergia.Forms
             InitializeComponent();
             InitializeComboBoxes();
             SetFormTitle();
+
+            if (instalacao != null) ConfigureEditMode();
         }
 
         private void SetFormTitle()
@@ -34,6 +36,68 @@ namespace GeradorRelatoriosSolarwelleEnergia.Forms
             {
                 this.Text = "Adicionando novo cliente";
             }
+        }
+        private void ConfigureEditMode()
+        {
+            PopulateFields(_instalacao);
+            txtBox_NumeroInstalacao.ReadOnly = true;
+            txtBox_NumeroInstalacao.BackColor = SystemColors.Control;
+            txtBox_NumeroInstalacao.TabStop = false;
+        }
+        private void btn_Send_Click(object sender, EventArgs e)
+        {
+            try
+            {
+                var instalacao = BuildInstalacaoFromForm();
+                var instalacaoRepo = new InstalacaoRepository();
+                instalacaoRepo.Insert(instalacao);
+
+                MessageBox.Show("Instalação salva com sucesso!", "Sucesso", MessageBoxButtons.OK, MessageBoxIcon.Information);
+                DialogResult = DialogResult.OK;
+                Close();
+                ClearFormFields();
+            }
+            catch (InvalidOperationException ex)
+            {
+                MessageBox.Show(ex.Message);
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show("Erro ao salvar cliente: " + ex.Message);
+            }
+        }
+       private void ClearFormFields()
+        {
+            txtBox_NumeroInstalacao.Clear();
+            txtBox_NumeroCliente.Clear();
+            cmb_EnergyDistributor.SelectedIndex = 0;
+            cmb_DiscountRate.SelectedIndex = 0;
+            chk_Ativo.Checked = true;
+
+            txtBox_NumeroInstalacao.Focus();
+        }
+        private void PopulateFields(Instalacao instalacao)
+        {
+            txtBox_NumeroInstalacao.Text = instalacao.NumeroInstalacao;
+            txtBox_NumeroCliente.Text = instalacao.NumeroCliente;
+            cmb_EnergyDistributor.Text = instalacao.DistribuidoraLocal;
+            cmb_DiscountRate.Text = $"{instalacao.DescontoPercentual}%";
+            chk_Ativo.Checked = instalacao.Ativo;
+        }
+        private Instalacao BuildInstalacaoFromForm()
+        {
+            string numeroInstalacao = txtBox_NumeroInstalacao.Text;
+            string numeroCliente = txtBox_NumeroCliente.Text;
+            string distribuidora = cmb_EnergyDistributor.SelectedItem.ToString();
+            string desconto = cmb_DiscountRate.SelectedItem.ToString().Replace("%", "");
+
+            return new Instalacao
+            {
+                NumeroInstalacao = numeroInstalacao,
+                NumeroCliente = numeroCliente,
+                DistribuidoraLocal = distribuidora,
+                DescontoPercentual = desconto
+            };
         }
         private void InitializeComboBoxes()
         {
@@ -63,61 +127,6 @@ namespace GeradorRelatoriosSolarwelleEnergia.Forms
             });
             cmb_EnergyDistributor.SelectedIndex = 0;
         }
-        private Instalacao BuildInstalacaoFromForm()
-        {
-            string numeroInstalacao = txtBox_NumeroInstalacao.Text;
-            string numeroCliente = txtBox_NumeroCliente.Text;
-            string distribuidora = cmb_EnergyDistributor.SelectedItem.ToString();
-            string desconto = cmb_DiscountRate.SelectedItem.ToString().Replace("%", "");
 
-            return new Instalacao
-            {
-                NumeroInstalacao = numeroInstalacao,
-                NumeroCliente = numeroCliente,
-                DistribuidoraLocal = distribuidora,
-                DescontoPercentual = desconto
-            };
-        }
-        private void btn_Send_Click(object sender, EventArgs e)
-        {
-            try
-            {
-                var instalacao = BuildInstalacaoFromForm();
-                var instalacaoRepo = new InstalacaoRepository();
-                instalacaoRepo.Insert(instalacao);
-
-                MessageBox.Show("Instalação salva com sucesso!", "Sucesso", MessageBoxButtons.OK, MessageBoxIcon.Information);
-                DialogResult = DialogResult.OK;
-                Close();
-                ClearFormFields();
-            }
-            catch (InvalidOperationException ex)
-            {
-                MessageBox.Show(ex.Message);
-            }
-            catch (Exception ex)
-            {
-                MessageBox.Show("Erro ao salvar cliente: " + ex.Message);
-            }
-        }
-        private void ClearFormFields()
-        {
-            txtBox_NumeroInstalacao.Clear();
-            txtBox_NumeroCliente.Clear();
-            cmb_EnergyDistributor.SelectedIndex = 0;
-            cmb_DiscountRate.SelectedIndex = 0;
-            chk_Ativo.Checked = true;
-
-            txtBox_NumeroInstalacao.Focus();
-        }
-        private void PopulateFields(Instalacao instalacao)
-        {
-            txtBox_NumeroInstalacao.Text = instalacao.NumeroInstalacao;
-            txtBox_NumeroCliente.Text = instalacao.NumeroCliente;
-            cmb_EnergyDistributor.Text = instalacao.DistribuidoraLocal;
-            cmb_DiscountRate.Text = $"{instalacao.DescontoPercentual}%";
-            chk_Ativo.Checked = instalacao.Ativo;
-        }
-                
     }
 }

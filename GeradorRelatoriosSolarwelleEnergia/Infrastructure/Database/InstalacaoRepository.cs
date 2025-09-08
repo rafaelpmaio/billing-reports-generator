@@ -4,6 +4,7 @@ using System.Data.SQLite;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using GeradorRelatoriosSolarwelleEnergia.Domain.DTO;
 using GeradorRelatoriosSolarwelleEnergia.Domain.Entities;
 using GeradorRelatoriosSolarwelleEnergia.Dominio.Entidades;
 
@@ -94,6 +95,35 @@ namespace GeradorRelatoriosSolarwelleEnergia.Infrastructure.Database
                     AddInstalacaoParameters(cmd, instalacao);
                     cmd.ExecuteNonQuery();
                 }
+            }
+        }
+        public void Update(Instalacao instalacao)
+        {
+            using (var conn = new SQLiteConnection(_connString))
+            {
+                conn.Open();
+                string sql = @"UPDATE Instalacoes SET
+                        NumeroInstalacao = @NumeroInstalacao,
+                        NumeroCliente = @NumeroCliente,
+                        DistribuidoraLocal = @DistribuidoraLocal,
+                        DescontoPercentual = @DescontoPercentual,
+                        Ativo = @Ativo
+                    WHERE NumeroInstalacao = @NumeroInstalacao";
+
+                var cmd = new SQLiteCommand(sql, conn);
+                AddInstalacaoParameters(cmd, instalacao);
+                cmd.ExecuteNonQuery();
+            }
+        }
+        public void Remove(string numeroInstalacao)
+        {
+            using (var conn = new SQLiteConnection(_connString))
+            {
+                conn.Open();
+                string sql = "UPDATE Instalacoes SET Ativo = 0 WHERE NumeroInstalacao = @numeroInstalacao";
+                var cmd = new SQLiteCommand(sql, conn);
+                cmd.Parameters.AddWithValue("@numeroInstalacao", numeroInstalacao);
+                cmd.ExecuteNonQuery();
             }
         }
         public List<Instalacao> GetByNumeroinstalacao(string numeroInstalacao)

@@ -44,6 +44,19 @@ namespace GeradorRelatoriosSolarwelleEnergia.Forms
                 }
             }
         }
+        private void btn_UpdateClient_Click(object sender, EventArgs e)
+        {
+            var dto = CreateClientDtoFromSelectedRow();
+
+            using (var form = new Frm_AddOrUpdateClient(dto))
+            {
+                var result = form.ShowDialog();
+                if (result == DialogResult.OK)
+                {
+                    LoadClients();
+                }
+            }
+        }
         private void btn_DeleteClient_Click(object sender, EventArgs e)
         {
             var confirmResult = MessageBox.Show(
@@ -70,19 +83,6 @@ namespace GeradorRelatoriosSolarwelleEnergia.Forms
             catch (Exception ex)
             {
                 MessageBox.Show("Erro ao excluir cliente: " + ex.Message, "Erro", MessageBoxButtons.OK, MessageBoxIcon.Error);
-            }
-        }
-        private void btn_UpdateClient_Click(object sender, EventArgs e)
-        {
-            var dto = CreateClientDtoFromSelectedRow();
-
-            using (var form = new Frm_AddOrUpdateClient(dto))
-            {
-                var result = form.ShowDialog();
-                if (result == DialogResult.OK)
-                {
-                    LoadClients();
-                }
             }
         }
         private void DataGridView_SelectionChanged(object? sender, EventArgs e)
